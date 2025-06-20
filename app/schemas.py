@@ -123,7 +123,7 @@ Step 3
 class ContractItem(BaseModel):
     numberField_l7ps2caa: Optional[str]
     radioField_lfafvypp: Optional[str]
-    selectField_la4orihe: Optional[str]
+    # selectField_la4orihe: Optional[str]
     selectField_l7ps2ca3: Optional[str]
     numberField_leqpuqk4: Optional[str]
     selectField_l7ps2ca8: Optional[str]
