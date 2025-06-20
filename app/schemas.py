@@ -150,15 +150,15 @@ class ContractAuditRequest(BaseModel):
     # winning_time: str  # 中标时间
     contracts: List[ContractItem]  # 合同数组
 
-    @validator("winning_time", pre=True)
-    def parse_millisecond_timestamp(cls, v):
-        try:
-            ts = float(v)
-            if ts > 1e12:  # 判断是否为毫秒级时间戳
-                ts /= 1000
-            return datetime.fromtimestamp(ts)
-        except Exception:
-            raise ValueError("winning_time 必须是有效的毫秒时间戳")
+    # @validator("winning_time", pre=True)
+    # def parse_millisecond_timestamp(cls, v):
+    #     try:
+    #         ts = float(v)
+    #         if ts > 1e12:  # 判断是否为毫秒级时间戳
+    #             ts /= 1000
+    #         return datetime.fromtimestamp(ts)
+    #     except Exception:
+    #         raise ValueError("winning_time 必须是有效的毫秒时间戳")
 
 
 
