@@ -659,7 +659,7 @@ def schedule_settlement_BCD(
     logger.info("d_email_subject_c9: %s", d_email_subject_c9)
     d_email_content_c9 = email_utils.render_invitation_template_content(
         buyer_name="", 
-        project_name=project_name, 
+        project_name=simplify_to_traditional(project_name), 
         first_name=b_company.last_name,
         serial_number=contract_serial_number,
         contract_number=contract_number,
@@ -844,7 +844,7 @@ def schedule_settlement_CCD_BD(
     logger.info("d_email_subject_c9: %s", d_email_subject_c9)
     d_email_content_c9 = email_utils.render_invitation_template_content(
         buyer_name="", 
-        project_name=project_name, 
+        project_name=simplify_to_traditional(project_name), 
         first_name=b_company.last_name,
         serial_number=contract_serial_number,
         contract_number=contract_number,

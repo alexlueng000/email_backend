@@ -167,8 +167,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
 
             #TODO 每个公司有不同的发送模板 
             content = email_utils.render_invitation_template_content(
-                buyer_name=req.purchase_department,
-                project_name=req.project_name,
+                buyer_name=simplify_to_traditional(req.purchase_department),
+                project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
             # print("LF公司邮件内容：", content)  
@@ -222,8 +222,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             }
             
             content = email_utils.render_invitation_template_content(
-                buyer_name=req.purchase_department,
-                project_name=req.project_name,
+                buyer_name=simplify_to_traditional(req.purchase_department),
+                project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
             # print("FR公司邮件内容：", content)
@@ -278,8 +278,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             }
             
             content = email_utils.render_invitation_template_content(
-                buyer_name=req.purchase_department,
-                project_name=req.project_name,
+                buyer_name=simplify_to_traditional(req.purchase_department),
+                project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
             # print("普利赛斯公司邮件内容：", content)
