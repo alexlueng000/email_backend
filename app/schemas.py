@@ -147,7 +147,7 @@ class ContractAuditRequest(BaseModel):
     company_c_name: str  # C公司
     company_d_name: str  # D公司
     winning_amount: float  # 中标金额
-    winning_time: datetime  # 中标时间
+    winning_time: str  # 中标时间
     contracts: List[ContractItem]  # 合同数组
 
     @validator("winning_time", pre=True)
