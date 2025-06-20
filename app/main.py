@@ -18,19 +18,22 @@ from app import email_utils, models, database, schemas, tasks, send_email_tasks
 
 from app.utils import get_dingtalk_access_token, create_yida_form_instance, simplify_to_traditional
 
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from app.log_config import setup_logger
 
 from dotenv import load_dotenv
 load_dotenv()
 
-
-logger = logging.getLogger(__name__)
+logger = setup_logger(__name__)
 
 app = FastAPI()
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"❌ 未处理异常: {repr(exc)}")
+    return JSONResponse(
+        status_code=500,
+        content={"message": "服务器内部错误"}
+    )
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
