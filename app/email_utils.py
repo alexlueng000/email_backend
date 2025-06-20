@@ -56,8 +56,8 @@ def send_email(to, subject, body, smtp_config):
                 system_token=os.getenv("SYSTEM_TOKEN"),
                 form_uuid=os.getenv("FORM_UUID"),
                 form_data={
-                    "textField_m8sdofy7": from_company.company_name,
-                    "textField_m8sdofy8": to_company.company_name,
+                    "textField_m8sdofy7": to_company.company_name,
+                    "textField_m8sdofy8": from_company.company_name,
                     "textfield_G00FCbMy": subject,
                     "editorField_m8sdofy9": body,
                     "radioField_manpa6yh": "发送成功",
