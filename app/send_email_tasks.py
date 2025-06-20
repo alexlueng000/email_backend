@@ -638,7 +638,7 @@ def schedule_settlement_BCD(
     # delay1 = random.randint(5, 60)
     delay1 = 1
     task2 = send_reply_email_with_attachments.apply_async(
-        args=[d_email, b_email_subject_c8, b_email_content_c8, c_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
+        args=[b_email, b_email_subject_c8, b_email_content_c8, d_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
         countdown=delay1 * 60  # 相对第一封
     )
 
