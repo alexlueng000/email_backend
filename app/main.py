@@ -8,6 +8,9 @@ import logging
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from fastapi import Request
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
@@ -28,6 +31,17 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print("❌ 请求验证失败：")
+    for error in exc.errors():
+        print(error)
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
+
 models.Base.metadata.create_all(bind=database.engine)
 
 # 将 ~/settlements 目录挂载为 /download 路由
