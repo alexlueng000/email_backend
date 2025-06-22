@@ -638,7 +638,7 @@ def schedule_settlement_BCD(
     # delay1 = random.randint(5, 60)
     delay1 = 1
     task2 = send_reply_email_with_attachments.apply_async(
-        args=[b_email, b_email_subject_c8, b_email_content_c8, d_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
+        args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1],
         countdown=delay1 * 60  # 相对第一封
     )
 
@@ -669,7 +669,7 @@ def schedule_settlement_BCD(
     )
     delay2 = delay1 + 1
     task3 = send_reply_email.apply_async(
-        args=[d_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
+        args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
         countdown=delay2 * 60  # 相对第一封
     )
 
@@ -700,7 +700,7 @@ def schedule_settlement_BCD(
     )
     delay3 = delay2 + 1
     task4 = send_reply_email.apply_async(
-        args=[b_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
+        args=[d_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
         countdown=delay3 * 60  # 相对第一封
     )
 
@@ -854,7 +854,7 @@ def schedule_settlement_CCD_BD(
     )
     delay2 = delay1 + 1
     task3 = send_reply_email.apply_async(
-        args=[d_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
+        args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
         countdown=delay2 * 60  # 相对第一封
     )
 

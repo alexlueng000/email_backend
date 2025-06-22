@@ -3,5 +3,5 @@ __pycache__
 *.xlsx
 .env
 *.cnf
-note.md
+*.md
 dingtalk_token.json

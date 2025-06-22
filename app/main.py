@@ -487,12 +487,6 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         logger.info("没有找到项目信息，不发送邮件")
         return {"message": "没有找到项目信息，不发送邮件"}
 
-    # 更新项目流水号
-    project.serial_number = req.contract_serial_number
-    db.add(project)
-    db.commit()
-    db.refresh(project)
-
 
     # C公司名字是有三方/四方合同的 selectField_l7ps2ca6 的值
     c_company_name = next(
@@ -517,6 +511,25 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     db.add(project)
     db.commit()
     db.refresh(project)
+
+    # 项目流水号是根据D公司的值来确认的
+    d_company = db.query(models.CompanyInfo).filter(
+        models.CompanyInfo.company_name == d_company_name
+    ).first()
+
+    actual_serial_number = ''
+
+    if d_company.short_name == 'FR': 
+        actual_serial_number = project.f_serial_number
+    elif d_company.short_name == 'LF':
+        actual_serial_number = project.l_serial_number
+    else:
+        actual_serial_number = project.p_serial_number
+    project.serial_number = actual_serial_number
+    db.add(project)
+    db.commit()
+    db.refresh(project)
+
 
     # 从project_fee_details表中获取中标金额，中标时间
     winning_amount = db.query(models.ProjectFeeDetails).filter(
@@ -713,7 +726,6 @@ def settlement(
     def clean_decimal(val):
         return 0 if val == "" else float(val)
 
-
     # 中标时间 
     winning_time = project_information.fee_details.winning_time if project_information.fee_details else None
 
@@ -746,6 +758,8 @@ def settlement(
         # 说明是BD项目
         pass 
 
+
+    # 回传的下载链接
     BC_download_url = ""
     BD_download_url = ""
 
