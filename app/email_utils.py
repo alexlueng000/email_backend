@@ -225,6 +225,7 @@ def render_invitation_template_content(
     )
 
     print("template_name: ", template_name)
+    print("c_company_name!!!!!!!!!!!!: ", c_company_name)
 
     template = env.get_template(template_name)  # 例如 "bidding_invite.html"
     return template.render(

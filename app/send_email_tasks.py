@@ -144,6 +144,7 @@ def schedule_bid_conversation_BCD(
     )
     
     print("B5-B公司邮件主题：", b_email_subject_b5)
+    logger.info("C公司名称：%s", c_company.company_name)
     
     b_email_content_b5 = email_utils.render_invitation_template_content(
         buyer_name=b_company.company_name, 
@@ -154,6 +155,7 @@ def schedule_bid_conversation_BCD(
         serial_number=contract_serial_number,
         project_name=project_name, 
         winning_time=winning_time,
+        c_company_name=c_company.company_name,
         template_name="B5_"+b_company.short_name+".html"
     )
 
@@ -246,7 +248,8 @@ def schedule_bid_conversation_CCD(
         purchase_department=purchase_department,
         winning_amount=winning_amount,
         winning_time=winning_time,
-        contract_number=contract_number
+        contract_number=contract_number,
+        # c_company_name=c_company.company_name
     )
     c_email_content_b5 = email_utils.render_invitation_template_content(
         buyer_name=b_company.company_name,
@@ -255,6 +258,7 @@ def schedule_bid_conversation_CCD(
         first_name=d_company.last_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
+        # c_company_name=c_company.company_name,
         template_name="B5_"+b_company.short_name+"_SPEC.html"
     )
     
