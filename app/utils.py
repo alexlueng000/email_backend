@@ -10,6 +10,7 @@ import requests
 from dotenv import load_dotenv
 import logging
 from opencc import OpenCC
+import paramiko
 
 load_dotenv()
 
@@ -120,3 +121,42 @@ def simplify_to_traditional(text: str) -> str:
     """
     cc = OpenCC('s2t')  # s2t 表示 Simplified to Traditional
     return cc.convert(text)
+
+
+def upload_file_to_sftp(local_file: str, filename: str) -> bool:
+    """
+    上传文件到 SFTP，连接配置从 .env 文件读取。
+    
+    参数：
+        local_file (str): 本地文件路径
+    
+    返回：
+        bool: 成功为 True，失败为 False
+    """
+    # 从环境变量读取配置
+    host = os.getenv("SFTP_HOST")
+    port = int(os.getenv("SFTP_PORT", "22"))
+    username = os.getenv("SFTP_USERNAME")
+    password = os.getenv("SFTP_PASSWORD")
+    remote_path = os.getenv("REMOTE_PATH")
+
+    try:
+        transport = paramiko.Transport((host, port))
+        transport.connect(username=username, password=password)
+        print("✅ 连接成功")
+
+        sftp = paramiko.SFTPClient.from_transport(transport)
+
+        print("📂 上传文件：", local_file)
+        print("📁 目标路径：", remote_path + filename)
+
+        sftp.put(local_file, remote_path + filename)
+
+        print("✅ 文件上传成功")
+        sftp.close()
+        transport.close()
+        return True
+
+    except Exception as e:
+        print("❌ 上传失败:", str(e))
+        return False

@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from app import database, models, email_utils, excel_utils
 from app.utils import get_dingtalk_access_token, create_yida_form_instance
 from app.tasks import send_reply_email, send_reply_email_with_attachments
-from app.utils import simplify_to_traditional
+from app.utils import simplify_to_traditional, upload_file_to_sftp
 
 import logging
 
@@ -562,7 +562,8 @@ def schedule_settlement_BCD(
     )
     logger.info("CB_settlement_path&&&: %s", CB_settlement_path)
     #TODO 1. FTP将生成的文件回传到归档服务器
-    #TODO 2. 需要生成一个链接传回到宜搭
+    
+    upload_file_to_sftp("/download/"+BC_filename)
 
     # 第一封邮件：C ➝ B
     task1 = send_reply_email_with_attachments.apply_async(
@@ -641,6 +642,8 @@ def schedule_settlement_BCD(
         args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1],
         countdown=delay1 * 60  # 相对第一封
     )
+
+    upload_file_to_sftp("/download/"+BD_filename)
 
 
     # 第三封邮件：D ➝ B
@@ -810,6 +813,8 @@ def schedule_settlement_CCD_BD(
         args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
         countdown=0 # 立即
     )
+
+    upload_file_to_sftp("/download/"+BD_filename)
 
     create_yida_form_instance(
         access_token=get_dingtalk_access_token(),
