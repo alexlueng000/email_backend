@@ -150,9 +150,6 @@ def upload_file_to_sftp(local_file: str, filename: str) -> bool:
 
         sftp = paramiko.SFTPClient.from_transport(transport)
 
-        print("📂 上传文件：", local_file)
-        print("📁 目标路径：", remote_path + filename)
-
         sftp.put(local_file, remote_path + filename)
 
         print("✅ 文件上传成功")
