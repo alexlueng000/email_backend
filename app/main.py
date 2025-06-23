@@ -613,7 +613,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     project_type = ''           
     # 确定B、C、D公司是否内部公司，B、D公司是内部公司才发送邮件
     b_company = db.query(models.CompanyInfo).filter(
-        models.CompanyInfo.company_name == req.company_b_name, models.CompanyInfo.company_type == 'B'
+        models.CompanyInfo.company_name == project.company_b_name, models.CompanyInfo.company_type == 'B'
     ).first()
     # 如果找到了B公司，说明是内部公司
     if not b_company:
