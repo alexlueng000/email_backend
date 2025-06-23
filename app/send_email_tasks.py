@@ -100,23 +100,6 @@ def schedule_bid_conversation_BCD(
         countdown=0  # 立即
     )
 
-    create_yida_form_instance(
-        access_token=get_dingtalk_access_token(),
-        user_id=os.getenv("USER_ID"),
-        app_type=os.getenv("APP_TYPE"),
-        system_token=os.getenv("SYSTEM_TOKEN"),
-        form_uuid=os.getenv("FORM_UUID"),
-        form_data={
-            "textField_m8sdofy7": b_company.company_name,
-            "textField_m8sdofy8": c_company.company_name,
-            "textfield_G00FCbMy": b_email_subject_b3,
-            "editorField_m8sdofy9": b_email_content_b3,
-            "radioField_manpa6yh": "发送成功",
-            "textField_mbyq9ksm": now_str,
-            "textField_mbyq9ksn": now_str,
-        }
-    )
-
     # 第二封邮件：C ➝ B 回复
     # 随机延迟 5–60 分钟
     c_email_subject_b4 = email_utils.render_email_subject(

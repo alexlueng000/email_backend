@@ -213,8 +213,6 @@ def render_invitation_template_content(
     winning_time: str | None = None,
     template_name: str | None = None,
 ):
-
-    print("template name000000000: ", template_name)
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     template_dir = os.path.join(base_dir, "app", "email_templates")
