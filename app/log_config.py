@@ -1,5 +1,5 @@
 import logging
-from logging.handlers import RotatingFileHandler
+from logging.handlers import TimedRotatingFileHandler
 import os
 
 def setup_logger(name: str = __name__) -> logging.Logger:
