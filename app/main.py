@@ -632,6 +632,8 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     c_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == c_company_name, models.CompanyInfo.company_type == 'C').first()
     # 如果找到了C公司，说明是内部公司，如果没有找到，说明是外部公司
 
+    logger.info("@@@@@@@@@@@@@@C公司名称：%s", c_company_name)
+
     if not c_company:
         project_type = 'BD'
     # 如果B公司和C公司是同一家公司，说明是CCD项目
