@@ -4,7 +4,7 @@ sftp_host = "szsyjz.vicp.io"       # 如 szsyjz.vicp.io
 sftp_port = 10035                      # 如果你通过 FRP 映射的是其他端口，比如 10022，就写对应端口
 sftp_user = "adm"       # 注意是 SSH 用户，通常是 admin 或你创建的用户
 sftp_pass = "Szsyjz159123"
-local_file = r"E:\code_projects\syjz_emails\backend\app\scripts\test.txt"        # 本地要上传的文件
+local_file = '/download/test1.txt'        # 本地要上传的文件
 remote_path = "JZ/中港模式结算单/test.txt"  # 群晖上目标路径，注意要有写权限
 
 # === 上传逻辑 ===

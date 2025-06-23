@@ -144,7 +144,8 @@ def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
         sftp = paramiko.SFTPClient.from_transport(transport)
 
         remote_dir = os.path.dirname(REMOTE_PATH+local_file)
-        ensure_remote_dir(sftp, REMOTE_PATH+local_file)
+        print("remote_dir: ", remote_dir)
+        ensure_remote_dir(sftp, remote_dir)
 
         sftp.put(local_file, REMOTE_PATH+local_file)
         print(f"✅ 文件上传成功：{REMOTE_PATH+local_file}")
