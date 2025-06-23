@@ -127,8 +127,8 @@ def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
     """
     host = os.getenv("SFTP_HOST")
     port = int(os.getenv("SFTP_PORT", "22"))
-    username = os.getenv("SFTP_USERNAME")
-    password = os.getenv("SFTP_PASSWORD")
+    username = os.getenv("SFTP_USER")
+    password = os.getenv("SFTP_PASS")
     REMOTE_PATH = os.getenv("REMOTE_PATH")
 
     remote_path = f"JZ/中港模式结算单/{filename}"  # 你可以灵活改成传参
