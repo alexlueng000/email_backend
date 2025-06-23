@@ -133,7 +133,9 @@ def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
 
     # remote_path = f"JZ/中港模式结算单/{remote_filename}"  # 你可以灵活改成传参
 
-    print("📂 上传文件：", local_file)
+    local_file_path = os.path.expanduser(local_file)
+
+    print("📂 上传文件：", local_file_path)
     print("📁 目标路径：", REMOTE_PATH + filename)
 
     try:
@@ -143,12 +145,10 @@ def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
 
         sftp = paramiko.SFTPClient.from_transport(transport)
 
-        remote_dir = os.path.dirname(REMOTE_PATH+local_file)
-        print("remote_dir: ", remote_dir)
-        ensure_remote_dir(sftp, remote_dir)
+        remote_dir = os.path.dirname(REMOTE_PATH+filename)
 
-        sftp.put(local_file, REMOTE_PATH+local_file)
-        print(f"✅ 文件上传成功：{REMOTE_PATH+local_file}")
+        sftp.put(local_file_path, remote_dir)
+        print(f"✅ 文件上传成功：{remote_dir}")
 
         sftp.close()
         transport.close()
