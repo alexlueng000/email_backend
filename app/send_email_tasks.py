@@ -7,7 +7,7 @@ from contextlib import contextmanager
 
 from app import database, models, email_utils, excel_utils
 from app.utils import get_dingtalk_access_token, create_yida_form_instance
-from app.tasks import send_reply_email, send_reply_email_with_attachments
+from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task
 from app.utils import simplify_to_traditional, upload_file_to_sftp
 
 import logging
@@ -563,7 +563,7 @@ def schedule_settlement_BCD(
     logger.info("CB_settlement_path&&&: %s", CB_settlement_path)
     #TODO 1. FTP将生成的文件回传到归档服务器
     
-    upload_file_to_sftp("/download/"+BC_filename, BC_filename)
+    upload_file_to_sftp_task("/download/"+BC_filename, BC_filename)
 
     # 第一封邮件：C ➝ B
     task1 = send_reply_email_with_attachments.apply_async(
@@ -643,7 +643,7 @@ def schedule_settlement_BCD(
         countdown=delay1 * 60  # 相对第一封
     )
 
-    upload_file_to_sftp("/download/"+BD_filename, BD_filename)
+    ("/download/"+BD_filename, BD_filename)
 
 
     # 第三封邮件：D ➝ B

@@ -1,15 +1,21 @@
 
 # app/tasks.py
 # 处理B公司回复邮件的任务
-
+import os 
 import time
 from datetime import datetime, timedelta
 import smtplib
 from email.mime.text import MIMEText
 
+
+import paramiko
+
 from celery import Celery
 from sqlalchemy.orm import Session
 from app import email_utils, models, database
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 celery = Celery(
@@ -102,3 +108,51 @@ def send_reply_email_with_attachments(
     db.commit()
     db.refresh(record)
     return {"success": success, "error": error}
+
+
+def ensure_remote_dir(sftp: paramiko.SFTPClient, remote_dir: str):
+    dirs = remote_dir.strip("/").split("/")
+    current = ""
+    for d in dirs:
+        current += f"/{d}"
+        try:
+            sftp.stat(current)
+        except FileNotFoundError:
+            sftp.mkdir(current)
+
+@celery.task
+def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
+    """
+    异步上传文件到 SFTP，remote_filename 是文件名（会放在根目录或你定义的子目录中）
+    """
+    host = os.getenv("SFTP_HOST")
+    port = int(os.getenv("SFTP_PORT", "22"))
+    username = os.getenv("SFTP_USERNAME")
+    password = os.getenv("SFTP_PASSWORD")
+    REMOTE_PATH = os.getenv("REMOTE_PATH")
+
+    # remote_path = f"JZ/中港模式结算单/{remote_filename}"  # 你可以灵活改成传参
+
+    print("📂 上传文件：", local_file)
+    print("📁 目标路径：", REMOTE_PATH + filename)
+
+    try:
+        transport = paramiko.Transport((host, port))
+        transport.connect(username=username, password=password)
+        print("✅ 连接成功")
+
+        sftp = paramiko.SFTPClient.from_transport(transport)
+
+        remote_dir = os.path.dirname(REMOTE_PATH+local_file)
+        ensure_remote_dir(sftp, REMOTE_PATH+local_file)
+
+        sftp.put(local_file, REMOTE_PATH+local_file)
+        print(f"✅ 文件上传成功：{REMOTE_PATH+local_file}")
+
+        sftp.close()
+        transport.close()
+        return True
+
+    except Exception as e:
+        print("❌ 上传失败:", str(e))
+        return False
