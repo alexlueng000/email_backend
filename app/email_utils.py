@@ -212,6 +212,7 @@ def render_invitation_template_content(
     contract_number: str | None = None,
     winning_time: str | None = None,
     template_name: str | None = None,
+    c_company_name: str | None = None
 ):
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -234,7 +235,9 @@ def render_invitation_template_content(
         first_name=first_name,
         full_name=full_name,
         winning_amount=winning_amount,
-        contract_number=contract_number)
+        contract_number=contract_number,
+        c_company_name=c_company_name
+    )
     
 
     
