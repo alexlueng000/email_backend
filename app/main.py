@@ -208,6 +208,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                     "radioField_manpa6yh": "发送成功",
                     "textField_mbyq9ksm": now_str,
                     "textField_mbyq9ksn": now_str,
+                    "textField_mc8eps0i": "A1"
                 }
             )
             
@@ -265,6 +266,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                     "radioField_manpa6yh": "发送成功",
                     "textField_mbyq9ksm": now_str,
                     "textField_mbyq9ksn": now_str,
+                    "textField_mc8eps0i": "A1"
                 }
             )
         # 普利赛斯
@@ -317,6 +319,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                     "radioField_manpa6yh": "发送成功",
                     "textField_mbyq9ksm": now_str,
                     "textField_mbyq9ksn": now_str,
+                    "textField_mc8eps0i": "A1"
                 }
             )
 

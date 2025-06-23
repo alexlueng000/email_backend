@@ -28,7 +28,7 @@ def get_db_session():
     finally:
         db.close()
 
-def send_email(to, subject, body, smtp_config):
+def send_email(to, subject, body, smtp_config, stage):
     # print("✅ 执行同步 send_email 函数")
     message = EmailMessage()
     message["From"] = smtp_config["from"]
@@ -63,6 +63,7 @@ def send_email(to, subject, body, smtp_config):
                     "radioField_manpa6yh": "发送成功",
                     "textField_mbyq9ksm": now_str,
                     "textField_mbyq9ksn": now_str,
+                    "textField_mc8eps0i": stage
                 }
             )
 
@@ -88,7 +89,7 @@ def send_email_in_main(to: str, subject: str, body: str, smtp_config: dict):
 
 
 # 发送带附件的邮件
-def send_email_with_attachments(to_email, subject, content, smtp_config, attachments):
+def send_email_with_attachments(to_email, subject, content, smtp_config, attachments, stage):
     message = MIMEMultipart()
     message["From"] = smtp_config["from"]
     message["To"] = to_email
@@ -136,6 +137,7 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
                 "radioField_manpa6yh": "发送成功",
                 "textField_mbyk13kz": now_str,
                 "textField_mbyk13l0": now_str,
+                "textField_mc8eps0i": stage
             }
         )
 
