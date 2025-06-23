@@ -563,7 +563,7 @@ def schedule_settlement_BCD(
     logger.info("CB_settlement_path&&&: %s", CB_settlement_path)
     #TODO 1. FTP将生成的文件回传到归档服务器
     
-    upload_file_to_sftp_task("/download/"+BC_filename, BC_filename)
+    upload_file_to_sftp_task.delay("/download/"+BC_filename, BC_filename)
 
     # 第一封邮件：C ➝ B
     task1 = send_reply_email_with_attachments.apply_async(
@@ -643,7 +643,7 @@ def schedule_settlement_BCD(
         countdown=delay1 * 60  # 相对第一封
     )
 
-    ("/download/"+BD_filename, BD_filename)
+    upload_file_to_sftp_task.delay("/download/"+BD_filename, BD_filename)
 
 
     # 第三封邮件：D ➝ B
@@ -814,7 +814,7 @@ def schedule_settlement_CCD_BD(
         countdown=0 # 立即
     )
 
-    upload_file_to_sftp("/download/"+BD_filename, BD_filename)
+    upload_file_to_sftp_task.delay("/download/"+BD_filename, BD_filename)
 
     create_yida_form_instance(
         access_token=get_dingtalk_access_token(),
