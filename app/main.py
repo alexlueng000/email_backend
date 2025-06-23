@@ -542,6 +542,8 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         models.ProjectFeeDetails.project_id == project.id
     ).first().winning_time
 
+    logger.info("获取到的中标金额为%s，中标时间为%s", winning_amount, winning_time)
+
     if project.project_type != '': # 说明之前已经判断过了项目类型，是D公司信息有修改的情况
         # D值有修改时再次触发发邮件（如从领先修改为PLSS），但是为CD值互换的时候不触发
         if project.company_d_name == c_company_name and project.company_c_name == d_company_name:
