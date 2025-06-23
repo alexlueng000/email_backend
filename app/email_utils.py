@@ -100,7 +100,7 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
     from app import database
     db = database.SessionLocal()
     from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
-    to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
+    to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to_email).first()
 
 
     # 添加附件
