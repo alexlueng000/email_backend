@@ -140,6 +140,9 @@ def upload_file_to_sftp(local_file: str, filename: str) -> bool:
     password = os.getenv("SFTP_PASSWORD")
     remote_path = os.getenv("REMOTE_PATH")
 
+    print("📂 上传文件：", local_file)
+    print("📁 目标路径：", remote_path + filename)
+
     try:
         transport = paramiko.Transport((host, port))
         transport.connect(username=username, password=password)
