@@ -558,23 +558,6 @@ def schedule_settlement_BCD(
         countdown=0  # 立即
     )
 
-    create_yida_form_instance(
-        access_token=get_dingtalk_access_token(),
-        user_id=os.getenv("USER_ID"),
-        app_type=os.getenv("APP_TYPE"),
-        system_token=os.getenv("SYSTEM_TOKEN"),
-        form_uuid=os.getenv("FORM_UUID"),
-        form_data={
-            "textField_m8sdofy7": b_company.company_name,
-            "textField_m8sdofy8": c_company.company_name,
-            "textfield_G00FCbMy": c_email_subject_c7,
-            "editorField_m8sdofy9": c_email_content_c7,
-            "radioField_manpa6yh": "发送成功",
-            "textField_mbyq9ksm": now_str,
-            "textField_mbyq9ksn": now_str,
-        }
-    )
-
     # 第二封邮件：B ➝ D
     # 随机延迟 5–60 分钟发出B-D间结算单
     b_email_subject_c8 = email_utils.render_email_subject(
@@ -803,22 +786,6 @@ def schedule_settlement_CCD_BD(
 
     upload_file_to_sftp_task.delay("~/settlements/"+BD_filename, BD_filename)
 
-    create_yida_form_instance(
-        access_token=get_dingtalk_access_token(),
-        user_id=os.getenv("USER_ID"),
-        app_type=os.getenv("APP_TYPE"),
-        system_token=os.getenv("SYSTEM_TOKEN"),
-        form_uuid=os.getenv("FORM_UUID"),
-        form_data={
-            "textField_m8sdofy7": b_company.company_name,
-            "textField_m8sdofy8": d_company.company_name,
-            "textfield_G00FCbMy": b_email_subject_c8,
-            "editorField_m8sdofy9": b_email_content_c8,
-            "radioField_manpa6yh": "待发送",
-            "textField_mbyk13kz": now_str,
-            "textField_mbyk13l0": now_str,
-        }
-    )
 
     # 第二封邮件：D ➝ B
     # 随机延迟 5–60 分钟发出D-B间结算单确认
