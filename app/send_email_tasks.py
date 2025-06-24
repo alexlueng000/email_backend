@@ -518,7 +518,7 @@ def schedule_settlement_BCD(
     )
     logger.info("c_email_subject_c7:%s, %s ", contract_serial_number, c_email_subject_c7)
     c_email_content_c7 = email_utils.render_invitation_template_content(
-        buyer_name="", 
+        buyer_name=b_company.company_name, 
         project_name=project_name, 
         serial_number=contract_serial_number,
         first_name=b_company.last_name,
@@ -573,13 +573,15 @@ def schedule_settlement_BCD(
     )
     print("b_email_subject_c8: ", b_email_subject_c8)
     b_email_content_c8 = email_utils.render_invitation_template_content(
-        buyer_name=purchase_department, 
+        buyer_name=d_company.company_name, 
         project_name=project_name, 
         first_name=d_company.last_name,
+        full_name=d_company.contact_person,
         serial_number=contract_serial_number,
         contract_number=contract_number,
         winning_amount=str(amount),
         winning_time=winning_time,
+        c_company_name=c_company.company_name,
         template_name="C8_"+b_company.short_name+".html"
     )
 
