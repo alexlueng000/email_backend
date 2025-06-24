@@ -112,6 +112,9 @@ class ProjectFeeDetails(Base):
     document_purchase_fee = Column(DECIMAL(15, 2), nullable=True)   # 购买标书费
     tender_service_fee = Column(DECIMAL(15, 2), nullable=True)      # 投标服务费
 
+    # 是否发送过结算单
+    is_sent = Column(Boolean, default=False, nullable=False)
+
     # 时间戳
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
