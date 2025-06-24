@@ -89,10 +89,7 @@ def generate_common_settlement_excel(
 
     # 实收表头
     ws["A5"] = "序号"
-    if project_type == "BCD" and stage == "C7":
-        ws["B5"] = "中标金额（RMB）"
-    else:
-        ws["B5"] = "收款金额（RMB）"
+    ws["B5"] = "中标金额（RMB）"
     ws["A5"].font = ws["B5"].font = bold_font
     ws["A5"].alignment = ws["B5"].alignment = center
     apply_border("A5:C5")
