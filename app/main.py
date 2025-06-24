@@ -729,10 +729,24 @@ def settlement(
 
     logger.info("4结算|请求参数：%s", req.model_dump())
 
+
     project_information = db.query(models.ProjectInfo).filter_by(contract_number=req.contract_number).first()
     if not project_information:
         logger.info("没有找到项目信息，不发送邮件，合同号为: %s", req.contract_number)
         return {"message": "没有找到项目信息"}
+
+    # 已经发送过结算单的，不用再发送
+    is_sent = project_information.fee_details.is_sent
+    if is_sent:
+        return {"message": "已经发送过结算单，不用再发送"}
+
+    # 如果 third_party_fee 为空或是空字符串
+    if req.three_fourth is None :
+        return {"message": "三方/四方货款（RMB）没有值，不发送邮件"}
+
+    # 如果 service_fee 为空或是空字符串
+    if req.import_service_fee is None :
+        return {"message": "C进口服务费（RMB）没有值，不发送邮件"}
 
     def clean_decimal(val):
         return 0 if val == "" else float(val)
@@ -821,6 +835,13 @@ def settlement(
         BD_download_url = result["BD_download_url"]
 
     logger.info("BC_download_url: %s, BD_download_url: %s", BC_download_url, BD_download_url)
+
+    # 更新project_fee_details表中的is_sent字段
+    fee = project_information.fee_details
+    fee.is_sent = True
+    db.add(fee)
+    db.commit()
+    db.refresh(fee)
 
     return {
         "message": f"结算邮件已成功发送，合同号为{req.contract_number}",

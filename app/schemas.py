@@ -164,24 +164,24 @@ class ContractAuditRequest(BaseModel):
 
 # 结算
 class SettlementRequest(BaseModel):
-    project_name: str # 项目名称
-    l_serial_number: str # L流水号
-    p_serial_number: str # P流水号
-    f_serial_number: str # F流水号
-    contract_number: str # 合同号
-    contract_serial_number: str # 合同流水号
-    company_b_name: str # B公司-中标商
-    company_c_name: str # C公司
-    company_d_name: str # D公司
-    contract_type: str # 合同类型
-    amount: Union[str, float]
-    three_fourth: Union[str, float]
-    import_service_fee: Union[str, float]
-    third_party_fee: Union[str, float]
-    service_fee: Union[str, float]
-    win_bidding_fee: Union[str, float]
-    bidding_document_fee: Union[str, float]
-    bidding_service_fee: Union[str, float]
+    project_name: str
+    l_serial_number: str
+    p_serial_number: str
+    f_serial_number: str
+    contract_number: str
+    contract_serial_number: str
+    company_b_name: str
+    company_c_name: str
+    company_d_name: str
+    contract_type: str
 
+    amount: Optional[Union[str, float]] = None
+    three_fourth: Optional[Union[str, float]] = None
+    import_service_fee: Optional[Union[str, float]] = None
+    third_party_fee: Optional[Union[str, float]] = None
+    service_fee: Optional[Union[str, float]] = None
+    win_bidding_fee: Optional[Union[str, float]] = None
+    bidding_document_fee: Optional[Union[str, float]] = None
+    bidding_service_fee: Optional[Union[str, float]] = None
 
     

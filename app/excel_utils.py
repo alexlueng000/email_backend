@@ -151,8 +151,8 @@ def generate_common_settlement_excel(
     balance_row = subtotal_row + 2
     ws.merge_cells(f"A{balance_row}:B{balance_row}")
     ws[f"A{balance_row}"] = "结算款(RMB)："
-    ws[f"A{balance_row}"].alignment = Alignment(horizontal="right")
-    ws[f"C{balance_row}"] = f"=B6 - C{subtotal_row}"  # 正确的结算公式
+    ws[f"B{balance_row}"] = "实收款项-应收账款="
+    ws[f"C{balance_row}"] = f"=B6 - C{subtotal_row}"
     ws[f"C{balance_row}"].number_format = "#,##0.00"
     apply_border(f"A{balance_row}:C{balance_row}")
 

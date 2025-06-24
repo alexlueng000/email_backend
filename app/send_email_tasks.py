@@ -602,8 +602,8 @@ def schedule_settlement_BCD(
             ("标书费", bidding_document_fee),
             ("投标服务费", bidding_service_fee)
         ],
-        head_company_name=b_company.company_name,
-        bottom_company_name=d_company.company_name
+        head_company_name=d_company.company_name,
+        bottom_company_name=b_company.company_name
     )
     logger.info("BD_settlement_path&&&: %s", BD_settlement_path)
     # delay1 = random.randint(5, 60)
