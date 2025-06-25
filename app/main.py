@@ -490,6 +490,10 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         logger.info("没有找到项目信息，不发送邮件")
         return {"message": "没有找到项目信息，不发送邮件"}
 
+    # 保存旧的C公司和D公司名称，用于判断CD值是否互换
+    old_c_company_name = project.company_c_name
+    old_d_company_name = project.company_d_name
+
 
     # C公司名字是有三方/四方合同的 selectField_l7ps2ca6 的值
     c_company_name = next(
@@ -499,9 +503,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 
     # 更新project_info表中的C公司信息
     project.company_c_name = c_company_name
-    db.add(project)
-    db.commit()
-    db.refresh(project)
+    # db.add(project)
+    # db.commit()
+    # db.refresh(project)
     
     # D公司名字是 selectField_l7ps2ca7 的值
     d_company_name = next(
@@ -511,9 +515,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     
     # 更新project_info表中的D公司信息
     project.company_d_name = d_company_name
-    db.add(project)
-    db.commit()
-    db.refresh(project)
+    # db.add(project)
+    # db.commit()
+    # db.refresh(project)
 
     # 项目流水号是根据D公司的值来确认的
     d_company = db.query(models.CompanyInfo).filter(
@@ -535,81 +539,78 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 
 
     # 从project_fee_details表中获取中标金额，中标时间
-    winning_amount = db.query(models.ProjectFeeDetails).filter(
+    fee_details = db.query(models.ProjectFeeDetails).filter(
         models.ProjectFeeDetails.project_id == project.id
-    ).first().winning_amount
-    winning_time = db.query(models.ProjectFeeDetails).filter(
-        models.ProjectFeeDetails.project_id == project.id
-    ).first().winning_time
+    ).first()
+    winning_amount = fee_details.winning_amount if fee_details else None
+    winning_time = fee_details.winning_time if fee_details else None
 
     logger.info("获取到的中标金额为%s，中标时间为%s", winning_amount, winning_time)
 
-    if project.project_type != '': # 说明之前已经判断过了项目类型，是D公司信息有修改的情况
-        # D值有修改时再次触发发邮件（如从领先修改为PLSS），但是为CD值互换的时候不触发
-        if project.company_d_name == c_company_name and project.company_c_name == d_company_name:
-            logger.info("CD值互换的时候不触发发邮件，CD公司名称分别为%s和%s", project.company_c_name, project.company_d_name)
-            return {"message": "CD值互换的时候不触发发邮件"}
-        else:
-            logger.info("D公司信息有修改，再次触发发邮件，D公司名称分别为%s", d_company_name)
-            # 更新project_info的D公司信息
-            project.company_d_name = d_company_name
-            db.add(project)
-            db.commit()
-            db.refresh(project)
- 
-            # 再次触发发邮件
-            b_company = db.query(models.CompanyInfo).filter(
-                models.CompanyInfo.company_name == project.company_b_name
-            ).first()
-            c_company = db.query(models.CompanyInfo).filter(
-                models.CompanyInfo.company_name == c_company_name
-            ).first()
-            d_company = db.query(models.CompanyInfo).filter(
-                models.CompanyInfo.company_name == d_company_name
-            ).first()
 
-            if project.project_type == 'BCD':
-                send_email_tasks.schedule_bid_conversation_BCD(
-                    b_company=b_company,
-                    c_company=c_company,
-                    d_company=d_company,
-                    contract_serial_number=actual_serial_number,
-                    project_name=project.project_name,
-                    winning_amount=winning_amount,
-                    winning_time=winning_time,
-                    contract_number=project.contract_number,
-                    purchase_department=project.purchaser,
-                    tender_number=project.tender_number
-                )
-            elif project.project_type == 'CCD':
-                send_email_tasks.schedule_bid_conversation_CCD(
-                    b_company=b_company,
-                    c_company=c_company,
-                    d_company=d_company,
-                    contract_serial_number=actual_serial_number,
-                    project_name=project.project_name,
-                    winning_amount=winning_amount,
-                    winning_time=winning_time,
-                    contract_number=project.contract_number,
-                    purchase_department=project.purchaser,
-                    tender_number=project.tender_number
-                )
-            elif project.project_type == 'BD':
-                send_email_tasks.schedule_bid_conversation_BD(
-                    b_company=b_company,
-                    d_company=d_company,
-                    contract_serial_number=actual_serial_number,
-                    project_name=project.project_name,
-                    winning_amount=winning_amount,
-                    winning_time=winning_time,
-                    contract_number=project.contract_number,
-                    purchase_department=project.purchaser,
-                    tender_number=project.tender_number
-                )
-            return {
-                "message": f"合同审批阶段邮件已成功发送，合同号为{req.contract_number}",
-                "project_type": project.project_type
-            }
+    if project.project_type: # 说明之前已经判断过了项目类型，是D公司信息有修改的情况
+        if old_d_company_name != d_company_name:
+            # D值有修改时再次触发发邮件（如从领先修改为PLSS），但是为CD值互换的时候不触发
+            if old_c_company_name == d_company_name and old_d_company_name == c_company_name:
+                logger.info("CD值互换的时候不触发发邮件，CD公司名称分别为%s和%s", old_c_company_name, old_d_company_name)
+                return {"message": "CD值互换的时候不触发发邮件"}
+            else:
+                logger.info("D公司信息有修改，再次触发发邮件，D公司名称分别为%s", d_company_name)
+                
+ 
+                # 再次触发发邮件
+                b_company = db.query(models.CompanyInfo).filter(
+                    models.CompanyInfo.company_name == project.company_b_name
+                ).first()
+                c_company = db.query(models.CompanyInfo).filter(
+                    models.CompanyInfo.company_name == c_company_name
+                ).first()
+                d_company = db.query(models.CompanyInfo).filter(
+                    models.CompanyInfo.company_name == d_company_name
+                ).first()
+
+                if project.project_type == 'BCD':
+                    send_email_tasks.schedule_bid_conversation_BCD(
+                        b_company=b_company,
+                        c_company=c_company,
+                        d_company=d_company,
+                        contract_serial_number=actual_serial_number,
+                        project_name=project.project_name,
+                        winning_amount=winning_amount,
+                        winning_time=winning_time,
+                        contract_number=project.contract_number,
+                        purchase_department=project.purchaser,
+                        tender_number=project.tender_number
+                    )
+                elif project.project_type == 'CCD':
+                    send_email_tasks.schedule_bid_conversation_CCD(
+                        b_company=b_company,
+                        c_company=c_company,
+                        d_company=d_company,
+                        contract_serial_number=actual_serial_number,
+                        project_name=project.project_name,
+                        winning_amount=winning_amount,
+                        winning_time=winning_time,
+                        contract_number=project.contract_number,
+                        purchase_department=project.purchaser,
+                        tender_number=project.tender_number
+                    )
+                elif project.project_type == 'BD':
+                    send_email_tasks.schedule_bid_conversation_BD(
+                        b_company=b_company,
+                        d_company=d_company,
+                        contract_serial_number=actual_serial_number,
+                        project_name=project.project_name,
+                        winning_amount=winning_amount,
+                        winning_time=winning_time,
+                        contract_number=project.contract_number,
+                        purchase_department=project.purchaser,
+                        tender_number=project.tender_number
+                    )
+                return {
+                    "message": f"D值修改，再次触发合同审批阶段邮件发送，合同号为{req.contract_number}",
+                    "project_type": project.project_type
+                }
 
     # 项目类型
     project_type = ''           
