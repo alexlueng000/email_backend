@@ -7,8 +7,10 @@ from contextlib import contextmanager
 
 from app import database, models, email_utils, excel_utils
 from app.utils import get_dingtalk_access_token, create_yida_form_instance
-from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task
-from app.utils import simplify_to_traditional, upload_file_to_sftp
+from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task, send_email_with_followup
+from app.utils import simplify_to_traditional
+
+from celery import chain
 
 import logging
 
@@ -95,10 +97,10 @@ def schedule_bid_conversation_BCD(
     print("B3-B公司邮件主题：", b_email_subject_b3)
     
     # 第一封邮件：B ➝ C（立即）
-    task1 = send_reply_email.apply_async(
-        args=[c_email, b_email_subject_b3, b_email_content_b3, b_smtp, 0, "B3", project_info.id],
-        countdown=0  # 立即
-    )
+    # task1 = send_reply_email.apply_async(
+    #     args=[c_email, b_email_subject_b3, b_email_content_b3, b_smtp, 0, "B3", project_info.id],
+    #     countdown=0  # 立即
+    # )
 
     # 第二封邮件：C ➝ B 回复
     # 随机延迟 5–60 分钟
@@ -126,11 +128,11 @@ def schedule_bid_conversation_BCD(
         template_name="B4_"+c_company.short_name+".html")
     
     # delay2 = random.randint(5, 60)
-    delay2 =  1
-    task2 = send_reply_email.apply_async(
-        args=[b_email, c_email_subject_b4, c_email_content_b4, c_smtp, delay2, "B4", project_info.id],
-        countdown=delay2 * 60  # 相对第一封
-    )
+    # delay2 =  1
+    # task2 = send_reply_email.apply_async(
+    #     args=[b_email, c_email_subject_b4, c_email_content_b4, c_smtp, delay2, "B4", project_info.id],
+    #     countdown=delay2 * 60  # 相对第一封
+    # )
 
     # 第三封：B ➝ D（延迟第2封基础上 5–60分钟）
     b_email_subject_b5 = email_utils.render_email_subject(
@@ -160,11 +162,11 @@ def schedule_bid_conversation_BCD(
     )
 
     # delay3 = delay2 + random.randint(5, 60)
-    delay3 = delay2 + 1
-    task3 = send_reply_email.apply_async(
-        args=[d_email, b_email_subject_b5, b_email_content_b5, b_smtp, delay3, "B5", project_info.id],
-        countdown=delay3 * 60
-    )
+    # delay3 = delay2 + 1
+    # task3 = send_reply_email.apply_async(
+    #     args=[d_email, b_email_subject_b5, b_email_content_b5, b_smtp, delay3, "B5", project_info.id],
+    #     countdown=delay3 * 60
+    # )
 
 
     # 第四封：D ➝ B（在第3封后延迟 5–60分钟）
@@ -194,11 +196,56 @@ def schedule_bid_conversation_BCD(
         template_name="B6_"+d_company.short_name+".html"
     )
     # delay4 = delay3 + random.randint(5, 60)
-    delay4 = delay3 + 1
-    task4 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp, delay4, "B6", project_info.id],
-        countdown=delay4 * 60
-    )
+    # delay4 = delay3 + 1
+    # task4 = send_reply_email.apply_async(
+    #     args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp, delay4, "B6", project_info.id],
+    #     countdown=delay4 * 60
+    # )
+
+    # 最后一封邮件任务（无 follow-up）D - B
+    task_b6 = {
+        "to_email": b_company.email,
+        "subject": d_email_subject_b6,
+        "content": d_email_content_b6,
+        "smtp_config": d_smtp,
+        "stage": "B6",
+        "project_id": project_info.id
+    }
+
+    # 第三封邮件 B ➝ D（成功后再发 B6）
+    task_b5 = {
+        "to_email": d_company.email,
+        "subject": b_email_subject_b5,
+        "content": b_email_content_b5,
+        "smtp_config": b_smtp,
+        "stage": "B5",
+        "project_id": project_info.id,
+        "followup_task_args": task_b6
+    }
+
+    # 第二封邮件 C ➝ B（成功后再发 B5）
+    task_b4 = {
+        "to_email": b_company.email,
+        "subject": c_email_subject_b4,
+        "content": c_email_content_b4,
+        "smtp_config": c_smtp,
+        "stage": "B4",
+        "project_id": project_info.id,
+        "followup_task_args": task_b5
+    }
+
+    # 第一封邮件 B ➝ C（成功后再发 B4）
+    task_b3 = {
+        "to_email": c_company.email,
+        "subject": b_email_subject_b3,
+        "content": b_email_content_b3,
+        "smtp_config": b_smtp,
+        "stage": "B3",
+        "project_id": project_info.id,
+        "followup_task_args": task_b4
+    }
+
+    send_email_with_followup.apply_async(kwargs=task_b3)
 
     return {"message": "email sent!"}
 
@@ -214,7 +261,7 @@ def schedule_bid_conversation_CCD(
     winning_time: str,
     contract_number: str,
     project_name: str,
-    purchase_department: str,
+    purchase_department: str, 
     tender_number: str
 ):
 
