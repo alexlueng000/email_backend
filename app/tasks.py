@@ -189,7 +189,7 @@ def ensure_remote_dir(sftp: paramiko.SFTPClient, remote_dir: str):
             sftp.mkdir(current)
 
 @celery.task(bind=True, max_retries=3, default_retry_delay=60)
-def upload_file_to_sftp_task(local_file: str, filename: str) -> bool:
+def upload_file_to_sftp_task(self, local_file: str, filename: str) -> bool:
     """
     异步上传文件到 SFTP，remote_filename 是文件名（会放在根目录或你定义的子目录中）
     """
