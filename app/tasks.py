@@ -45,7 +45,7 @@ def send_sync_email(to_email, subject, content, smtp_config):
 
 
 @celery.task(bind=True, max_retries=3, default_retry_delay=60)
-def send_reply_email(to_email: str, subject: str, content: str, smtp_config: dict, delay: int, stage: str, project_id: int):
+def send_reply_email(self, to_email: str, subject: str, content: str, smtp_config: dict, delay: int, stage: str, project_id: int):
     from app import database
     db = database.SessionLocal()
 
