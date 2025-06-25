@@ -135,6 +135,7 @@ def send_email_with_followup(
 
 @celery.task(bind=True, max_retries=3, default_retry_delay=60)
 def send_reply_email_with_attachments(
+    self,
     to_email: str, 
     subject: str, 
     content: str, 
