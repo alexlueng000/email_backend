@@ -655,6 +655,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 
     # BCD 类型项目
     if project_type == 'BCD':
+        logger.info("BCD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_BCD(
             b_company=b_company,
             c_company=c_company,
@@ -669,6 +670,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         )
     # CCD 类型项目
     elif project_type == 'CCD':
+        logger.info("CCD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_CCD(
             b_company=b_company,
             # c_company=c_company,
@@ -683,6 +685,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         )
     # BD 类型项目
     else:
+        logger.info("BD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_BD(
             b_company=b_company,
             d_company=d_company,

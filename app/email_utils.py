@@ -179,15 +179,15 @@ def render_email_subject(
             return f"{stage}_{company_short_name}_{project_name}"
         
         return subject.subject.format(
-            company_name=subject.company_name,
-            short_name=subject.short_name,
-            project_name=project_name,
-            serial_number=serial_number,
-            contract_number=contract_number,
-            contract_amount=winning_amount,
-            winning_time=winning_time,
-            tender_number=tender_number,
-            purchase_department=purchase_department
+            company_name=subject.company_name or "",
+            short_name=subject.short_name or "",
+            project_name=project_name or "",
+            serial_number=serial_number or "",
+            contract_number=contract_number or "",
+            contract_amount=winning_amount or "",
+            winning_time=winning_time or "",
+            tender_number=tender_number or "", 
+            purchase_department=purchase_department or ""
         )
 
 
