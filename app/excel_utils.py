@@ -11,14 +11,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-sftp_host = os.getenv("SFTP_HOST")       # 如 szsyjz.vicp.io
-sftp_port = os.getenv("SFTP_PORT")                      # 如果你通过 FRP 映射的是其他端口，比如 10022，就写对应端口
-sftp_user = os.getenv("SFTP_USER")       # 注意是 SSH 用户，通常是 admin 或你创建的用户
-sftp_pass = os.getenv("SFTP_PASS")
-# local_file = r"E:\code_projects\syjz_emails\backend\app\scripts\test.txt"        # 本地要上传的文件
-remote_path = "JZ/中港模式结算单/"  # 群晖上目标路径，注意要有写权限
-
-
 def generate_common_settlement_excel(
     filename: str,
     stage: str,
@@ -65,7 +57,7 @@ def generate_common_settlement_excel(
                 cell.border = border
 
     # 列宽
-    ws.column_dimensions["A"].width = 8
+    ws.column_dimensions["A"].width = 14
     ws.column_dimensions["B"].width = 25
     ws.column_dimensions["C"].width = 20
 
@@ -98,6 +90,8 @@ def generate_common_settlement_excel(
     ws["A6"] = "1"
     ws["B6"] = received_amount
     ws["B6"].number_format = "#,##0.00"
+    ws["A6"].alignment = center
+    ws["B6"].alignment = center
     apply_border("A6:C6")
 
     # 应收账款标题
@@ -118,6 +112,7 @@ def generate_common_settlement_excel(
     for i, (item, amount) in enumerate(receivable_items, start=1):
         row = 9 + i
         ws[f"A{row}"] = i
+        ws[f"A{row}"].alignment = center
         ws[f"B{row}"] = item
         try:
             ws[f"C{row}"] = float(amount) if amount not in ("", None) else 0
@@ -148,6 +143,8 @@ def generate_common_settlement_excel(
     balance_row = subtotal_row + 2
     # ws.merge_cells(f"A{balance_row}:B{balance_row}")
     ws[f"A{balance_row}"] = "结算款(RMB)："
+    ws[f"A{balance_row}"].font = Font(bold=True)
+    
     ws[f"B{balance_row}"] = "实收款项-应收账款="
     ws[f"C{balance_row}"] = f"=B6 - C{subtotal_row}"
     ws[f"C{balance_row}"].number_format = "#,##0.00"
@@ -163,25 +160,4 @@ def generate_common_settlement_excel(
 
     wb.save(file_path)
     
-    #TODO 上传文件到共享服务器
-    try:
-        transport = paramiko.Transport((sftp_host, sftp_port))
-        transport.connect(username=sftp_user, password=sftp_pass)
-        print("✅ FTP连接成功")
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        remote_pathfile = f"{remote_path}/{filename}"
-        print("local file: ", file_path)
-        print("remote path: ", remote_pathfile)
-
-        sftp.put(file_path, remote_pathfile)
-
-        print("✅ 文件上传成功")
-        sftp.close()
-        transport.close()
-
-    except Exception as e:
-        print("❌ 上传失败:", str(e))
-
-
-
     return file_path
