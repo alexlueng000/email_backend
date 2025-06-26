@@ -1,10 +1,13 @@
 # app/main.py
 import os
+import re
 
 from pathlib import Path
 from datetime import datetime
 from decimal import Decimal
-import logging
+from typing import TypeVar
+from pydantic import BaseModel
+
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -15,15 +18,26 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks
-
 from app.utils import get_dingtalk_access_token, create_yida_form_instance, simplify_to_traditional
-
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
 load_dotenv()
 
 logger = setup_logger(__name__)
+
+T = TypeVar('T', bound=BaseModel)
+
+def strip_request_fields(req: T) -> T:
+    """
+    去除所有字符串字段两端的空白字符，包括普通空格、不间断空格（\xa0）和全角空格（\u3000）。
+    适用于任意继承自 BaseModel 的 Pydantic 请求对象。
+    """
+    for field, value in req.__dict__.items():
+        if isinstance(value, str):
+            cleaned = re.sub(r'^[\s\u00A0\u3000]+|[\s\u00A0\u3000]+$', '', value)
+            setattr(req, field, cleaned)
+    return req
 
 app = FastAPI()
 
@@ -86,16 +100,8 @@ def ping_db():
 @project_name: 项目名称 （必有）
 @bidding_code: 招标编号 （可能为空）
 """
-def strip_request_fields(req: schemas.BiddingRegisterRequest) -> schemas.BiddingRegisterRequest:
-    """
-    去除请求参数中所有字符串字段的首尾空白字符（包括空格和不间断空格）。
-    """
-    for field, value in req.__dict__.items():
-        if isinstance(value, str):
-            # 替换所有 \xa0 为普通空格，然后 strip()
-            cleaned = value.replace('\xa0', ' ').strip()
-            setattr(req, field, cleaned)
-    return req
+
+
 
 @app.post("/receive_bidding_register")
 async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Session = Depends(database.get_db)):
@@ -513,24 +519,18 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         (contract.selectField_l7ps2ca6 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同"),
         None
     )
-
     # 更新project_info表中的C公司信息
     project.company_c_name = c_company_name
-    # db.add(project)
-    # db.commit()
-    # db.refresh(project)
+
     
     # D公司名字是 selectField_l7ps2ca7 的值
     d_company_name = next(
         (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同"),
         None
     )
-    
     # 更新project_info表中的D公司信息
     project.company_d_name = d_company_name
-    # db.add(project)
-    # db.commit()
-    # db.refresh(project)
+
 
     # 项目流水号是根据D公司的值来确认的
     d_company = db.query(models.CompanyInfo).filter(
@@ -624,6 +624,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
                     "message": f"D值修改，再次触发合同审批阶段邮件发送，合同号为{req.contract_number}",
                     "project_type": project.project_type
                 }
+        else:
+            logger.info("D值没有修改，已经发送过邮件，不再触发发邮件，合同号：%s", project.contract_number)
+            return {"message": "D值没有修改，已经发送过邮件，不再触发发邮件"}
 
     # 项目类型
     project_type = ''           
