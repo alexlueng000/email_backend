@@ -86,10 +86,23 @@ def ping_db():
 @project_name: 项目名称 （必有）
 @bidding_code: 招标编号 （可能为空）
 """
+def strip_request_fields(req: schemas.BiddingRegisterRequest) -> schemas.BiddingRegisterRequest:
+    """
+    去除请求参数中所有字符串字段的首尾空白字符（包括空格和不间断空格）。
+    """
+    for field, value in req.__dict__.items():
+        if isinstance(value, str):
+            # 替换所有 \xa0 为普通空格，然后 strip()
+            cleaned = value.replace('\xa0', ' ').strip()
+            setattr(req, field, cleaned)
+    return req
+
 @app.post("/receive_bidding_register")
 async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Session = Depends(database.get_db)):
 
     logger.info("1委托投标登记|请求参数：%s", req.model_dump())
+
+    req = strip_request_fields(req)
 
     # 新增一条项目信息
     project_info = models.ProjectInfo(
