@@ -88,7 +88,7 @@ def generate_common_settlement_excel(
 
     # 实收数据
     ws["A6"] = "1"
-    ws["B6"] = received_amount
+    ws["B6"] = float(received_amount)
     ws["B6"].number_format = "#,##0.00"
     ws["A6"].alignment = center
     ws["B6"].alignment = center

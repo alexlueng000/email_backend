@@ -761,7 +761,7 @@ def settlement(
         return {"message": "已经发送过结算单，不用再发送"}
 
     # 如果 third_party_fee 为空或是空字符串
-    if req.three_fourth is None  or (isinstance(req.third_party_fee, str) and req.third_party_fee.strip() == ""):
+    if req.three_fourth is None  or (isinstance(req.three_fourth, str) and req.third_party_fee.strip() == ""):
         return {"message": "三方/四方货款（RMB）没有值，不发送邮件"}
 
     # 如果 service_fee 为空或是空字符串
