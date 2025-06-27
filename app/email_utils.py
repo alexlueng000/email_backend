@@ -42,7 +42,7 @@ def send_email(to, subject, body, smtp_config, stage):
     to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
 
     try:
-        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"]) as smtp:
+        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10) as smtp:
             smtp.login(smtp_config["username"], smtp_config["password"])
             smtp.send_message(message)
 
@@ -115,7 +115,7 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
             return False, f"附件读取失败: {file_path}，错误信息：{str(e)}"
 
     try:
-        server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"])
+        server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10)
         server.login(smtp_config["username"], smtp_config["password"])
         server.sendmail(smtp_config["from"], [to_email], message.as_string())
         server.quit()
