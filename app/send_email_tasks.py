@@ -94,7 +94,7 @@ def schedule_bid_conversation_BCD(
         template_name="B3_"+b_company.short_name+".html"
     )
     
-    print("B3-B公司邮件主题：", b_email_subject_b3)
+    logger.info("B3-B公司邮件主题：%s", b_email_subject_b3)
     
     # 第一封邮件：B ➝ C（立即）
     # task1 = send_reply_email.apply_async(
@@ -116,7 +116,7 @@ def schedule_bid_conversation_BCD(
         contract_number=contract_number
     )
     
-    print("B4-C公司邮件主题：", c_email_subject_b4)
+    logger.info("B4-C公司邮件主题：%s", c_email_subject_b4)
     
     c_email_content_b4 = email_utils.render_invitation_template_content(
         buyer_name=c_company.company_name, 
@@ -145,7 +145,7 @@ def schedule_bid_conversation_BCD(
         winning_time=winning_time
     )
     
-    print("B5-B公司邮件主题：", b_email_subject_b5)
+    logger.info("B5-B公司邮件主题：%s", b_email_subject_b5)
     logger.info("C公司名称：%s", c_company.company_name)
     
     b_email_content_b5 = email_utils.render_invitation_template_content(
@@ -182,7 +182,7 @@ def schedule_bid_conversation_BCD(
         contract_number=contract_number
     )
     
-    print("B6-D公司邮件主题：", d_email_subject_b6)
+    logger.info("B6-D公司邮件主题：%s", d_email_subject_b6)
     
     d_email_content_b6 = email_utils.render_invitation_template_content(
         buyer_name=d_company.company_name, 
@@ -265,6 +265,9 @@ def schedule_bid_conversation_CCD(
     tender_number: str
 ):
 
+    with get_db_session() as db:
+        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -309,13 +312,13 @@ def schedule_bid_conversation_CCD(
         template_name="B5_"+b_company.short_name+"_SPEC.html"
     )
     
-    print("CCB B5-C公司邮件主题：", c_email_subject_b5)
+    logger.info("CCB B5-C公司邮件主题：%s", c_email_subject_b5)
     
     # 第一封邮件：B ➝ D（立即）
-    task1 = send_reply_email.apply_async(
-        args=[d_email, c_email_subject_b5, c_email_content_b5, b_smtp],
-        countdown=0  # 立即
-    )
+    # task1 = send_reply_email.apply_async(
+    #     args=[d_email, c_email_subject_b5, c_email_content_b5, b_smtp],
+    #     countdown=0  # 立即
+    # )
 
     # 第二封邮件：D ➝ B（随机延迟 5–60 分钟）
     # 随机延迟 5–60 分钟
@@ -341,20 +344,37 @@ def schedule_bid_conversation_CCD(
         template_name="B6_"+d_company.short_name+".html"
     )
     # delay = random.randint(5, 60)
-    delay = 1
-    task2 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp],
-        countdown=delay * 60
-    )
+    # delay = 1
+    # task2 = send_reply_email.apply_async(
+    #     args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp],
+    #     countdown=delay * 60
+    # )
 
-    now = datetime.now()
-    actual_send_time_str = (now + timedelta(minutes=delay)).strftime("%Y-%m-%d %H:%M")
+    # 第二封邮件：D ➝ B（随机延迟 5–60 分钟）
+    task_b6 = {
+        "to_email": b_company.email,
+        "subject": d_email_subject_b6,
+        "content": d_email_content_b6,
+        "smtp_config": d_smtp,
+        "stage": "B6",
+        "project_id": project_info.id
+    }
+
+    # 第一封邮件：B ➝ D（成功后再发 B6）
+    task_b5 = {
+        "to_email": d_company.email,
+        "subject": c_email_subject_b5,
+        "content": c_email_content_b5,
+        "smtp_config": b_smtp,
+        "stage": "B5",
+        "project_id": project_info.id,
+        "followup_task_args": task_b6
+    }
+
+    send_email_with_followup.apply_async(kwargs=task_b5)
 
     return {
-        "tasks": [
-            {"step": "B ➝ D", "task_id": task1.id, "delay_min": 0},
-            {"step": "D ➝ B", "task_id": task2.id, "delay_min": delay},
-        ]
+        "message": "email sent!"
     }
 
 
@@ -370,6 +390,9 @@ def schedule_bid_conversation_BD(
     purchase_department: str,
     tender_number: str
 ):
+
+    with get_db_session() as db:
+        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -412,10 +435,10 @@ def schedule_bid_conversation_BD(
         template_name="B5_"+b_company.short_name+".html"
     )
     # 第一封邮件：B ➝ D
-    task1 = send_reply_email.apply_async(
-        args=[d_email, b_email_subject_b5, b_email_content_b5, b_smtp],
-        countdown=0  # 立即
-    )
+    # task1 = send_reply_email.apply_async(
+    #     args=[d_email, b_email_subject_b5, b_email_content_b5, b_smtp],
+    #     countdown=0  # 立即
+    # )
 
     # 随机延迟 5–60 分钟
     d_email_subject_b6 = email_utils.render_email_subject(
@@ -438,17 +461,37 @@ def schedule_bid_conversation_BD(
         template_name="B6_"+d_company.short_name+".html"
     )
     # delay = random.randint(5, 60)
-    delay = 1
-    task2 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp],
-        countdown=delay * 60  # 相对第一封
-    )
+    # delay = 1
+    # task2 = send_reply_email.apply_async(
+    #     args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp],
+    #     countdown=delay * 60  # 相对第一封
+    # )
+
+    # 第二封邮件：D ➝ B（随机延迟 5–60 分钟）
+    task_b6 = {
+        "to_email": b_company.email,
+        "subject": d_email_subject_b6,
+        "content": d_email_content_b6,
+        "smtp_config": d_smtp,
+        "stage": "B6",
+        "project_id": project_info.id
+    }
+
+    # 第一封邮件：B ➝ D（成功后再发 B6）
+    task_b5 = {
+        "to_email": d_company.email,
+        "subject": b_email_subject_b5,
+        "content": b_email_content_b5,
+        "smtp_config": b_smtp,
+        "stage": "B5",
+        "project_id": project_info.id,
+        "followup_task_args": task_b6
+    }
+
+    send_email_with_followup.apply_async(kwargs=task_b5)
 
     return {
-        "tasks": [
-            {"step": "B ➝ D", "task_id": task1.id, "delay_min": 0},
-            {"step": "D ➝ B", "task_id": task2.id, "delay_min": delay},
-        ]
+        "message": "email sent!"
     }
 
 
@@ -487,7 +530,10 @@ def schedule_settlement_BCD(
     winning_time: str, # 中标时间
     purchase_department: str, # 购买部门
     tender_number: str # 招标编号
-) -> tuple[str, str]:
+):
+
+    with get_db_session() as db:
+        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -567,10 +613,10 @@ def schedule_settlement_BCD(
     upload_file_to_sftp_task.delay("~/settlements/"+BC_filename, BC_filename)
 
     # 第一封邮件：C ➝ B
-    task1 = send_reply_email_with_attachments.apply_async(
-        args=[b_email, c_email_subject_c7, c_email_content_c7, c_smtp, [CB_settlement_path], 0, "C7", 1], # TODO 换成真实的附件路径
-        countdown=0  # 立即
-    )
+    # task1 = send_reply_email_with_attachments.apply_async(
+    #     args=[b_email, c_email_subject_c7, c_email_content_c7, c_smtp, [CB_settlement_path], 0, "C7", 1], # TODO 换成真实的附件路径
+    #     countdown=0  # 立即
+    # )
 
     # 第二封邮件：B ➝ D
     # 随机延迟 5–60 分钟发出B-D间结算单
@@ -623,11 +669,11 @@ def schedule_settlement_BCD(
     )
     logger.info("BD_settlement_path&&&: %s", BD_settlement_path)
     # delay1 = random.randint(5, 60)
-    delay1 = 1
-    task2 = send_reply_email_with_attachments.apply_async(
-        args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1],
-        countdown=delay1 * 60  # 相对第一封
-    )
+    # delay1 = 1
+    # task2 = send_reply_email_with_attachments.apply_async(
+    #     args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1],
+    #     countdown=delay1 * 60  # 相对第一封
+    # )
 
     upload_file_to_sftp_task.delay("~/settlements/"+BD_filename, BD_filename)
 
@@ -657,10 +703,10 @@ def schedule_settlement_BCD(
         template_name="C9_"+d_company.short_name+".html"
     )
     delay2 = delay1 + 1
-    task3 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
-        countdown=delay2 * 60  # 相对第一封
-    )
+    # task3 = send_reply_email.apply_async(
+    #     args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
+    #     countdown=delay2 * 60  # 相对第一封
+    # )
 
 
     # 第四封邮件：B ➝ C
@@ -688,14 +734,74 @@ def schedule_settlement_BCD(
         template_name="C10_"+b_company.short_name+".html"
     )
     delay3 = delay2 + 1
-    task4 = send_reply_email.apply_async(
-        args=[c_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
-        countdown=delay3 * 60  # 相对第一封
-    )
+    # task4 = send_reply_email.apply_async(
+    #     args=[c_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
+    #     countdown=delay3 * 60  # 相对第一封
+    # )
+
+
+    # 最后一封邮件任务 （无 follow up）B - C
+    task_c10 = {
+        "to_email": c_company.email,
+        "subject": b_email_subject_c10,
+        "content": b_email_content_c10,
+        "smtp_config": b_smtp,
+        "stage": "C10",
+        "project_id": project_info.id
+    }
+
+    # 第三封邮件 D - B
+    task_c9 = {
+        "to_email": b_company.email,
+        "subject": d_email_subject_c9,
+        "content": d_email_content_c9,
+        "smtp_config": d_smtp,
+        "stage": "C9",
+        "project_id": project_info.id,
+        "followup_task_args": task_c10,
+        "followup_delay_min": 300,
+        "followup_delay_max": 3600
+    }
+
+    # 第二封邮件 B - D
+    task_c8 = {
+        "to_email": d_company.email,
+        "subject": b_email_subject_c8,
+        "content": b_email_content_c8,
+        "smtp_config": b_smtp,
+        "stage": "C8",
+        "project_id": project_info.id,
+        "followup_task_args": task_c9,
+        "followup_delay_min": 300,
+        "followup_delay_max": 3600
+    }
+
+    # 第一封邮件 C - B
+    task_c7 = {
+        "to_email": b_company.email,
+        "subject": c_email_subject_c7,
+        "content": c_email_content_c7,
+        "smtp_config": c_smtp,
+        "stage": "C7",
+        "project_id": project_info.id,
+        "followup_task_args": task_c8,
+        "followup_delay_min": 300,
+        "followup_delay_max": 3600
+    }
+
+
+    send_reply_email_with_attachments.apply_async(kwargs=task_c7)
+    
 
     return {
         "BC_download_url": BC_download_url,
-        "BD_download_url": BD_download_url
+        "BD_download_url": BD_download_url,
+        "tasks": [
+            task_c10,
+            task_c9,
+            task_c8,
+            task_c7
+        ]
     }
     
 

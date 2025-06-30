@@ -143,7 +143,10 @@ def send_reply_email_with_attachments(
     attachments: list[str], 
     delay: int, 
     stage: str, 
-    project_id: int
+    project_id: int,
+    followup_task_args: dict | None = None,
+    followup_delay_min: int = 300,   # 最小延迟（单位秒）= 5 分钟
+    followup_delay_max: int = 3600   # 最大延迟 = 60 分钟
 ):
     from app import database
     db = database.SessionLocal()
@@ -168,6 +171,14 @@ def send_reply_email_with_attachments(
         db.add(record)
         db.commit()
         db.refresh(record)
+
+        # 3. 如成功，调度后续任务（如果有）
+        if success and followup_task_args:
+            delay = random.randint(followup_delay_min, followup_delay_max)
+            send_email_with_followup.apply_async(
+                kwargs=followup_task_args,
+                countdown=1*60
+            )
     except Exception as e:
         # 如果邮件发送或数据库操作失败，也返回失败信息
         success = False
