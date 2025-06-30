@@ -96,6 +96,7 @@ class ProjectWinningInfoRequest(BaseModel):
     contract_number: str # 合同号
     winning_amount: float # 中标金额
     winning_time: datetime  # 毫秒时间戳将被转为 datetime
+    actual_winning_company: str # 实际中标商
 
     @validator("winning_time", pre=True)
     def parse_millisecond_timestamp(cls, v):

@@ -438,6 +438,7 @@ async def project_bidding_winning_information(req: schemas.ProjectWinningInfoReq
 
     project_information.contract_number = req.contract_number
     project_information.tender_number = req.bidding_code
+    project_information.company_b_name = req.actual_winning_company
 
     # 3. 尝试将中标金额转换为 Decimal
     try:
