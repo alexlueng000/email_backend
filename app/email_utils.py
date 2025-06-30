@@ -45,6 +45,7 @@ def send_email(to, subject, body, smtp_config, stage):
         logger.info("📧 开始建立 SMTP 连接")
         with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10) as smtp:
             logger.info("📧 登录 SMTP...")
+            logger.info("📧 登录 SMTP...username: %s, password: %s", smtp_config["username"], smtp_config["password"])
             smtp.login(smtp_config["username"], smtp_config["password"])
             logger.info("📧 登录成功，开始发送邮件...")
             smtp.send_message(message)
