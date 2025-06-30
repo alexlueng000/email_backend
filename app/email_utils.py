@@ -29,7 +29,7 @@ def get_db_session():
         db.close()
 
 def send_email(to, subject, body, smtp_config, stage):
-    # print("✅ 执行同步 send_email 函数")
+    print("✅ 执行同步 send_email 函数")
     message = EmailMessage()
     message["From"] = smtp_config["from"]
     message["To"] = to
