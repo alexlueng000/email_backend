@@ -169,7 +169,7 @@ def send_reply_email_with_attachments(
 ):
     from app import database
     db = database.SessionLocal()
-    scheduled_time = datetime.now() + timedelta(seconds=delay)
+    # scheduled_time = datetime.now() + timedelta(seconds=delay)
 
     try:
         logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments)}")
