@@ -773,7 +773,8 @@ def schedule_settlement_BCD(
         "project_id": project_info.id,
         "followup_task_args": task_c9,
         "followup_delay_min": 300,
-        "followup_delay_max": 3600
+        "followup_delay_max": 3600,
+        "attachments": [BD_settlement_path]
     }
 
     # 第一封邮件 C - B
@@ -786,7 +787,8 @@ def schedule_settlement_BCD(
         "project_id": project_info.id,
         "followup_task_args": task_c8,
         "followup_delay_min": 300,
-        "followup_delay_max": 3600
+        "followup_delay_max": 3600,
+        "attachments": [CB_settlement_path]
     }
 
 
@@ -965,7 +967,8 @@ def schedule_settlement_CCD_BD(
         "project_id": project_info.id,
         "followup_task_args": task_c9,
         "followup_delay_min": 300,
-        "followup_delay_max": 3600
+        "followup_delay_max": 3600,
+        "attachments": [BD_settlement_path]
     }
 
     send_email_with_followup.apply_async(kwargs=task_c8)
