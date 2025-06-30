@@ -42,22 +42,25 @@ def send_email(to, subject, body, smtp_config, stage):
     to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
 
     try:
+        logger.info("📧 开始建立 SMTP 连接")
         with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10) as smtp:
+            logger.info("📧 登录 SMTP...")
             smtp.login(smtp_config["username"], smtp_config["password"])
+            logger.info("📧 登录成功，开始发送邮件...")
             smtp.send_message(message)
 
-            now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
-            logger.info("✅ #########发送邮件成功，时间：%s", now_str)
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+        logger.info("✅ #########发送邮件成功，时间：%s", now_str)
 
-            create_yida_form_instance(
-                access_token=get_dingtalk_access_token(),
-                user_id=os.getenv("USER_ID"),
-                app_type=os.getenv("APP_TYPE"),
-                system_token=os.getenv("SYSTEM_TOKEN"),
-                form_uuid=os.getenv("FORM_UUID"),
-                form_data={
-                    "textField_m8sdofy7": to_company.company_name,
-                    "textField_m8sdofy8": from_company.company_name,
+        create_yida_form_instance(
+            access_token=get_dingtalk_access_token(),
+            user_id=os.getenv("USER_ID"),
+            app_type=os.getenv("APP_TYPE"),
+            system_token=os.getenv("SYSTEM_TOKEN"),
+            form_uuid=os.getenv("FORM_UUID"),
+            form_data={
+                "textField_m8sdofy7": to_company.company_name,
+                "textField_m8sdofy8": from_company.company_name,
                     "textfield_G00FCbMy": subject,
                     "editorField_m8sdofy9": body,
                     "radioField_manpa6yh": "发送成功",
