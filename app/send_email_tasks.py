@@ -554,7 +554,7 @@ def schedule_settlement_BCD(
         received_amount=amount,
         receivable_items=[
             ("三方/四方货款", three_fourth),
-            ('进口服务费', import_service_fee),
+            ('C进口服务费', import_service_fee),
             ("第三方费用", third_party_fee),
             ("费用结算服务费", service_fee),
         ],
@@ -611,11 +611,11 @@ def schedule_settlement_BCD(
         received_amount=amount,
         receivable_items=[
             ("三方/四方货款", three_fourth),
-            ('进口服务费', import_service_fee),
+            ('C进口服务费', import_service_fee),
             ("第三方费用", third_party_fee),
             ("费用结算服务费", service_fee),
             ("中标服务费", win_bidding_fee),
-            ("标书费", bidding_document_fee),
+            ("购买标书费", bidding_document_fee),
             ("投标服务费", bidding_service_fee)
         ],
         head_company_name=d_company.company_name,
@@ -782,11 +782,11 @@ def schedule_settlement_CCD_BD(
         received_amount=amount,
         receivable_items=[
             ("三方/四方货款", three_fourth),
-            ('进口服务费', import_service_fee),
+            ('C进口服务费', import_service_fee),
             ("第三方费用", third_party_fee),
             ("费用结算服务费", service_fee),
             ("中标服务费", win_bidding_fee),
-            ("标书费", bidding_document_fee),
+            ("购买标书费", bidding_document_fee),
             ("投标服务费", bidding_service_fee)
         ],
         head_company_name=b_company.company_name,
