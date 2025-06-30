@@ -185,7 +185,7 @@ def send_reply_email_with_attachments(
             body=content,
             status="success" if success else "failed",
             error_message=error if not success else None,
-            actual_sending_time=scheduled_time,
+            actual_sending_time=datetime.now(),
             stage=stage,
             project_id=project_id
         )
