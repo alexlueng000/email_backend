@@ -27,6 +27,10 @@ celery = Celery(
     backend="redis://localhost:6379/0"      # 可用于任务结果存储（可选）
 )
 
+class EmailSendFailed(Exception):
+    """自定义异常：表示邮件逻辑上发送失败"""
+    pass
+
 
 def send_sync_email(to_email, subject, content, smtp_config):
     msg = MIMEText(content, "html", "utf-8")
@@ -89,17 +93,19 @@ def send_email_with_followup(
     stage: str,
     project_id: int,
     followup_task_args: dict | None = None,
-    followup_delay_min: int = 300,   # 最小延迟（单位秒）= 5 分钟
-    followup_delay_max: int = 3600   # 最大延迟 = 60 分钟
+    followup_delay_min: int = 300,
+    followup_delay_max: int = 3600
 ):
     from app import database
     db = database.SessionLocal()
+
     try:
-        # 1. 发送邮件
+        logger.info(f"[{stage}] 🚀 发送邮件任务开始，to={to_email}")
+        
         success, error = email_utils.send_email(to_email, subject, content, smtp_config, stage)
         scheduled_time = datetime.now()
-        
-        # 2. 保存记录
+
+        # 保存发送记录
         record = models.EmailRecord(
             to=to_email,
             subject=subject,
@@ -112,52 +118,67 @@ def send_email_with_followup(
         )
         db.add(record)
         db.commit()
-        db.refresh(record)
 
-        # 3. 如成功，调度后续任务（如果有）
-        if success and followup_task_args:
+        if not success:
+            logger.warning(f"[{stage}] ❌ 邮件发送失败，将重试：{error}")
+            raise EmailSendFailed(error)
+
+        # 如果成功且有后续任务，调度之
+        if followup_task_args:
             delay = random.randint(followup_delay_min, followup_delay_max)
+            logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {delay} 秒")
             send_email_with_followup.apply_async(
                 kwargs=followup_task_args,
+                # countdown=delay
                 countdown=1*60
             )
+
+        logger.info(f"[{stage}] ✅ 邮件发送任务成功完成")
+    except EmailSendFailed as e:
+        db.rollback()
+        try:
+            logger.warning(f"[{stage}] 重试中（逻辑失败）：{e}")
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] 达到最大重试次数（逻辑失败）：{e}")
     except Exception as e:
         db.rollback()
-        logger.error(f"[{stage}] 邮件发送失败: {e}")
+        logger.exception(f"[{stage}] ❌ 邮件任务异常，将重试：{e}")
         try:
-            self.retry(exc=e)
+            raise self.retry(exc=e)
         except MaxRetriesExceededError:
-            logger.error(f"[{stage}] 达到最大重试次数")
+            logger.error(f"[{stage}] 达到最大重试次数（系统异常）：{e}")
     finally:
         db.close()
-
 
 
 @celery.task(bind=True, max_retries=3, default_retry_delay=60)
 def send_reply_email_with_attachments(
     self,
-    to_email: str, 
-    subject: str, 
-    content: str, 
-    smtp_config: dict, 
-    attachments: list[str], 
-    delay: int, 
-    stage: str, 
+    to_email: str,
+    subject: str,
+    content: str,
+    smtp_config: dict,
+    attachments: list[str],
+    delay: int,
+    stage: str,
     project_id: int,
     followup_task_args: dict | None = None,
-    followup_delay_min: int = 300,   # 最小延迟（单位秒）= 5 分钟
-    followup_delay_max: int = 3600   # 最大延迟 = 60 分钟
+    followup_delay_min: int = 300,
+    followup_delay_max: int = 3600
 ):
     from app import database
     db = database.SessionLocal()
-
     scheduled_time = datetime.now() + timedelta(seconds=delay)
 
     try:
+        logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments)}")
+
         success, error = email_utils.send_email_with_attachments(
             to_email, subject, content, smtp_config, attachments, stage
         )
 
+        # 保存记录
         record = models.EmailRecord(
             to=to_email,
             subject=subject,
@@ -172,22 +193,43 @@ def send_reply_email_with_attachments(
         db.commit()
         db.refresh(record)
 
-        # 3. 如成功，调度后续任务（如果有）
-        if success and followup_task_args:
-            delay = random.randint(followup_delay_min, followup_delay_max)
+        if not success:
+            logger.warning(f"[{stage}] ❌ 带附件邮件发送失败，将重试：{error}")
+            raise EmailSendFailed(error)
+
+        # 派发后续任务
+        if followup_task_args:
+            followup_delay = random.randint(followup_delay_min, followup_delay_max)
+            logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {followup_delay} 秒")
             send_email_with_followup.apply_async(
                 kwargs=followup_task_args,
+                # countdown=followup_delay
                 countdown=1*60
             )
-    except Exception as e:
-        # 如果邮件发送或数据库操作失败，也返回失败信息
-        success = False
-        error = str(e)
-        print(f"[邮件发送异常] to={to_email}, subject={subject}, error={error}")
-    finally:
-        db.close()  # ✅ 无论如何都关闭连接
 
-    return {"success": success, "error": error}
+        logger.info(f"[{stage}] ✅ 带附件邮件任务完成")
+        return {"success": True, "error": ""}
+
+    except EmailSendFailed as e:
+        db.rollback()
+        logger.warning(f"[{stage}] 📧 邮件逻辑失败，准备 retry：{e}")
+        try:
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] 📧 达到最大重试次数（逻辑失败）: {e}")
+            return {"success": False, "error": str(e)}
+
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"[{stage}] ❌ 系统异常，将重试：")
+        try:
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] ❌ 达到最大重试次数（系统异常）: {e}")
+            return {"success": False, "error": str(e)}
+
+    finally:
+        db.close()
 
 
 def ensure_remote_dir(sftp: paramiko.SFTPClient, remote_dir: str):
