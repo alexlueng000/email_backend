@@ -702,7 +702,7 @@ def schedule_settlement_BCD(
         winning_time=winning_time,
         template_name="C9_"+d_company.short_name+".html"
     )
-    delay2 = delay1 + 1
+    # delay2 = delay1 + 1
     # task3 = send_reply_email.apply_async(
     #     args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
     #     countdown=delay2 * 60  # 相对第一封
@@ -733,7 +733,7 @@ def schedule_settlement_BCD(
         winning_time=winning_time,
         template_name="C10_"+b_company.short_name+".html"
     )
-    delay3 = delay2 + 1
+    # delay3 = delay2 + 1
     # task4 = send_reply_email.apply_async(
     #     args=[c_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
     #     countdown=delay3 * 60  # 相对第一封
@@ -827,6 +827,10 @@ def schedule_settlement_CCD_BD(
     purchase_department: str, # 购买部门
     tender_number: str # 招标编号
 ):
+    
+    with get_db_session() as db:
+        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
+    
 
     b_email = b_company.email
     d_email = d_company.email
@@ -900,11 +904,11 @@ def schedule_settlement_CCD_BD(
     )
 
     # delay1 = random.randint(5, 60)
-    delay1 = 1
-    task2 = send_reply_email_with_attachments.apply_async(
-        args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
-        countdown=0 # 立即
-    )
+    # delay1 = 1
+    # task2 = send_reply_email_with_attachments.apply_async(
+    #     args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
+    #     countdown=0 # 立即
+    # )
 
     upload_file_to_sftp_task.delay("~/settlements/"+BD_filename, BD_filename)
 
@@ -933,11 +937,38 @@ def schedule_settlement_CCD_BD(
         winning_time=winning_time,
         template_name="C9_"+d_company.short_name+".html"
     )
-    delay2 = delay1 + 1
-    task3 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
-        countdown=delay2 * 60  # 相对第一封
-    )
+    # delay2 = delay1 + 1
+    # task3 = send_reply_email.apply_async(
+    #     args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
+    #     countdown=delay2 * 60  # 相对第一封
+    # ) 
+
+    # 第二封邮件：D ➝ B
+    task_c9 = {
+        "to_email": b_email,
+        "subject": d_email_subject_c9,
+        "content": d_email_content_c9,
+        "smtp_config": d_smtp,
+        "stage": "C9",
+        "project_id": project_info.id,
+        "followup_delay_min": 300,
+        "followup_delay_max": 3600
+    }
+
+    # 第一封邮件：B ➝ D
+    task_c8 = {
+        "to_email": d_email,
+        "subject": b_email_subject_c8,
+        "content": b_email_content_c8,
+        "smtp_config": b_smtp,
+        "stage": "C8",
+        "project_id": project_info.id,
+        "followup_task_args": task_c9,
+        "followup_delay_min": 300,
+        "followup_delay_max": 3600
+    }
+
+    send_email_with_followup.apply_async(kwargs=task_c8)
 
 
     return {
