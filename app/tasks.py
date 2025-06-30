@@ -160,7 +160,7 @@ def send_reply_email_with_attachments(
     content: str,
     smtp_config: dict,
     attachments: list[str] | None = None,
-    delay: int = 0,
+    # delay: int = 0,
     stage: str = "",
     project_id: int = 0,
     followup_task_args: dict | None = None,
