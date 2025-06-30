@@ -55,12 +55,12 @@ def send_email(to, subject, body, smtp_config, stage):
         create_yida_form_instance(
             access_token=get_dingtalk_access_token(),
             user_id=os.getenv("USER_ID"),
-            app_type=os.getenv("APP_TYPE"),
-            system_token=os.getenv("SYSTEM_TOKEN"),
-            form_uuid=os.getenv("FORM_UUID"),
-            form_data={
-                "textField_m8sdofy7": to_company.company_name,
-                "textField_m8sdofy8": from_company.company_name,
+                app_type=os.getenv("APP_TYPE"),
+                system_token=os.getenv("SYSTEM_TOKEN"),
+                form_uuid=os.getenv("FORM_UUID"),
+                form_data={
+                    "textField_m8sdofy7": to_company.company_name,
+                    "textField_m8sdofy8": from_company.company_name,
                     "textfield_G00FCbMy": subject,
                     "editorField_m8sdofy9": body,
                     "radioField_manpa6yh": "发送成功",
@@ -72,6 +72,7 @@ def send_email(to, subject, body, smtp_config, stage):
 
         return True, ""
     except Exception as e:
+        logger.exception("❌ send_email 执行失败，异常如下：")
         return False, str(e)
 
 def send_email_in_main(to: str, subject: str, body: str, smtp_config: dict):
