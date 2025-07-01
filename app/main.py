@@ -766,8 +766,8 @@ def settlement(
         return {"message": "三方/四方货款（RMB）没有值，不发送邮件"}
 
     # 如果 service_fee 为空或是空字符串
-    if req.import_service_fee is None or (isinstance(req.import_service_fee, str) and req.import_service_fee.strip() == ""):
-        return {"message": "C进口服务费（RMB）没有值，不发送邮件"}
+    # if req.import_service_fee is None or (isinstance(req.import_service_fee, str) and req.import_service_fee.strip() == ""):
+    #     return {"message": "C进口服务费（RMB）没有值，不发送邮件"}
 
     def clean_decimal(val):
         return 0 if val == "" else float(val)
