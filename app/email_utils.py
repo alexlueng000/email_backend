@@ -43,7 +43,7 @@ def send_email(to, subject, body, smtp_config, stage):
 
     try:
         logger.info("📧 开始建立 SMTP 连接")
-        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10) as smtp:
+        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30) as smtp:
             logger.info("📧 登录 SMTP...")
             logger.info("📧 登录 SMTP...username: %s, password: %s", smtp_config["username"], smtp_config["password"])
             smtp.login(smtp_config["username"], smtp_config["password"])
@@ -120,7 +120,7 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
             return False, f"附件读取失败: {file_path}，错误信息：{str(e)}"
 
     try:
-        server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=10)
+        server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30)
         server.login(smtp_config["username"], smtp_config["password"])
         server.sendmail(smtp_config["from"], [to_email], message.as_string())
         server.quit()
