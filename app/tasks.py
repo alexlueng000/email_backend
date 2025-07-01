@@ -172,7 +172,7 @@ def send_reply_email_with_attachments(
     # scheduled_time = datetime.now() + timedelta(seconds=delay)
 
     try:
-        logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments)}")
+        logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments) if attachments else 0}")
 
         success, error = email_utils.send_email_with_attachments(
             to_email, subject, content, smtp_config, attachments, stage
