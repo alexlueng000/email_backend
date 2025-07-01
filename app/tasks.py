@@ -201,7 +201,7 @@ def send_reply_email_with_attachments(
         if followup_task_args:
             followup_delay = random.randint(followup_delay_min, followup_delay_max)
             logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {followup_delay} 秒")
-            send_email_with_followup.apply_async(
+            send_reply_email_with_attachments.apply_async(
                 kwargs=followup_task_args,
                 # countdown=followup_delay
                 countdown=1*60
