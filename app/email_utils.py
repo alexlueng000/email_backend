@@ -110,14 +110,17 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
 
 
     # 添加附件
-    for file_path in attachments:
-        try:
-            with open(file_path, "rb") as f:
-                part = MIMEApplication(f.read())
-                part.add_header("Content-Disposition", "attachment", filename=os.path.basename(file_path))
-                message.attach(part)
-        except Exception as e:
-            return False, f"附件读取失败: {file_path}，错误信息：{str(e)}"
+    if not attachments:
+        logger.warning("📎 未提供任何附件，跳过附件处理")
+    else:
+        for file_path in attachments:
+            try:
+                with open(file_path, "rb") as f:
+                    part = MIMEApplication(f.read())
+                    part.add_header("Content-Disposition", "attachment", filename=os.path.basename(file_path))
+                    message.attach(part)
+            except Exception as e:
+                return False, f"附件读取失败: {file_path}，错误信息：{str(e)}"
 
     try:
         server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30)
