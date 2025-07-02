@@ -143,8 +143,8 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
                 "textfield_G00FCbMy": subject,
                 "editorField_m8sdofy9": content,
                 "radioField_manpa6yh": "发送成功",
-                "textField_mbyk13kz": now_str,
-                "textField_mbyk13l0": now_str,
+                "textField_mbyq9ksm": now_str,
+                "textField_mbyq9ksn": now_str,
                 "textField_mc8eps0i": stage
             }
         )
