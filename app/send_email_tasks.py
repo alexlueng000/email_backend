@@ -979,7 +979,7 @@ def schedule_settlement_CCD_BD(
 
     return {
         "message": f"已发送BD结算单，合同号为：{contract_serial_number}",
-        "BD_download_url": BD_download_url
+        # "BD_download_url": BD_download_url
     }
 
 # BD 项目类型发送结算单
