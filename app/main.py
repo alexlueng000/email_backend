@@ -800,7 +800,7 @@ def settlement(
 
     c_company = db.query(models.CompanyInfo).filter_by(company_name=project_information.company_c_name).first()
     if not c_company:
-        logger.info("没有找到C公司，不发送邮件，合同号为: %s", req.contract_number)
+        logger.info("没有找到C公司，说明是BD项目，合同号为: %s", req.contract_number)
         # 说明是BD项目
         pass 
 
