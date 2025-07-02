@@ -974,7 +974,7 @@ def schedule_settlement_CCD_BD(
         "attachments": [BD_settlement_path]
     }
 
-    send_email_with_followup_with_attachments.apply_async(kwargs=task_c8)
+    send_reply_email_with_attachments.apply_async(kwargs=task_c8)
 
 
     return {
