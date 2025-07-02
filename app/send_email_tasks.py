@@ -890,7 +890,7 @@ def schedule_settlement_CCD_BD(
         BD_filename = f"{contract_number}_{contract_serial_number}_CCD模式_BD结算单.xlsx"
 
     # 生成B-D结算单
-    BD_settlement_path, BD_download_url = excel_utils.generate_common_settlement_excel(
+    BD_settlement_path = excel_utils.generate_common_settlement_excel(
         filename=BD_filename,  
         stage="C8",
         project_type="BD",
@@ -974,7 +974,7 @@ def schedule_settlement_CCD_BD(
         "attachments": [BD_settlement_path]
     }
 
-    send_email_with_followup.apply_async(kwargs=task_c8)
+    send_email_with_followup_with_attachments.apply_async(kwargs=task_c8)
 
 
     return {
