@@ -293,7 +293,7 @@ def schedule_bid_conversation_CCD(
         stage="B5", 
         company_short_name=b_company.short_name, 
         project_name=project_name, 
-        contract_serial_number=contract_serial_number,
+        serial_number=contract_serial_number,
         tender_number=tender_number,
         purchase_department=purchase_department,
         winning_amount=winning_amount,
@@ -312,7 +312,7 @@ def schedule_bid_conversation_CCD(
         template_name="B5_"+b_company.short_name+"_SPEC.html"
     )
     
-    logger.info("CCB B5-C公司邮件主题：%s", c_email_subject_b5)
+    logger.info("CCD B5-C公司邮件主题：%s", c_email_subject_b5)
     
     # 第一封邮件：B ➝ D（立即）
     # task1 = send_reply_email.apply_async(
