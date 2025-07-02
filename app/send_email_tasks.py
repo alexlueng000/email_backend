@@ -936,6 +936,7 @@ def schedule_settlement_CCD_BD(
         buyer_name="", 
         project_name=simplify_to_traditional(project_name), 
         first_name=b_company.last_name,
+        full_name=b_company.full_name,
         serial_number=contract_serial_number,
         contract_number=contract_number,
         winning_amount=str(amount),
