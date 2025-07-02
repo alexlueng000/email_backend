@@ -309,6 +309,7 @@ def schedule_bid_conversation_CCD(
         winning_amount=winning_amount,
         contract_number=contract_number,
         # c_company_name=c_company.company_name,
+        winning_time=winning_time,
         template_name="B5_"+b_company.short_name+"_SPEC.html"
     )
     
@@ -432,6 +433,7 @@ def schedule_bid_conversation_BD(
         first_name=d_company.last_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
+        winning_time=winning_time,
         template_name="B5_"+b_company.short_name+".html"
     )
     # 第一封邮件：B ➝ D
@@ -458,6 +460,7 @@ def schedule_bid_conversation_BD(
         first_name=b_company.last_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
+        winning_time=winning_time,
         template_name="B6_"+d_company.short_name+".html"
     )
     # delay = random.randint(5, 60)
