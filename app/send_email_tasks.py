@@ -908,8 +908,8 @@ def schedule_settlement_CCD_BD(
             ("购买标书费", bidding_document_fee),
             ("投标服务费", bidding_service_fee)
         ],
-        head_company_name=b_company.company_name,
-        bottom_company_name=d_company.company_name
+        head_company_name=d_company.company_name,
+        bottom_company_name=b_company.company_name
     )
 
     # delay1 = random.randint(5, 60)
