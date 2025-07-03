@@ -706,6 +706,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         logger.info("BD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_BD(
             b_company=b_company,
+            c_company_name=c_company_name,
             d_company=d_company,
             contract_serial_number=project.serial_number,
             project_name=project.project_name,
