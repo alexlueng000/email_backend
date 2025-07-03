@@ -306,6 +306,7 @@ def schedule_bid_conversation_CCD(
         project_name=project_name,
         serial_number=contract_serial_number,
         first_name=d_company.last_name,
+        full_name=d_company.contact_person,
         winning_amount=winning_amount,
         contract_number=contract_number,
         # c_company_name=c_company.company_name,
