@@ -460,6 +460,7 @@ def schedule_bid_conversation_BD(
         project_name=project_name,
         serial_number=contract_serial_number,
         first_name=b_company.last_name,
+        full_name=b_company.contact_person,
         winning_amount=winning_amount,
         contract_number=contract_number,
         winning_time=winning_time,
