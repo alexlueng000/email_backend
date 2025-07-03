@@ -383,6 +383,7 @@ def schedule_bid_conversation_CCD(
 # BD 项目类型发送邮件
 def schedule_bid_conversation_BD(
     b_company: models.CompanyInfo, 
+    c_company_name: str,
     d_company: models.CompanyInfo,
     contract_serial_number: str,
     winning_amount: str,
@@ -428,6 +429,7 @@ def schedule_bid_conversation_BD(
         tender_number=tender_number
     )
     b_email_content_b5 = email_utils.render_invitation_template_content(
+        c_company_name=c_company_name,
         buyer_name=b_company.company_name,
         project_name=project_name,
         serial_number=contract_serial_number,
