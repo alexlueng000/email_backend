@@ -237,20 +237,20 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 template_name=template_name,
                 full_name=company.contact_person,
             )
-            task_FR_A2_delay = send_time_FR + timedelta(minutes=1)
+            task_FR_A2_delay = send_time_FR + timedelta(minutes=2)
             delay_minutes = (task_FR_A2_delay - datetime.now()).total_seconds() // 60
             message += f"公司 FR 的A2邮件将在 {task_FR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
             logger.info("message: %s", message)
-            task_FR_A2 = tasks.send_email_with_followup_delay.delay(
-                to_email=company.email,
-                subject=A2_subject,
-                content=content,
-                smtp_config=b_smtp,
-                stage="A2",
-                project_id=project_id,
-                followup_task_args=None,
-                followup_delay=task_FR_A2_delay
-            )
+            task_FR_A2 = {
+                "to_email": company.email,
+                "subject": A2_subject,
+                "content": content,
+                "smtp_config": b_smtp,
+                "stage": "A2",
+                # "project_id": project_id,
+                "followup_task_args": None,
+                "followup_delay": task_FR_A2_delay
+            }
             
         elif company.short_name == "LF":
             A2_subject = email_utils.render_email_subject(
@@ -265,20 +265,20 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 template_name=template_name,
                 full_name=company.contact_person,
             )
-            task_LF_A2_delay = send_time_LF + timedelta(minutes=1)
+            task_LF_A2_delay = send_time_LF + timedelta(minutes=2)
             delay_minutes = (task_LF_A2_delay - datetime.now()).total_seconds() // 60
             message += f"公司 LF 的A2邮件将在 {task_LF_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
             logger.info("message: %s", message)
-            task_LF_A2 = tasks.send_email_with_followup_delay.delay(
-                to_email=company.email,
-                subject=A2_subject,
-                content=content,
-                smtp_config=b_smtp,
-                stage="A2",
-                project_id=project_id,
-                followup_task_args=None,
-                followup_delay=task_LF_A2_delay
-            )
+            task_LF_A2 = {
+                "to_email": company.email,
+                "subject": A2_subject,
+                "content": content,
+                "smtp_config": b_smtp,
+                "stage": "A2",
+                # "project_id": project_id,
+                "followup_task_args": None,
+                "followup_delay": task_FR_A2_delay
+            }
         
         else:
             A2_subject = email_utils.render_email_subject(
@@ -294,20 +294,20 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 template_name=template_name,
                 full_name=company.contact_person,
             )
-            task_PR_A2_delay = send_time_PR + timedelta(minutes=1)  
+            task_PR_A2_delay = send_time_PR + timedelta(minutes=2)  
             delay_minutes = (task_PR_A2_delay - datetime.now()).total_seconds() // 60
             message += f"公司 PR 的A2邮件将在 {task_PR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n" 
             logger.info("message: %s", message)     
-            task_PR_A2 = tasks.send_email_with_followup_delay.delay(
-                to_email=company.email,
-                subject=A2_subject,
-                content=content,
-                smtp_config=b_smtp,
-                stage="A2",
-                project_id=project_id,
-                followup_task_args=None,
-                followup_delay=task_PR_A2_delay
-            )
+            task_PR_A2 = {
+                "to_email": company.email,
+                "subject": A2_subject,
+                "content": content,
+                "smtp_config": b_smtp,
+                "stage": "A2",
+                # "project_id": project_id,
+                "followup_task_args": None,
+                "followup_delay": task_PR_A2_delay
+            }
         
     # 三家D公司给B公司发送A1邮件
     for company in d_companies:
@@ -333,56 +333,18 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
-            # print("LF公司邮件内容：", content)  
-            # success, error = email_utils.send_email_in_main(to=b_company_info.email, subject=subject, body=content, smtp_config=smtp_config)
-            # if error:
-            #     logger.error("LF A1发送邮件失败，错误信息：%s", error)
-            
-            # 保存发送记录
-            # record = models.EmailRecord(
-            #     to=b_company_info.email,
-            #     subject=subject,
-            #     body=content,
-            #     status="success" if success else "failed",
-            #     error_message=error if not success else None,
-            #     project_id=project_id,
-            #     task_id="",
-            #     stage="A1",
-            #     actual_sending_time=datetime.now()
-            # )
-            # db.add(record)
-            # db.commit()
-            # db.refresh(record)
 
-            # 更新宜搭表单实例
-            # create_yida_form_instance(
-            #     app_type=os.getenv("APP_TYPE"),
-            #     system_token=os.getenv("SYSTEM_TOKEN"),
-            #     access_token=get_dingtalk_access_token(),
-            #     user_id=os.getenv("USER_ID"),
-            #     form_uuid=os.getenv("FORM_UUID"),
-            #     form_data={
-            #         "textField_m8sdofy7": b_company_info.company_name,
-            #         "textField_m8sdofy8": company.company_name,
-            #         "textfield_G00FCbMy": subject,
-            #         "editorField_m8sdofy9": content,
-            #         "radioField_manpa6yh": "发送成功",
-            #         "textField_mbyq9ksm": now_str,
-            #         "textField_mbyq9ksn": now_str,
-            #         "textField_mc8eps0i": "A1"
-            #     }
-            # )
-            
-            tasks.send_email_with_followup_delay.delay(
-                to_email=b_company_info.email,
-                subject=subject,
-                content=content,
-                smtp_config=smtp_config,
-                stage="A1",
-                project_id=project_id,
-                followup_task_args=task_LF_A2,
-                followup_delay=LF_A1_delay
-            )
+            task_LF_A1 = {
+                "to_email": b_company_info.email,
+                "subject": subject,
+                "content": content,
+                "smtp_config": smtp_config,
+                "stage": "A1",
+                "project_id": project_id,
+                "followup_task_args": task_LF_A2,
+                "followup_delay": LF_A1_delay
+            }
+            tasks.send_email_with_followup.apply_async(kwargs=task_LF_A1)
             
         # 弗劳恩
         elif company.short_name == "FR":
@@ -402,56 +364,18 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
-            # print("FR公司邮件内容：", content)
-            # try:
-            #     success, error = email_utils.send_email_in_main(to=b_company_info.email, subject=subject, body=content, smtp_config=smtp_config)
 
-            # except Exception as e:
-            #     print("FR公司邮件发送失败：", e)
-            
-            # 保存发送记录
-            # record = models.EmailRecord(
-            #     to=b_company_info.email,
-            #     subject=subject,
-            #     body=content,
-            #     status="success" if success else "failed",
-            #     error_message=error if not success else None,
-            #     project_id=project_id,
-            #     stage="A1",
-            #     actual_sending_time=datetime.now()
-            # )
-            # db.add(record)
-            # db.commit()
-            # db.refresh(record)
-
-            # create_yida_form_instance(
-            #     access_token=get_dingtalk_access_token(),
-            #     user_id=os.getenv("USER_ID"),
-            #     app_type=os.getenv("APP_TYPE"),
-            #     system_token=os.getenv("SYSTEM_TOKEN"),
-            #     form_uuid=os.getenv("FORM_UUID"),
-            #     form_data={
-            #         "textField_m8sdofy7": b_company_info.company_name,
-            #         "textField_m8sdofy8": company.company_name,
-            #         "textfield_G00FCbMy": subject,
-            #         "editorField_m8sdofy9": content,
-            #         "radioField_manpa6yh": "发送成功",
-            #         "textField_mbyq9ksm": now_str,
-            #         "textField_mbyq9ksn": now_str,
-            #         "textField_mc8eps0i": "A1"
-            #     }
-            # )
-            
-            tasks.send_email_with_followup_delay.delay(
-                to_email=b_company_info.email,
-                subject=subject,
-                content=content,
-                smtp_config=smtp_config,
-                stage="A1",
-                project_id=project_id,
-                followup_task_args=task_FR_A2,
-                followup_delay=FR_A1_delay
-            )
+            task_FR_A1 = {
+                "to_email": b_company_info.email,
+                "subject": subject,
+                "content": content,
+                "smtp_config": smtp_config,
+                "stage": "A1",
+                "project_id": project_id,
+                "followup_task_args": task_FR_A2,
+                "followup_delay": FR_A1_delay
+            }
+            tasks.send_email_with_followup.apply_async(kwargs=task_FR_A1)
         # 普利赛斯
         else:
             subject = f"{ simplify_to_traditional(req.project_name) }投標委託{ req.p_serial_number }"
@@ -470,122 +394,19 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 project_name=simplify_to_traditional(req.project_name),
                 template_name=template_name
             )
-            # print("普利赛斯公司邮件内容：", content)
-            # success, error = email_utils.send_email_in_main(to=b_company_info.email, subject=subject, body=content, smtp_config=smtp_config)
-            # 保存发送记录
-            # record = models.EmailRecord(
-            #     to=b_company_info.email,
-            #     subject=subject,
-            #     # body=content,
-            #     status="success" if success else "failed",
-            #     error_message=error if not success else None,
-            #     task_id="",
-            #     project_id=project_id,
-            #     stage="A1",
-            #     actual_sending_time=datetime.now()
-            # )
-            # db.add(record)
-            # db.commit()
-            # db.refresh(record)
 
-            # create_yida_form_instance(
-            #     access_token=get_dingtalk_access_token(),
-            #     user_id=os.getenv("USER_ID"),
-            #     app_type=os.getenv("APP_TYPE"),
-            #     system_token=os.getenv("SYSTEM_TOKEN"),
-            #     form_uuid=os.getenv("FORM_UUID"),
-            #     form_data={
-            #         "textField_m8sdofy7": b_company_info.company_name,
-            #         "textField_m8sdofy8": company.company_name,
-            #         "textfield_G00FCbMy": subject,
-            #         "editorField_m8sdofy9": content,
-            #         "radioField_manpa6yh": "发送成功",
-            #         "textField_mbyq9ksm": now_str,
-            #         "textField_mbyq9ksn": now_str,
-            #         "textField_mc8eps0i": "A1"
-            #     }
-            # )
-            PR_A1_delay = 1 * 60
-            tasks.send_email_with_followup_delay.delay(
-                to_email=b_company_info.email,
-                subject=subject,
-                content=content,
-                smtp_config=smtp_config,
-                stage="A1",
-                project_id=project_id,
-                followup_task_args=task_PR_A2,
-                followup_delay=PR_A1_delay
-            )
+            task_PR_A1 = {
+                "to_email": b_company_info.email,
+                "subject": subject,
+                "content": content,
+                "smtp_config": smtp_config,
+                "stage": "A1",
+                "project_id": project_id,
+                "followup_task_args": task_PR_A2,
+                "followup_delay": PR_A1_delay
+            }
+            tasks.send_email_with_followup.apply_async(kwargs=task_PR_A1)
 
-    # 定时任务：5-60分钟后由 B公司 给3家公司回复邮件
-    # random_numbers = utils.generate_random_number()
-
-    # b_smtp = {
-    #     "host": b_company_info.smtp_host,
-    #     "port": b_company_info.smtp_port,
-    #     "username": b_company_info.smtp_username,
-    #     "password": b_company_info.smtp_password,
-    #     "from": b_company_info.smtp_from
-    # }
-
-    # template_name = "A2_" + b_company_info.short_name + ".html"
-
-    
-    # for company in d_companies:
-
-    #     A2_subject = ''
-
-    #     if company.short_name == "FR":
-
-    #         A2_subject = email_utils.render_email_subject(
-    #             stage="A2", 
-    #             company_short_name=b_company_info.short_name, 
-    #             project_name=req.project_name,
-    #             serial_number=req.f_serial_number
-    #         )
-            
-    #     elif company.short_name == "LF":
-    #         A2_subject = email_utils.render_email_subject(
-    #             stage="A2", 
-    #             company_short_name=b_company_info.short_name, 
-    #             project_name=req.project_name,
-    #             serial_number=req.l_serial_number
-    #         )
-            
-        
-    #     else:
-    #         A2_subject = email_utils.render_email_subject(
-    #             stage="A2", 
-    #             company_short_name=b_company_info.short_name, 
-    #             project_name=req.project_name,
-    #             serial_number=req.p_serial_number
-    #         )
-            
-    #     content = email_utils.render_invitation_template_content(
-    #         # purchase_department=req.purchase_department,
-    #         project_name=req.project_name,
-    #         template_name=template_name,
-    #         full_name=company.contact_person,
-    #     )
-            
-    #     result = tasks.send_reply_email.apply_async(
-    #         args=[company.email, A2_subject, content, b_smtp, 1 * 60, "A2", project_id],
-    #         countdown=1 * 60  
-    #     )
-        # 保存发送记录
-        # record = models.EmailRecord(
-        #     to=company.email,
-        #     subject=A2_subject,
-        #     body=content,
-        #     status="pending", 
-        #     task_id=result.task_id,
-        #     project_id=project_id,
-        #     stage="A2"
-        # )
-        # db.add(record)
-        # db.commit()
-        # db.refresh(record)
-    # 更新project_info表中的a1状态为1
     project_info.a1 = True
     db.commit()
 
