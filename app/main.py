@@ -236,7 +236,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 full_name=company.contact_person,
             )
             task_FR_A2_delay = send_time_FR + timedelta(minutes=1)
-            message += f"公司 FR 的A2邮件将在 {task_FR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {task_FR_A2_delay // 60} 分钟。\n"
+            delay_minutes = (task_FR_A2_delay - datetime.now()).total_seconds() // 60
+            message += f"公司 FR 的A2邮件将在 {task_FR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
             task_FR_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
@@ -262,7 +263,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 full_name=company.contact_person,
             )
             task_LF_A2_delay = send_time_LF + timedelta(minutes=1)
-            message += f"公司 LF 的A2邮件将在 {task_LF_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {task_LF_A2_delay // 60} 分钟。\n"
+            delay_minutes = (task_LF_A2_delay - datetime.now()).total_seconds() // 60
+            message += f"公司 LF 的A2邮件将在 {task_LF_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
             task_LF_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
@@ -289,7 +291,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
                 full_name=company.contact_person,
             )
             task_PR_A2_delay = send_time_PR + timedelta(minutes=1)  
-            message += f"公司 PR 的A2邮件将在 {task_PR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {task_PR_A2_delay // 60} 分钟。\n"      
+            delay_minutes = (task_PR_A2_delay - datetime.now()).total_seconds() // 60
+            message += f"公司 PR 的A2邮件将在 {task_PR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"      
             task_PR_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
