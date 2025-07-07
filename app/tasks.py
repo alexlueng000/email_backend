@@ -153,6 +153,74 @@ def send_email_with_followup(
 
 
 @celery.task(bind=True, max_retries=3, default_retry_delay=60)
+def send_email_with_followup_delay(
+    self,
+    to_email: str,
+    subject: str,
+    content: str,
+    smtp_config: dict,
+    stage: str,
+    project_id: int,
+    followup_task_args: dict | None = None,
+    followup_delay: int = 0
+):
+    from app import database
+    db = database.SessionLocal()
+
+    try:
+        logger.info(f"[{stage}] 🚀 发送邮件任务开始，to={to_email}")
+        
+        success, error = email_utils.send_email(to_email, subject, content, smtp_config, stage)
+        scheduled_time = datetime.now()
+
+        # 保存发送记录
+        record = models.EmailRecord(
+            to=to_email,
+            subject=subject,
+            body=content,
+            status="success" if success else "failed",
+            error_message=error if not success else None,
+            actual_sending_time=scheduled_time,
+            stage=stage,
+            project_id=project_id
+        )
+        db.add(record)
+        db.commit()
+
+        if not success:
+            logger.warning(f"[{stage}] ❌ 邮件发送失败，将重试：{error}")
+            raise EmailSendFailed(error)
+
+        # 如果成功且有后续任务，调度之
+        if followup_task_args:
+            # delay = random.randint(followup_delay_min, followup_delay_max)
+            logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {followup_delay} 秒")
+            send_email_with_followup.apply_async(
+                kwargs=followup_task_args,
+                # countdown=delay
+                countdown=followup_delay
+            )
+
+        logger.info(f"[{stage}] ✅ 邮件发送任务成功完成")
+    except EmailSendFailed as e:
+        db.rollback()
+        try:
+            logger.warning(f"[{stage}] 重试中（逻辑失败）：{e}")
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] 达到最大重试次数（逻辑失败）：{e}")
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"[{stage}] ❌ 邮件任务异常，将重试：{e}")
+        try:
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] 达到最大重试次数（系统异常）：{e}")
+    finally:
+        db.close()
+
+
+@celery.task(bind=True, max_retries=3, default_retry_delay=60)
 def send_reply_email_with_attachments(
     self,
     to_email: str,
