@@ -140,6 +140,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     message += f"公司 FR 的A1邮件将在 {send_time_FR.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {FR_A1_delay // 60} 分钟。\n"
     message += f"公司 PR 的A1邮件将在 {send_time_PR.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {PR_A1_delay // 60} 分钟。\n"
 
+    logger.info("2委托投标登记|发送时间信息：%s", message)
+
 
     req = strip_request_fields(req)
 
@@ -238,6 +240,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             task_FR_A2_delay = send_time_FR + timedelta(minutes=1)
             delay_minutes = (task_FR_A2_delay - datetime.now()).total_seconds() // 60
             message += f"公司 FR 的A2邮件将在 {task_FR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
+            logger.info("message: %s", message)
             task_FR_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
@@ -265,6 +268,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             task_LF_A2_delay = send_time_LF + timedelta(minutes=1)
             delay_minutes = (task_LF_A2_delay - datetime.now()).total_seconds() // 60
             message += f"公司 LF 的A2邮件将在 {task_LF_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"
+            logger.info("message: %s", message)
             task_LF_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
@@ -292,7 +296,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             )
             task_PR_A2_delay = send_time_PR + timedelta(minutes=1)  
             delay_minutes = (task_PR_A2_delay - datetime.now()).total_seconds() // 60
-            message += f"公司 PR 的A2邮件将在 {task_PR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n"      
+            message += f"公司 PR 的A2邮件将在 {task_PR_A2_delay.strftime('%Y-%m-%d %H:%M:%S')} 发送，延迟 {delay_minutes} 分钟。\n" 
+            logger.info("message: %s", message)     
             task_PR_A2 = tasks.send_email_with_followup_delay.delay(
                 to_email=company.email,
                 subject=A2_subject,
@@ -437,7 +442,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             #     }
             # )
             
-            tasks.send_email_with_followup_delay(
+            tasks.send_email_with_followup_delay.delay(
                 to_email=b_company_info.email,
                 subject=subject,
                 content=content,
@@ -501,7 +506,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             #     }
             # )
             PR_A1_delay = 1 * 60
-            tasks.send_email_with_followup_delay(
+            tasks.send_email_with_followup_delay.delay(
                 to_email=b_company_info.email,
                 subject=subject,
                 content=content,
