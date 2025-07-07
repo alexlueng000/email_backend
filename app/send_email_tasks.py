@@ -140,7 +140,7 @@ def schedule_bid_conversation_BCD(
         company_short_name=b_company.short_name, 
         project_name=project_name, 
         serial_number=contract_serial_number,
-        tender_number=contract_number,
+        tender_number=tender_number,
         winning_amount=winning_amount,
         winning_time=winning_time
     )

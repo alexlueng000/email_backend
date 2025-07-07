@@ -195,6 +195,8 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
             )
             # print("LF公司邮件内容：", content)  
             success, error = email_utils.send_email_in_main(to=b_company_info.email, subject=subject, body=content, smtp_config=smtp_config)
+            if error:
+                logger.error("LF A1发送邮件失败，错误信息：%s", error)
             
             # 保存发送记录
             record = models.EmailRecord(
