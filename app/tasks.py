@@ -160,7 +160,6 @@ def send_email_with_followup_delay(
     content: str,
     smtp_config: dict,
     stage: str,
-    # project_id: int,
     followup_task_args: dict | None = None,
     followup_delay: int = 0
 ):
@@ -172,20 +171,6 @@ def send_email_with_followup_delay(
         
         success, error = email_utils.send_email(to_email, subject, content, smtp_config, stage)
         scheduled_time = datetime.now()
-
-        # 保存发送记录
-        # record = models.EmailRecord(
-        #     to=to_email,
-        #     subject=subject,
-        #     body=content,
-        #     status="success" if success else "failed",
-        #     error_message=error if not success else None,
-        #     actual_sending_time=scheduled_time,
-        #     stage=stage,
-        #     project_id=project_id
-        # )
-        # db.add(record)
-        # db.commit()
 
         if not success:
             logger.warning(f"[{stage}] ❌ 邮件发送失败，将重试：{error}")

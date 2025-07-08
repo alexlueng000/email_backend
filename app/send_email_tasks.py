@@ -7,7 +7,7 @@ from contextlib import contextmanager
 
 from app import database, models, email_utils, excel_utils
 from app.utils import get_dingtalk_access_token, create_yida_form_instance
-from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task, send_email_with_followup
+from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task, send_email_with_followup, send_email_with_followup_delay, send_reply_email_with_attachments_delay
 from app.utils import simplify_to_traditional
 
 from celery import chain
@@ -202,17 +202,23 @@ def schedule_bid_conversation_BCD(
     #     countdown=delay4 * 60
     # )
 
-    # 最后一封邮件任务（无 follow-up）D - B
+
+    # B6：D ➝ B
+    delay_b6 = 0  # 没有后续任务
     task_b6 = {
         "to_email": b_company.email,
         "subject": d_email_subject_b6,
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id
+        "project_id": project_info.id,
+        "followup_task_args": None,
+        "followup_delay": delay_b6
     }
+    logger.info(f"[B6] 💌 邮件准备完毕，将在前一任务完成后立即发送，目标：{b_company.email}")
 
-    # 第三封邮件 B ➝ D（成功后再发 B6）
+    # B5：B ➝ D
+    delay_b5 = random.randint(5, 60) * 60
     task_b5 = {
         "to_email": d_company.email,
         "subject": b_email_subject_b5,
@@ -220,10 +226,13 @@ def schedule_bid_conversation_BCD(
         "smtp_config": b_smtp,
         "stage": "B5",
         "project_id": project_info.id,
-        "followup_task_args": task_b6
+        "followup_task_args": task_b6,
+        "followup_delay": delay_b5
     }
+    logger.info(f"[B5] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b5 // 60} 分钟发送，目标：{d_company.email}")
 
-    # 第二封邮件 C ➝ B（成功后再发 B5）
+    # B4：C ➝ B
+    delay_b4 = random.randint(5, 60) * 60
     task_b4 = {
         "to_email": b_company.email,
         "subject": c_email_subject_b4,
@@ -231,10 +240,13 @@ def schedule_bid_conversation_BCD(
         "smtp_config": c_smtp,
         "stage": "B4",
         "project_id": project_info.id,
-        "followup_task_args": task_b5
+        "followup_task_args": task_b5,
+        "followup_delay": delay_b4
     }
+    logger.info(f"[B4] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b4 // 60} 分钟发送，目标：{b_company.email}")
 
-    # 第一封邮件 B ➝ C（成功后再发 B4）
+    # B3：B ➝ C（起点）
+    delay_b3 = random.randint(5, 60) * 60
     task_b3 = {
         "to_email": c_company.email,
         "subject": b_email_subject_b3,
@@ -242,10 +254,18 @@ def schedule_bid_conversation_BCD(
         "smtp_config": b_smtp,
         "stage": "B3",
         "project_id": project_info.id,
-        "followup_task_args": task_b4
+        "followup_task_args": task_b4,
+        "followup_delay": delay_b3
     }
+    logger.info(f"[B3] 💌 邮件准备完毕，将立即调度，后续依次触发 B4→B5→B6，目标：{c_company.email}")
 
-    send_email_with_followup.apply_async(kwargs=task_b3)
+    # 调度 B3
+    send_email_with_followup_delay.apply_async(
+        kwargs=task_b3,
+        countdown=0  # 或 random delay
+    )
+    logger.info("[B3] 🚀 已调度，Celery任务开始执行邮件链")
+
 
     return {"message": "email sent!"}
 
@@ -352,17 +372,23 @@ def schedule_bid_conversation_CCD(
     #     countdown=delay * 60
     # )
 
-    # 第二封邮件：D ➝ B（随机延迟 5–60 分钟）
+    # 生成随机延迟时间（5 ~ 60 分钟）
+    delay_b6 = random.randint(5, 60) * 60
+
+    # 第二封邮件：D ➝ B（由 B5 成功后触发）
     task_b6 = {
         "to_email": b_company.email,
         "subject": d_email_subject_b6,
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id
+        "project_id": project_info.id,
+        "followup_task_args": None,
+        "followup_delay": 0  # 无后续任务
     }
+    logger.info(f"[B6] 💌 邮件准备完毕，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送，目标：{b_company.email}")
 
-    # 第一封邮件：B ➝ D（成功后再发 B6）
+    # 第一封邮件：B ➝ D（成功后调度 B6）
     task_b5 = {
         "to_email": d_company.email,
         "subject": c_email_subject_b5,
@@ -370,10 +396,16 @@ def schedule_bid_conversation_CCD(
         "smtp_config": b_smtp,
         "stage": "B5",
         "project_id": project_info.id,
-        "followup_task_args": task_b6
+        "followup_task_args": task_b6,
+        "followup_delay": delay_b6
     }
+    logger.info(f"[B5] 🚀 邮件已调度，发送对象：{d_company.email}，发送成功后将调度 B6")
 
-    send_email_with_followup.apply_async(kwargs=task_b5)
+    # 调度 B5 邮件立即执行（或你也可以加入前置 delay）
+    send_email_with_followup_delay.apply_async(
+        kwargs=task_b5,
+        countdown=0
+    )
 
     return {
         "message": "email sent!"
@@ -475,17 +507,23 @@ def schedule_bid_conversation_BD(
     #     countdown=delay * 60  # 相对第一封
     # )
 
-    # 第二封邮件：D ➝ B（随机延迟 5–60 分钟）
+    # 生成 B6 邮件发送的延迟时间（单位：秒）
+    delay_b6 = random.randint(5, 60) * 60
+
+    # 第二封邮件：D ➝ B（将在 B5 成功后延迟 delay_b6 秒发送）
     task_b6 = {
         "to_email": b_company.email,
         "subject": d_email_subject_b6,
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id
+        "project_id": project_info.id,
+        "followup_task_args": None,
+        "followup_delay": 0  # 无下一级任务
     }
+    logger.info(f"[B6] 💌 准备完毕，目标: {b_company.email}，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送")
 
-    # 第一封邮件：B ➝ D（成功后再发 B6）
+    # 第一封邮件：B ➝ D
     task_b5 = {
         "to_email": d_company.email,
         "subject": b_email_subject_b5,
@@ -493,10 +531,16 @@ def schedule_bid_conversation_BD(
         "smtp_config": b_smtp,
         "stage": "B5",
         "project_id": project_info.id,
-        "followup_task_args": task_b6
+        "followup_task_args": task_b6,
+        "followup_delay": delay_b6
     }
+    logger.info(f"[B5] 🚀 调度中，目标: {d_company.email}，成功后将调度 B6")
 
-    send_email_with_followup.apply_async(kwargs=task_b5)
+    # 调度 B5，立即执行
+    send_email_with_followup_delay.apply_async(
+        kwargs=task_b5,
+        countdown=0
+    )
 
     return {
         "message": "email sent!"
@@ -747,18 +791,22 @@ def schedule_settlement_BCD(
     #     countdown=delay3 * 60  # 相对第一封
     # )
 
-
-    # 最后一封邮件任务 （无 follow up）B - C
+    # 最后一封邮件任务 C10：B ➝ C（无 follow up）
     task_c10 = {
         "to_email": c_company.email,
         "subject": b_email_subject_c10,
         "content": b_email_content_c10,
         "smtp_config": b_smtp,
         "stage": "C10",
-        "project_id": project_info.id
+        "project_id": project_info.id,
+        "attachments": [],
+        "followup_task_args": None,
+        "followup_delay": 0
     }
+    logger.info(f"[C10] 💌 准备完毕，目标：{c_company.email}，无后续任务")
 
-    # 第三封邮件 D - B
+    # C9：D ➝ B（成功后调度 C10）
+    delay_c9 = random.randint(5, 60) * 60
     task_c9 = {
         "to_email": b_company.email,
         "subject": d_email_subject_c9,
@@ -766,12 +814,14 @@ def schedule_settlement_BCD(
         "smtp_config": d_smtp,
         "stage": "C9",
         "project_id": project_info.id,
+        "attachments": [],
         "followup_task_args": task_c10,
-        "followup_delay_min": 300,
-        "followup_delay_max": 3600
+        "followup_delay": delay_c9
     }
+    logger.info(f"[C9] 💌 准备完毕，目标：{b_company.email}，成功后将在 {delay_c9 // 60} 分钟后调度 C10")
 
-    # 第二封邮件 B - D
+    # C8：B ➝ D（成功后调度 C9）
+    delay_c8 = random.randint(5, 60) * 60
     task_c8 = {
         "to_email": d_company.email,
         "subject": b_email_subject_c8,
@@ -779,13 +829,14 @@ def schedule_settlement_BCD(
         "smtp_config": b_smtp,
         "stage": "C8",
         "project_id": project_info.id,
+        "attachments": [BD_settlement_path],
         "followup_task_args": task_c9,
-        "followup_delay_min": 300,
-        "followup_delay_max": 3600,
-        "attachments": [BD_settlement_path]
+        "followup_delay": delay_c8
     }
+    logger.info(f"[C8] 💌 准备完毕，目标：{d_company.email}，成功后将在 {delay_c8 // 60} 分钟后调度 C9")
 
-    # 第一封邮件 C - B
+    # C7：C ➝ B（入口任务，成功后调度 C8）
+    delay_c7 = random.randint(5, 60) * 60
     task_c7 = {
         "to_email": b_company.email,
         "subject": c_email_subject_c7,
@@ -793,14 +844,17 @@ def schedule_settlement_BCD(
         "smtp_config": c_smtp,
         "stage": "C7",
         "project_id": project_info.id,
+        "attachments": [CB_settlement_path],
         "followup_task_args": task_c8,
-        "followup_delay_min": 300,
-        "followup_delay_max": 3600,
-        "attachments": [CB_settlement_path]
+        "followup_delay": delay_c7
     }
+    logger.info(f"[C7] 🚀 开始调度，目标：{b_company.email}，成功后将在 {delay_c7 // 60} 分钟后调度 C8")
 
-
-    send_reply_email_with_attachments.apply_async(kwargs=task_c7)
+    # 启动入口任务 C7
+    send_reply_email_with_attachments_delay.apply_async(
+        kwargs=task_c7,
+        countdown=0
+    )
     
 
     return {
@@ -955,7 +1009,8 @@ def schedule_settlement_CCD_BD(
     #     countdown=delay2 * 60  # 相对第一封
     # ) 
 
-    # 第二封邮件：D ➝ B
+    # 第二封邮件：D ➝ B（由 C8 成功后调度）
+    delay_c9 = random.randint(5, 60) * 60
     task_c9 = {
         "to_email": b_email,
         "subject": d_email_subject_c9,
@@ -963,11 +1018,13 @@ def schedule_settlement_CCD_BD(
         "smtp_config": d_smtp,
         "stage": "C9",
         "project_id": project_info.id,
-        "followup_delay_min": 300,
-        "followup_delay_max": 3600
+        "attachments": [],
+        "followup_task_args": None,
+        "followup_delay": 0
     }
+    logger.info(f"[C9] 💌 准备完毕，目标：{b_email}，将在 C8 成功后延迟 {delay_c9 // 60} 分钟发送")
 
-    # 第一封邮件：B ➝ D
+    # 第一封邮件：B ➝ D（启动任务）
     task_c8 = {
         "to_email": d_email,
         "subject": b_email_subject_c8,
@@ -975,13 +1032,17 @@ def schedule_settlement_CCD_BD(
         "smtp_config": b_smtp,
         "stage": "C8",
         "project_id": project_info.id,
+        "attachments": [BD_settlement_path],
         "followup_task_args": task_c9,
-        "followup_delay_min": 300,
-        "followup_delay_max": 3600,
-        "attachments": [BD_settlement_path]
+        "followup_delay": delay_c9
     }
+    logger.info(f"[C8] 🚀 调度任务，目标：{d_email}，成功后将在 {delay_c9 // 60} 分钟后发送 C9")
 
-    send_reply_email_with_attachments.apply_async(kwargs=task_c8)
+    # 执行任务 C8（立即）
+    send_reply_email_with_attachments_delay.apply_async(
+        kwargs=task_c8,
+        countdown=0
+    )
 
 
     return {
