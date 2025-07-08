@@ -195,7 +195,7 @@ def send_email_with_followup_delay(
         if followup_task_args:
             # delay = random.randint(followup_delay_min, followup_delay_max)
             logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {followup_delay} 秒")
-            send_email_with_followup.apply_async(
+            send_email_with_followup_delay.apply_async(
                 kwargs=followup_task_args,
                 # countdown=delay
                 countdown=followup_delay
