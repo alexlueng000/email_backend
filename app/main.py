@@ -320,7 +320,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         "followup_task_args": task_LF_A2,
         "followup_delay": LF_A1_delay
     }
-    tasks.send_email_with_followup.apply_async(kwargs=task_LF_A1)
+    tasks.send_email_with_followup_delay.apply_async(kwargs=task_LF_A1)
         
     # 弗劳恩
     fr_subject = f"【誠邀合作】{ simplify_to_traditional(req.project_name) }投標{req.f_serial_number}"
@@ -349,7 +349,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         "followup_task_args": task_FR_A2,
         "followup_delay": FR_A1_delay
     }
-    tasks.send_email_with_followup.apply_async(kwargs=task_FR_A1)
+    tasks.send_email_with_followup_delay.apply_async(kwargs=task_FR_A1)
         
         
     # 普利赛斯
@@ -379,7 +379,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         "followup_task_args": task_PR_A2,
         "followup_delay": PR_A1_delay
     }
-    tasks.send_email_with_followup.apply_async(kwargs=task_PR_A1)
+    tasks.send_email_with_followup_delay.apply_async(kwargs=task_PR_A1)
 
     project_info.a1 = True
     db.commit()
