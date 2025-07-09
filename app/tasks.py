@@ -298,7 +298,7 @@ def send_reply_email_with_attachments_delay(
     stage: str = "",
     project_id: int = 0,
     followup_task_args: dict | None = None,
-    # followup_delay: int = 0
+    followup_delay: int = 0
 ):
     from app import database
     db = database.SessionLocal()
@@ -331,14 +331,14 @@ def send_reply_email_with_attachments_delay(
 
         # 调度后续任务（若有）
         if followup_task_args:
-            followup_delay = followup_task_args.pop("followup_delay", 60)
+            next_delay = followup_task_args.pop("followup_delay", 60)
             logger.info(
                 f"[{stage}] 🕐 调度后续任务 {followup_task_args.get('stage')}，"
-                f"目标：{followup_task_args.get('to_email')}，延迟 {followup_delay} 秒"
+                f"目标：{followup_task_args.get('to_email')}，延迟 {next_delay} 秒"
             )
             send_reply_email_with_attachments_delay.apply_async(
                 kwargs=followup_task_args,
-                countdown=followup_delay
+                countdown=next_delay
             )
 
         logger.info(f"[{stage}] ✅ 带附件邮件任务成功完成")
