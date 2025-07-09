@@ -29,6 +29,8 @@ logger = setup_logger(__name__)
 
 T = TypeVar('T', bound=BaseModel)
 
+max_sending_time = 10
+
 def strip_request_fields(req: T) -> T:
     """
     去除所有字符串字段两端的空白字符，包括普通空格、不间断空格（\xa0）和全角空格（\u3000）。
@@ -186,7 +188,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         full_name=fr_company.contact_person,
     )
 
-    delay_FR_A2 = random.randint(5, 60)
+    delay_FR_A2 = random.randint(5, max_sending_time)
     task_FR_A2 = {
         "to_email": fr_company.email,
         "subject": FR_A2_subject,
@@ -214,7 +216,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         full_name=lf_company.contact_person,
     )
 
-    delay_LF_A2 = random.randint(5, 60)
+    delay_LF_A2 = random.randint(5, max_sending_time)
     task_LF_A2 = {
         "to_email": lf_company.email,
         "subject": LF_A2_subject,
@@ -241,7 +243,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         full_name=pr_company.contact_person,
     )
     
-    delay_PR_A2 = random.randint(5, 60)
+    delay_PR_A2 = random.randint(5, max_sending_time)
     task_PR_A2 = {
         "to_email": pr_company.email,
         "subject": PR_A2_subject,

@@ -285,6 +285,84 @@ def send_reply_email_with_attachments(
         db.close()
 
 
+@celery.task(bind=True, max_retries=3, default_retry_delay=60)
+def send_reply_email_with_attachments_delay(
+    self,
+    to_email: str,
+    subject: str,
+    content: str,
+    smtp_config: dict,
+    attachments: list[str] | None = None,
+    stage: str = "",
+    project_id: int = 0,
+    followup_task_args: dict | None = None
+):
+    from app import database
+    db = database.SessionLocal()
+
+    try:
+        logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments) if attachments else 0}")
+
+        success, error = email_utils.send_email_with_attachments(
+            to_email, subject, content, smtp_config, attachments, stage
+        )
+
+        # 保存记录
+        # record = models.EmailRecord(
+        #     to=to_email,
+        #     subject=subject,
+        #     body=content,
+        #     status="success" if success else "failed",
+        #     error_message=error if not success else None,
+        #     actual_sending_time=datetime.now(),
+        #     stage=stage,
+        #     project_id=project_id
+        # )
+        # db.add(record)
+        # db.commit()
+        # db.refresh(record)
+
+        if not success:
+            logger.warning(f"[{stage}] ❌ 带附件邮件发送失败，将重试：{error}")
+            raise EmailSendFailed(error)
+
+        # 调度后续任务（若有）
+        if followup_task_args:
+            followup_delay = followup_task_args.pop("followup_delay", 60)
+            logger.info(
+                f"[{stage}] 🕐 调度后续任务 {followup_task_args.get('stage')}，"
+                f"目标：{followup_task_args.get('to_email')}，延迟 {followup_delay} 秒"
+            )
+            send_reply_email_with_attachments_delay.apply_async(
+                kwargs=followup_task_args,
+                countdown=followup_delay
+            )
+
+        logger.info(f"[{stage}] ✅ 带附件邮件任务成功完成")
+        return {"success": True, "error": ""}
+
+    except EmailSendFailed as e:
+        db.rollback()
+        logger.warning(f"[{stage}] 📧 邮件逻辑失败，准备 retry：{e}")
+        try:
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] 📧 达到最大重试次数（逻辑失败）：{e}")
+            return {"success": False, "error": str(e)}
+
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"[{stage}] ❌ 系统异常，将重试：")
+        try:
+            raise self.retry(exc=e)
+        except MaxRetriesExceededError:
+            logger.error(f"[{stage}] ❌ 达到最大重试次数（系统异常）：{e}")
+            return {"success": False, "error": str(e)}
+
+    finally:
+        db.close()
+
+
 def ensure_remote_dir(sftp: paramiko.SFTPClient, remote_dir: str):
     dirs = remote_dir.strip("/").split("/")
     current = ""

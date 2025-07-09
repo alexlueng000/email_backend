@@ -16,7 +16,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 load_dotenv()
+
 now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+max_sending_time = 10
 
 @contextmanager
 def get_db_session():
@@ -218,7 +221,7 @@ def schedule_bid_conversation_BCD(
     logger.info(f"[B6] 💌 邮件准备完毕，将在前一任务完成后立即发送，目标：{b_company.email}")
 
     # B5：B ➝ D
-    delay_b5 = random.randint(5, 60) * 60
+    delay_b5 = random.randint(5, max_sending_time) * 60
     task_b5 = {
         "to_email": d_company.email,
         "subject": b_email_subject_b5,
@@ -232,7 +235,7 @@ def schedule_bid_conversation_BCD(
     logger.info(f"[B5] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b5 // 60} 分钟发送，目标：{d_company.email}")
 
     # B4：C ➝ B
-    delay_b4 = random.randint(5, 60) * 60
+    delay_b4 = random.randint(5, max_sending_time) * 60
     task_b4 = {
         "to_email": b_company.email,
         "subject": c_email_subject_b4,
@@ -246,7 +249,7 @@ def schedule_bid_conversation_BCD(
     logger.info(f"[B4] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b4 // 60} 分钟发送，目标：{b_company.email}")
 
     # B3：B ➝ C（起点）
-    delay_b3 = random.randint(5, 60) * 60
+    delay_b3 = random.randint(5, max_sending_time) * 60
     task_b3 = {
         "to_email": c_company.email,
         "subject": b_email_subject_b3,
@@ -373,7 +376,7 @@ def schedule_bid_conversation_CCD(
     # )
 
     # 生成随机延迟时间（5 ~ 60 分钟）
-    delay_b6 = random.randint(5, 60) * 60
+    delay_b6 = random.randint(5, max_sending_time) * 60
 
     # 第二封邮件：D ➝ B（由 B5 成功后触发）
     task_b6 = {
@@ -508,7 +511,7 @@ def schedule_bid_conversation_BD(
     # )
 
     # 生成 B6 邮件发送的延迟时间（单位：秒）
-    delay_b6 = random.randint(5, 60) * 60
+    delay_b6 = random.randint(5, max_sending_time) * 60
 
     # 第二封邮件：D ➝ B（将在 B5 成功后延迟 delay_b6 秒发送）
     task_b6 = {
@@ -806,7 +809,7 @@ def schedule_settlement_BCD(
     logger.info(f"[C10] 💌 准备完毕，目标：{c_company.email}，无后续任务")
 
     # C9：D ➝ B（成功后调度 C10）
-    delay_c9 = random.randint(5, 60) * 60
+    delay_c9 = random.randint(5, max_sending_time) * 60
     task_c9 = {
         "to_email": b_company.email,
         "subject": d_email_subject_c9,
@@ -821,7 +824,7 @@ def schedule_settlement_BCD(
     logger.info(f"[C9] 💌 准备完毕，目标：{b_company.email}，成功后将在 {delay_c9 // 60} 分钟后调度 C10")
 
     # C8：B ➝ D（成功后调度 C9）
-    delay_c8 = random.randint(5, 60) * 60
+    delay_c8 = random.randint(5, max_sending_time) * 60
     task_c8 = {
         "to_email": d_company.email,
         "subject": b_email_subject_c8,
@@ -836,7 +839,7 @@ def schedule_settlement_BCD(
     logger.info(f"[C8] 💌 准备完毕，目标：{d_company.email}，成功后将在 {delay_c8 // 60} 分钟后调度 C9")
 
     # C7：C ➝ B（入口任务，成功后调度 C8）
-    delay_c7 = random.randint(5, 60) * 60
+    delay_c7 = random.randint(5, max_sending_time) * 60
     task_c7 = {
         "to_email": b_company.email,
         "subject": c_email_subject_c7,
@@ -1010,7 +1013,7 @@ def schedule_settlement_CCD_BD(
     # ) 
 
     # 第二封邮件：D ➝ B（由 C8 成功后调度）
-    delay_c9 = random.randint(5, 60) * 60
+    delay_c9 = random.randint(5, max_sending_time) * 60
     task_c9 = {
         "to_email": b_email,
         "subject": d_email_subject_c9,
