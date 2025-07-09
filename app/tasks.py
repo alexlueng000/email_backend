@@ -178,12 +178,14 @@ def send_email_with_followup_delay(
 
         # 如果成功且有后续任务，调度之
         if followup_task_args:
-            # delay = random.randint(followup_delay_min, followup_delay_max)
-            logger.info(f"[{stage}] 🕐 调度 followup 任务，延迟 {followup_delay} 秒")
+            # 从 followup_task_args 中提取自己的 delay，不用 A1 的
+            next_delay = followup_task_args.pop("followup_delay", 60)
+            logger.info(
+                f"[{stage}] 🕐 调度 followup 任务（下一阶段 {followup_task_args.get('stage')}），延迟 {next_delay} 秒"
+            )
             send_email_with_followup_delay.apply_async(
                 kwargs=followup_task_args,
-                # countdown=delay
-                countdown=followup_delay
+                countdown=next_delay
             )
 
         logger.info(f"[{stage}] ✅ 邮件发送任务成功完成")
