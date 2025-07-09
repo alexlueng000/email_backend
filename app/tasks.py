@@ -298,7 +298,7 @@ def send_reply_email_with_attachments_delay(
     stage: str = "",
     project_id: int = 0,
     followup_task_args: dict | None = None,
-    followup_delay: int = 0
+    # followup_delay: int = 0
 ):
     from app import database
     db = database.SessionLocal()
