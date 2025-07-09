@@ -214,7 +214,7 @@ def schedule_bid_conversation_BCD(
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": None,
         "followup_delay": delay_b6
     }
@@ -228,7 +228,7 @@ def schedule_bid_conversation_BCD(
         "content": b_email_content_b5,
         "smtp_config": b_smtp,
         "stage": "B5",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": task_b6,
         "followup_delay": delay_b5
     }
@@ -242,7 +242,7 @@ def schedule_bid_conversation_BCD(
         "content": c_email_content_b4,
         "smtp_config": c_smtp,
         "stage": "B4",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": task_b5,
         "followup_delay": delay_b4
     }
@@ -256,7 +256,7 @@ def schedule_bid_conversation_BCD(
         "content": b_email_content_b3,
         "smtp_config": b_smtp,
         "stage": "B3",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": task_b4,
         "followup_delay": delay_b3
     }
@@ -385,7 +385,7 @@ def schedule_bid_conversation_CCD(
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": None,
         "followup_delay": 0  # 无后续任务
     }
@@ -398,7 +398,7 @@ def schedule_bid_conversation_CCD(
         "content": c_email_content_b5,
         "smtp_config": b_smtp,
         "stage": "B5",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": task_b6,
         "followup_delay": delay_b6
     }
@@ -520,7 +520,7 @@ def schedule_bid_conversation_BD(
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "followup_task_args": None,
         "followup_delay": 0  # 无下一级任务
     }
@@ -533,7 +533,7 @@ def schedule_bid_conversation_BD(
         "content": b_email_content_b5,
         "smtp_config": b_smtp,
         "stage": "B5",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,  
         "followup_task_args": task_b6,
         "followup_delay": delay_b6
     }
@@ -801,7 +801,7 @@ def schedule_settlement_BCD(
         "content": b_email_content_c10,
         "smtp_config": b_smtp,
         "stage": "C10",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [],
         "followup_task_args": None,
         "followup_delay": 0
@@ -816,7 +816,7 @@ def schedule_settlement_BCD(
         "content": d_email_content_c9,
         "smtp_config": d_smtp,
         "stage": "C9",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [],
         "followup_task_args": task_c10,
         "followup_delay": delay_c9
@@ -831,7 +831,7 @@ def schedule_settlement_BCD(
         "content": b_email_content_c8,
         "smtp_config": b_smtp,
         "stage": "C8",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [BD_settlement_path],
         "followup_task_args": task_c9,
         "followup_delay": delay_c8
@@ -846,7 +846,7 @@ def schedule_settlement_BCD(
         "content": c_email_content_c7,
         "smtp_config": c_smtp,
         "stage": "C7",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [CB_settlement_path],
         "followup_task_args": task_c8,
         "followup_delay": delay_c7
@@ -1020,7 +1020,7 @@ def schedule_settlement_CCD_BD(
         "content": d_email_content_c9,
         "smtp_config": d_smtp,
         "stage": "C9",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [],
         "followup_task_args": None,
         "followup_delay": 0
@@ -1034,7 +1034,7 @@ def schedule_settlement_CCD_BD(
         "content": b_email_content_c8,
         "smtp_config": b_smtp,
         "stage": "C8",
-        "project_id": project_info.id,
+        # "project_id": project_info.id,
         "attachments": [BD_settlement_path],
         "followup_task_args": task_c9,
         "followup_delay": delay_c9
