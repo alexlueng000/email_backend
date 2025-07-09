@@ -207,7 +207,7 @@ def schedule_bid_conversation_BCD(
 
 
     # B6：D ➝ B
-    delay_b6 = 0  # 没有后续任务
+    delay_b6 = random.randint(5, max_sending_time) * 60  # 没有后续任务
     task_b6 = {
         "to_email": b_company.email,
         "subject": d_email_subject_b6,
@@ -387,7 +387,7 @@ def schedule_bid_conversation_CCD(
         "stage": "B6",
         # "project_id": project_info.id,
         "followup_task_args": None,
-        "followup_delay": 0  # 无后续任务
+        "followup_delay": delay_b6  # 无后续任务
     }
     logger.info(f"[B6] 💌 邮件准备完毕，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送，目标：{b_company.email}")
 
@@ -522,10 +522,12 @@ def schedule_bid_conversation_BD(
         "stage": "B6",
         # "project_id": project_info.id,
         "followup_task_args": None,
-        "followup_delay": 0  # 无下一级任务
+        "followup_delay": delay_b6  # 无下一级任务
     }
     logger.info(f"[B6] 💌 准备完毕，目标: {b_company.email}，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送")
 
+    # 生成 B5 邮件发送的延迟时间（单位：秒）
+    delay_b5 = random.randint(5, max_sending_time) * 60
     # 第一封邮件：B ➝ D
     task_b5 = {
         "to_email": d_company.email,
@@ -535,7 +537,7 @@ def schedule_bid_conversation_BD(
         "stage": "B5",
         # "project_id": project_info.id,  
         "followup_task_args": task_b6,
-        "followup_delay": delay_b6
+        "followup_delay": delay_b5
     }
     logger.info(f"[B5] 🚀 调度中，目标: {d_company.email}，成功后将调度 B6")
 
@@ -795,6 +797,7 @@ def schedule_settlement_BCD(
     # )
 
     # 最后一封邮件任务 C10：B ➝ C（无 follow up）
+    delay_c10 = random.randint(5, max_sending_time) * 60
     task_c10 = {
         "to_email": c_company.email,
         "subject": b_email_subject_c10,
@@ -804,9 +807,9 @@ def schedule_settlement_BCD(
         # "project_id": project_info.id,
         "attachments": [],
         "followup_task_args": None,
-        "followup_delay": 0
+        "followup_delay": delay_c10
     }
-    logger.info(f"[C10] 💌 准备完毕，目标：{c_company.email}，无后续任务")
+    logger.info(f"[C10] 💌 准备完毕，目标：{c_company.email}，将在 C9 成功后延迟 {delay_c10 // 60} 分钟发送")
 
     # C9：D ➝ B（成功后调度 C10）
     delay_c9 = random.randint(5, max_sending_time) * 60
@@ -1023,11 +1026,12 @@ def schedule_settlement_CCD_BD(
         # "project_id": project_info.id,
         "attachments": [],
         "followup_task_args": None,
-        "followup_delay": 0
+        "followup_delay": delay_c9
     }
     logger.info(f"[C9] 💌 准备完毕，目标：{b_email}，将在 C8 成功后延迟 {delay_c9 // 60} 分钟发送")
 
     # 第一封邮件：B ➝ D（启动任务）
+    delay_c8 = random.randint(5, max_sending_time) * 60
     task_c8 = {
         "to_email": d_email,
         "subject": b_email_subject_c8,
@@ -1037,7 +1041,7 @@ def schedule_settlement_CCD_BD(
         # "project_id": project_info.id,
         "attachments": [BD_settlement_path],
         "followup_task_args": task_c9,
-        "followup_delay": delay_c9
+        "followup_delay": delay_c8
     }
     logger.info(f"[C8] 🚀 调度任务，目标：{d_email}，成功后将在 {delay_c9 // 60} 分钟后发送 C9")
 
