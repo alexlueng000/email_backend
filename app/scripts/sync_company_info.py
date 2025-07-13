@@ -47,6 +47,5 @@ def sync_company_info():
         )
 
 
-if __name__ == "__main__":
-    sync_company_info()
+sync_company_info()
     
