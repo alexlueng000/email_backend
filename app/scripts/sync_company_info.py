@@ -45,3 +45,8 @@ def sync_company_info():
                 "textField_md18jasj": company_info.english_address, # 英文地址
             }
         )
+
+
+if __name__ == "__main__":
+    sync_company_info()
+    
