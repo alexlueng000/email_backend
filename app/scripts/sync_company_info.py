@@ -20,6 +20,11 @@ def sync_company_info():
     db = database.SessionLocal()
     company_infos = db.query(models.CompanyInfo).all()
 
+    # 打印公司信息
+    print("✅ 打印公司信息")
+    for company_info in company_infos:
+        print(company_info.company_name)
+
     for company_info in company_infos:
         create_yida_form_instance(
             access_token=get_dingtalk_access_token(),
