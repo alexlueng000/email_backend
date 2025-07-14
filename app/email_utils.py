@@ -36,10 +36,9 @@ def send_email(to, subject, body, smtp_config, stage):
     message["Subject"] = subject
     message.add_alternative(body, subtype="html")
 
-    from app import database
-    db = database.SessionLocal()
-    from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
-    to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
+    with get_db_session() as db:
+        from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
+        to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
 
     try:
         logger.info("📧 开始建立 SMTP 连接")
@@ -103,9 +102,8 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
     # 添加正文
     message.attach(MIMEText(content, "html", "utf-8"))
 
-    from app import database
-    db = database.SessionLocal()
-    from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
+    with get_db_session() as db:
+        from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
     to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to_email).first()
 
 

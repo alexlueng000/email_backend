@@ -44,8 +44,8 @@ def schedule_bid_conversation_BCD(
     purchase_department: str # 采购单位
 ):
 
-    with get_db_session() as db:
-        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+    # with get_db_session() as db:
+    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
         
     b_smtp = {
         "host": b_company.smtp_host,
@@ -71,9 +71,9 @@ def schedule_bid_conversation_BCD(
         "from": d_company.smtp_from
     }
 
-    b_email = b_company.email
-    c_email = c_company.email
-    d_email = d_company.email
+    # b_email = b_company.email
+    # c_email = c_company.email
+    # d_email = d_company.email
 
     # 获取对应B公司的邮件模板
     b_email_subject_b3 = email_utils.render_email_subject(
@@ -288,8 +288,8 @@ def schedule_bid_conversation_CCD(
     tender_number: str
 ):
 
-    with get_db_session() as db:
-        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+    # with get_db_session() as db:
+    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
 
 
     b_smtp = {
@@ -308,8 +308,8 @@ def schedule_bid_conversation_CCD(
         "password": d_company.smtp_password,
         "from": d_company.smtp_from
     }
-    b_email = b_company.email
-    d_email = d_company.email
+    # b_email = b_company.email
+    # d_email = d_company.email
 
     # C公司的特殊B5邮件模板
     c_email_subject_b5 = email_utils.render_email_subject(
@@ -429,8 +429,8 @@ def schedule_bid_conversation_BD(
     tender_number: str
 ):
 
-    with get_db_session() as db:
-        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+    # with get_db_session() as db:
+    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -448,8 +448,8 @@ def schedule_bid_conversation_BD(
         "from": d_company.smtp_from
     }
 
-    b_email = b_company.email
-    d_email = d_company.email
+    # b_email = b_company.email
+    # d_email = d_company.email
 
     # 获取对应B公司的邮件模板
     b_email_subject_b5 = email_utils.render_email_subject(
@@ -589,8 +589,8 @@ def schedule_settlement_BCD(
     tender_number: str # 招标编号
 ):
 
-    with get_db_session() as db:
-        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
+    # with get_db_session() as db:
+    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -616,9 +616,9 @@ def schedule_settlement_BCD(
         "from": d_company.smtp_from
     }
 
-    b_email = b_company.email
-    c_email = c_company.email
-    d_email = d_company.email
+    # b_email = b_company.email
+    # c_email = c_company.email
+    # d_email = d_company.email
 
 
     # 获取对应C公司的邮件模板
@@ -898,8 +898,8 @@ def schedule_settlement_CCD_BD(
     tender_number: str # 招标编号
 ):
     
-    with get_db_session() as db:
-        project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
+    # with get_db_session() as db:
+    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
     
 
     b_email = b_company.email
