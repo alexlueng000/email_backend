@@ -4,7 +4,7 @@ import re
 import random 
 
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime
 from decimal import Decimal
 from typing import TypeVar
 from pydantic import BaseModel
@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import get_dingtalk_access_token, create_yida_form_instance, simplify_to_traditional
+from app.utils import simplify_to_traditional
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
