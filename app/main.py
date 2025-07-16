@@ -186,6 +186,11 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=fr_company.contact_person,
+        phone=fr_company.phone,
+        email=fr_company.email,
+        address=fr_company.address,
+        english_address=fr_company.english_address,
+        pingyin=fr_company.pingyin,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -214,6 +219,11 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=lf_company.contact_person,
+        phone=lf_company.phone,
+        email=lf_company.email,
+        address=lf_company.address,
+        english_address=lf_company.english_address,
+        pingyin=lf_company.pingyin,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -241,6 +251,11 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=pr_company.contact_person,
+        phone=pr_company.phone,
+        email=pr_company.email,
+        address=pr_company.address,
+        english_address=pr_company.english_address,
+        pingyin=pr_company.pingyin,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)
@@ -272,7 +287,13 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     content = email_utils.render_invitation_template_content(
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name
+        template_name=template_name,
+        full_name=lf_company.contact_person,
+        phone=lf_company.phone,
+        email=lf_company.email,
+        address=lf_company.address,
+        english_address=lf_company.english_address,
+        pingyin=lf_company.pingyin,
     )
 
     task_LF_A1 = {
@@ -301,7 +322,13 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     content = email_utils.render_invitation_template_content(
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name
+        template_name=template_name,
+        full_name=fr_company.contact_person,
+        phone=fr_company.phone,
+        email=fr_company.email,
+        address=fr_company.address,
+        english_address=fr_company.english_address,
+        pingyin=fr_company.pingyin,
     )
 
     task_FR_A1 = {
@@ -331,7 +358,13 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     content = email_utils.render_invitation_template_content(
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name
+        template_name=template_name,
+        full_name=pr_company.contact_person,
+        phone=pr_company.phone,
+        email=pr_company.email,
+        address=pr_company.address,
+        english_address=pr_company.english_address,
+        pingyin=pr_company.pingyin,
     )
 
     task_PR_A1 = {

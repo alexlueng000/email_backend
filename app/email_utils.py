@@ -218,20 +218,22 @@ def render_invitation_template_content(
     contract_number: str | None = None,
     winning_time: str | None = None,
     template_name: str | None = None,
-    c_company_name: str | None = None
+    c_company_name: str | None = None,
+    phone: str | None = None,
+    email: str | None = None,
+    address: str | None = None,
+    english_address: str | None = None,
+    pingyin: str | None = None,
+
 ):
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     template_dir = os.path.join(base_dir, "app", "email_templates")
-    print("template_dir: ", template_dir)
 
     env = Environment(
         loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape(['html', 'xml'])  # 自动转义 HTML
     )
-
-    print("template_name: ", template_name)
-    print("c_company_name!!!!!!!!!!!!: ", c_company_name)
 
     template = env.get_template(template_name)  # 例如 "bidding_invite.html"
     return template.render(
@@ -243,7 +245,12 @@ def render_invitation_template_content(
         full_name=full_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
-        c_company_name=c_company_name
+        c_company_name=c_company_name,
+        phone=phone,
+        email=email,
+        address=address,
+        english_address=english_address,
+        pingyin=pingyin,
     )
     
 
