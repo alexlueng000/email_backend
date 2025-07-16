@@ -298,6 +298,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=simplify_to_traditional(req.project_name),
         template_name=template_name,
         # 发送人落款信息
+        contact_person=lf_company.contact_person,
         company_name=lf_company.company_name,
         full_name=lf_company.contact_person,
         phone=lf_company.phone,
@@ -335,6 +336,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=simplify_to_traditional(req.project_name),
         template_name=template_name,
         # 发送人落款信息
+        contact_person=fr_company.contact_person,
         company_name=fr_company.company_name,
         full_name=fr_company.contact_person,
         phone=fr_company.phone,
@@ -380,6 +382,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=pr_company.address,
         english_address=pr_company.english_address,
         pingyin=pr_company.pingyin,
+        contact_person=pr_company.contact_person,
     )
 
     task_PR_A1 = {
