@@ -186,12 +186,14 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=fr_company.contact_person,
-        company_name=fr_company.company_name,
-        phone=fr_company.phone,
-        email=fr_company.email,
-        address=fr_company.address,
-        english_address=fr_company.english_address,
-        pingyin=fr_company.pingyin,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -220,12 +222,14 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=lf_company.contact_person,
-        company_name=lf_company.company_name,
-        phone=lf_company.phone,
-        email=lf_company.email,
-        address=lf_company.address,
-        english_address=lf_company.english_address,
-        pingyin=lf_company.pingyin,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -253,12 +257,14 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         project_name=req.project_name,
         template_name=template_name,
         full_name=pr_company.contact_person,
-        company_name=pr_company.company_name,
-        phone=pr_company.phone,
-        email=pr_company.email,
-        address=pr_company.address,
-        english_address=pr_company.english_address,
-        pingyin=pr_company.pingyin,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)
@@ -291,6 +297,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
         template_name=template_name,
+        # 发送人落款信息
         company_name=lf_company.company_name,
         full_name=lf_company.contact_person,
         phone=lf_company.phone,
@@ -327,6 +334,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
         template_name=template_name,
+        # 发送人落款信息
         company_name=fr_company.company_name,
         full_name=fr_company.contact_person,
         phone=fr_company.phone,
@@ -364,6 +372,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
         template_name=template_name,
+        # 发送人落款信息
         company_name=pr_company.company_name,
         full_name=pr_company.contact_person,
         phone=pr_company.phone,
