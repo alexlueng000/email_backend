@@ -219,6 +219,7 @@ def render_invitation_template_content(
     winning_time: str | None = None,
     template_name: str | None = None,
     c_company_name: str | None = None,
+    company_name: str | None = None,
     phone: str | None = None,
     email: str | None = None,
     address: str | None = None,
