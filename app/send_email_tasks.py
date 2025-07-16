@@ -94,7 +94,15 @@ def schedule_bid_conversation_BCD(
         full_name=c_company.contact_person,
         winning_amount=winning_amount,
         contract_number=contract_number,
-        template_name="B3_"+b_company.short_name+".html"
+        template_name="B3_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
     
     logger.info("B3-B公司邮件主题：%s", b_email_subject_b3)
@@ -128,7 +136,16 @@ def schedule_bid_conversation_BCD(
         first_name=b_company.last_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
-        template_name="B4_"+c_company.short_name+".html")
+        template_name="B4_"+c_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=c_company.contact_person,
+        company_name=c_company.company_name,
+        phone=c_company.phone,
+        email=c_company.email,
+        address=c_company.address,
+        english_address=c_company.english_address,
+        pingyin=c_company.pingyin,
+    )
     
     # delay2 = random.randint(5, 60)
     # delay2 =  1
