@@ -246,6 +246,7 @@ def render_invitation_template_content(
         winning_amount=winning_amount,
         contract_number=contract_number,
         c_company_name=c_company_name,
+        company_name=company_name,
         phone=phone,
         email=email,
         address=address,
