@@ -79,6 +79,26 @@ def ping_db():
     except Exception as e:
         return {"status": "error", "message": "❌ 数据库连接失败", "detail": str(e)}
 
+
+@app.get("/update_company_info")
+def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Depends(database.get_db)):
+    company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name and models.CompanyInfo.company_type == req.company_type).first()
+    if not company_info:
+        return {"message": "没有找到公司信息"}
+    
+    company_info.company_name = req.company_name
+    company_info.company_type = req.company_type
+    company_info.short_name = req.company_short_name
+    company_info.contact_person = req.contact_person
+    company_info.last_name = req.last_name
+    company_info.last_name_traditional = req.last_name_tc
+    company_info.email = req.email
+    company_info.address = req.address
+    company_info.english_address = req.address_en
+    company_info.phone = req.phone
+    db.commit()
+    return {"message": "公司信息更新成功"}
+
 '''
 1. 委托投标
 第一封邮件：三家D公司给B公司发送邮件    

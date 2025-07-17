@@ -64,6 +64,23 @@ class EmailSubjectOut(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+'''
+更新公司信息
+'''
+class UpdateCompanyInfoRequest(BaseModel):
+    company_name: Optional[str] = None # 公司名称
+    company_type: Optional[str] = None # 公司类型
+    company_short_name: Optional[str] = None # 公司简称
+    contact_person: Optional[str] = None # 联系人
+    last_name: Optional[str] = None # 姓
+    last_name_tc: Optional[str] = None # 姓（繁体）
+    phone: Optional[str] = None # 电话
+    email: Optional[EmailStr] = None # 邮箱
+    address: Optional[str] = None # 地址
+    address_en: Optional[str] = None # 地址（英文）
+
+
 '''
 Step 1
 委托投标登记请求：采购单位，项目名称，流水号，招标编号, B公司名称
