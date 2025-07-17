@@ -178,7 +178,15 @@ def schedule_bid_conversation_BCD(
         project_name=project_name, 
         winning_time=winning_time,
         c_company_name=c_company.company_name,
-        template_name="B5_"+b_company.short_name+".html"
+        template_name="B5_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
 
     # delay3 = delay2 + random.randint(5, 60)
@@ -213,7 +221,15 @@ def schedule_bid_conversation_BCD(
         serial_number=contract_serial_number,
         project_name=project_name, 
         winning_time=winning_time,
-        template_name="B6_"+d_company.short_name+".html"
+        template_name="B6_"+d_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=d_company.contact_person,
+        company_name=d_company.company_name,
+        phone=d_company.phone,
+        email=d_company.email,
+        address=d_company.address,
+        english_address=d_company.english_address,
+        pingyin=d_company.pingyin,
     )
     # delay4 = delay3 + random.randint(5, 60)
     # delay4 = delay3 + 1
@@ -351,7 +367,15 @@ def schedule_bid_conversation_CCD(
         contract_number=contract_number,
         # c_company_name=c_company.company_name,
         winning_time=winning_time,
-        template_name="B5_"+b_company.short_name+"_SPEC.html"
+        template_name="B5_"+b_company.short_name+"_SPEC.html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
     
     logger.info("CCD B5-C公司邮件主题：%s", c_email_subject_b5)
@@ -383,7 +407,15 @@ def schedule_bid_conversation_CCD(
         serial_number=contract_serial_number,
         project_name=project_name, 
         winning_time=winning_time,
-        template_name="B6_"+d_company.short_name+".html"
+        template_name="B6_"+d_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=d_company.contact_person,
+        company_name=d_company.company_name,
+        phone=d_company.phone,
+        email=d_company.email,
+        address=d_company.address,
+        english_address=d_company.english_address,
+        pingyin=d_company.pingyin,
     )
     # delay = random.randint(5, 60)
     # delay = 1
@@ -490,7 +522,15 @@ def schedule_bid_conversation_BD(
         winning_amount=winning_amount,
         contract_number=contract_number,
         winning_time=winning_time,
-        template_name="B5_"+b_company.short_name+".html"
+        template_name="B5_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
     # 第一封邮件：B ➝ D
     # task1 = send_reply_email.apply_async(
@@ -513,12 +553,20 @@ def schedule_bid_conversation_BD(
     d_email_content_b6 = email_utils.render_invitation_template_content(
         project_name=project_name,
         serial_number=contract_serial_number,
-        first_name=b_company.last_name,
+        first_name=b_company.last_name_traditional,
         full_name=b_company.contact_person,
         winning_amount=winning_amount,
         contract_number=contract_number,
         winning_time=winning_time,
-        template_name="B6_"+d_company.short_name+".html"
+        template_name="B6_"+d_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=d_company.contact_person,
+        company_name=d_company.company_name,
+        phone=d_company.phone,
+        email=d_company.email,
+        address=d_company.address,
+        english_address=d_company.english_address,
+        pingyin=d_company.pingyin,
     )
     # delay = random.randint(5, 60)
     # delay = 1
@@ -658,7 +706,15 @@ def schedule_settlement_BCD(
         first_name=b_company.last_name,
         winning_amount=str(amount),
         contract_number=contract_number,
-        template_name="C7_"+c_company.short_name+".html"
+        template_name="C7_"+c_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=c_company.contact_person,
+        company_name=c_company.company_name,
+        phone=c_company.phone,
+        email=c_company.email,
+        address=c_company.address,
+        english_address=c_company.english_address,
+        pingyin=c_company.pingyin,
     )
 
     # 生成C->B结算单
@@ -716,7 +772,15 @@ def schedule_settlement_BCD(
         winning_amount=str(amount),
         winning_time=winning_time,
         c_company_name=c_company.company_name,
-        template_name="C8_"+b_company.short_name+".html"
+        template_name="C8_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
 
     BD_filename = f"{contract_number}_{contract_serial_number}_BCD模式_BD结算单.xlsx"
@@ -769,12 +833,20 @@ def schedule_settlement_BCD(
     d_email_content_c9 = email_utils.render_invitation_template_content(
         buyer_name="", 
         project_name=simplify_to_traditional(project_name), 
-        first_name=b_company.last_name,
+        first_name=b_company.last_name_traditional,
         serial_number=contract_serial_number,
         contract_number=contract_number,
         winning_amount=str(amount),
         winning_time=winning_time,
-        template_name="C9_"+d_company.short_name+".html"
+        template_name="C9_"+d_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=d_company.contact_person,
+        company_name=d_company.company_name,
+        phone=d_company.phone,
+        email=d_company.email,
+        address=d_company.address,
+        english_address=d_company.english_address,
+        pingyin=d_company.pingyin,
     )
     # delay2 = delay1 + 1
     # task3 = send_reply_email.apply_async(
@@ -805,7 +877,15 @@ def schedule_settlement_BCD(
         contract_number=contract_number,
         winning_amount=str(amount),
         winning_time=winning_time,
-        template_name="C10_"+b_company.short_name+".html"
+        template_name="C10_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
     # delay3 = delay2 + 1
     # task4 = send_reply_email.apply_async(
@@ -961,7 +1041,15 @@ def schedule_settlement_CCD_BD(
         contract_number=contract_number,
         winning_amount=str(amount),
         winning_time=winning_time,
-        template_name="C8_"+b_company.short_name+".html"
+        template_name="C8_"+b_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=b_company.contact_person,
+        company_name=b_company.company_name,
+        phone=b_company.phone,
+        email=b_company.email,
+        address=b_company.address,
+        english_address=b_company.english_address,
+        pingyin=b_company.pingyin,
     )
 
     BD_filename = ""
@@ -1024,7 +1112,15 @@ def schedule_settlement_CCD_BD(
         contract_number=contract_number,
         winning_amount=str(amount),
         winning_time=winning_time,
-        template_name="C9_"+d_company.short_name+".html"
+        template_name="C9_"+d_company.short_name+".html",
+        # 发送人落款信息
+        contact_person=d_company.contact_person,
+        company_name=d_company.company_name,
+        phone=d_company.phone,
+        email=d_company.email,
+        address=d_company.address,
+        english_address=d_company.english_address,
+        pingyin=d_company.pingyin,
     )
     # delay2 = delay1 + 1
     # task3 = send_reply_email.apply_async(
