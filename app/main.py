@@ -80,7 +80,7 @@ def ping_db():
         return {"status": "error", "message": "❌ 数据库连接失败", "detail": str(e)}
 
 
-@app.get("/update_company_info")
+@app.post("/update_company_info")
 def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Depends(database.get_db)):
     company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name and models.CompanyInfo.company_type == req.company_type).first()
     if not company_info:
