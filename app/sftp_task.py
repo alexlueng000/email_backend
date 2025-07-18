@@ -28,7 +28,7 @@ def upload_file_to_sftp_task(local_file: str, remote_filename: str) -> bool:
     username = os.getenv("SFTP_USERNAME")
     password = os.getenv("SFTP_PASSWORD")
 
-    remote_path = f"JZ/中港模式结算单/{remote_filename}"  # 你可以灵活改成传参
+    remote_path = f"财务部/中港模式结算单/{remote_filename}"  # 你可以灵活改成传参
 
     try:
         transport = paramiko.Transport((host, port))
