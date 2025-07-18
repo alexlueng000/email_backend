@@ -387,7 +387,7 @@ def upload_file_to_sftp_task(self, local_file: str, filename: str) -> bool:
     password = os.getenv("SFTP_PASS")
     REMOTE_PATH = os.getenv("REMOTE_PATH")
 
-    remote_path = f"JZ/中港模式结算单/{filename}"  # 你可以灵活改成传参
+    remote_path = f"财务部/中港模式结算单/{filename}"  # 你可以灵活改成传参
 
     local_file_path = os.path.expanduser(local_file)
 
