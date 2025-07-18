@@ -6,8 +6,7 @@ from datetime import datetime, timedelta
 from contextlib import contextmanager
 
 from app import database, models, email_utils, excel_utils
-from app.utils import get_dingtalk_access_token, create_yida_form_instance
-from app.tasks import send_reply_email, send_reply_email_with_attachments, upload_file_to_sftp_task, send_email_with_followup, send_email_with_followup_delay, send_reply_email_with_attachments_delay
+from app.tasks import send_reply_email, upload_file_to_sftp_task, send_email_with_followup_delay, send_reply_email_with_attachments_delay
 from app.utils import simplify_to_traditional
 
 from celery import chain
@@ -19,7 +18,7 @@ load_dotenv()
 
 now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-max_sending_time = 5
+max_sending_time = 60
 
 @contextmanager
 def get_db_session():
