@@ -29,7 +29,7 @@ logger = setup_logger(__name__)
 
 T = TypeVar('T', bound=BaseModel)
 
-max_sending_time = 60
+max_sending_time = 5
 
 def strip_request_fields(req: T) -> T:
     """

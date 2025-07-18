@@ -19,7 +19,7 @@ load_dotenv()
 
 now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-max_sending_time = 60
+max_sending_time = 5
 
 @contextmanager
 def get_db_session():
