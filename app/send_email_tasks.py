@@ -653,8 +653,6 @@ def schedule_settlement_BCD(
     tender_number: str # 招标编号
 ):
 
-    # with get_db_session() as db:
-    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -679,10 +677,6 @@ def schedule_settlement_BCD(
         "password": d_company.smtp_password,
         "from": d_company.smtp_from
     }
-
-    # b_email = b_company.email
-    # c_email = c_company.email
-    # d_email = d_company.email
 
 
     # 获取对应C公司的邮件模板
@@ -736,7 +730,23 @@ def schedule_settlement_BCD(
         head_company_name=b_company.company_name,
         bottom_company_name=c_company.company_name
     )
+
+    CB_email_attachment_path = excel_utils.generate_email_settlement_excel(
+        filename="结算单.xlsx",
+        prefix="CB",
+        received_amount=amount,
+        receivable_items=[
+            ("三方/四方货款", three_fourth),
+            ('C进口服务费', import_service_fee),
+            ("第三方费用", third_party_fee),
+            ("费用结算服务费", service_fee),
+        ],
+        head_company_name=b_company.company_name,
+        bottom_company_name=c_company.company_name
+    )
+
     logger.info("CB_settlement_path&&&: %s", CB_settlement_path)
+    logger.info("CB_email_attachment_path&&&: %s", CB_email_attachment_path)
     #TODO 1. FTP将生成的文件回传到归档服务器
     
     upload_file_to_sftp_task.delay("~/settlements/"+BC_filename, BC_filename)
@@ -804,13 +814,26 @@ def schedule_settlement_BCD(
         head_company_name=d_company.company_name,
         bottom_company_name=b_company.company_name
     )
+
+    BD_email_attachment_path = excel_utils.generate_email_settlement_excel(
+        filename="结算单.xlsx",
+        prefix="BD",
+        received_amount=amount,
+        receivable_items=[
+            ("三方/四方货款", three_fourth),
+            ('C进口服务费', import_service_fee),
+            ("第三方费用", third_party_fee),
+            ("费用结算服务费", service_fee),
+            ("中标服务费", win_bidding_fee),
+            ("购买标书费", bidding_document_fee),
+            ("投标服务费", bidding_service_fee)
+        ],
+        head_company_name=d_company.company_name,
+        bottom_company_name=b_company.company_name
+    )
+
     logger.info("BD_settlement_path&&&: %s", BD_settlement_path)
-    # delay1 = random.randint(5, 60)
-    # delay1 = 1
-    # task2 = send_reply_email_with_attachments.apply_async(
-    #     args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1],
-    #     countdown=delay1 * 60  # 相对第一封
-    # )
+    logger.info("BD_email_attachment_path&&&: %s", BD_email_attachment_path)
 
     upload_file_to_sftp_task.delay("~/settlements/"+BD_filename, BD_filename)
 
@@ -847,12 +870,6 @@ def schedule_settlement_BCD(
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
     )
-    # delay2 = delay1 + 1
-    # task3 = send_reply_email.apply_async(
-    #     args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
-    #     countdown=delay2 * 60  # 相对第一封
-    # )
-
 
     # 第四封邮件：B ➝ C
     # 随机延迟 5–60 分钟发出B-C间结算单确认
@@ -886,11 +903,6 @@ def schedule_settlement_BCD(
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
     )
-    # delay3 = delay2 + 1
-    # task4 = send_reply_email.apply_async(
-    #     args=[c_email, b_email_subject_c10, b_email_content_c10, b_smtp, delay3, "C10", 1],
-    #     countdown=delay3 * 60  # 相对第一封
-    # )
 
     # 最后一封邮件任务 C10：B ➝ C（无 follow up）
     delay_c10 = random.randint(5, max_sending_time) * 60
@@ -931,7 +943,7 @@ def schedule_settlement_BCD(
         "smtp_config": b_smtp,
         "stage": "C8",
         # "project_id": project_info.id,
-        "attachments": [BD_settlement_path],
+        "attachments": [BD_email_attachment_path],
         "followup_task_args": task_c9,
         "followup_delay": delay_c8
     }
@@ -946,7 +958,7 @@ def schedule_settlement_BCD(
         "smtp_config": c_smtp,
         "stage": "C7",
         # "project_id": project_info.id,
-        "attachments": [CB_settlement_path],
+        "attachments": [CB_email_attachment_path],
         "followup_task_args": task_c8,
         "followup_delay": delay_c7
     }
@@ -1078,12 +1090,26 @@ def schedule_settlement_CCD_BD(
         bottom_company_name=b_company.company_name
     )
 
-    # delay1 = random.randint(5, 60)
-    # delay1 = 1
-    # task2 = send_reply_email_with_attachments.apply_async(
-    #     args=[d_email, b_email_subject_c8, b_email_content_c8, b_smtp, [BD_settlement_path], delay1, "C8", 1], # TODO 换成真实的附件路径
-    #     countdown=0 # 立即
-    # )
+    BD_email_attachment_path = excel_utils.generate_email_settlement_excel(
+        filename="结算单.xlsx",
+        prefix="BD",
+        received_amount=amount,
+        receivable_items=[
+            ("三方/四方货款", three_fourth),
+            ('C进口服务费', import_service_fee),
+            ("第三方费用", third_party_fee),
+            ("费用结算服务费", service_fee),
+            ("中标服务费", win_bidding_fee),
+            ("购买标书费", bidding_document_fee),
+            ("投标服务费", bidding_service_fee)
+        ],
+        head_company_name=d_company.company_name,
+        bottom_company_name=b_company.company_name
+    )
+
+    logger.info("BD_settlement_path&&&: %s", BD_settlement_path)
+    logger.info("BD_email_attachment_path&&&: %s", BD_email_attachment_path)
+
 
     upload_file_to_sftp_task.delay("~/settlements/"+BD_filename, BD_filename)
 
@@ -1121,11 +1147,6 @@ def schedule_settlement_CCD_BD(
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
     )
-    # delay2 = delay1 + 1
-    # task3 = send_reply_email.apply_async(
-    #     args=[b_email, d_email_subject_c9, d_email_content_c9, d_smtp, delay2, "C9", 1],
-    #     countdown=delay2 * 60  # 相对第一封
-    # ) 
 
     # 第二封邮件：D ➝ B（由 C8 成功后调度）
     delay_c9 = random.randint(5, max_sending_time) * 60
@@ -1151,7 +1172,7 @@ def schedule_settlement_CCD_BD(
         "smtp_config": b_smtp,
         "stage": "C8",
         # "project_id": project_info.id,
-        "attachments": [BD_settlement_path],
+        "attachments": [BD_email_attachment_path],
         "followup_task_args": task_c9,
         "followup_delay": delay_c8
     }
