@@ -538,6 +538,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同"),
         None
     )
+
     # 更新project_info表中的D公司信息
     project.company_d_name = d_company_name
 
@@ -546,6 +547,19 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     d_company = db.query(models.CompanyInfo).filter(
         models.CompanyInfo.company_name == d_company_name
     ).first()
+
+    # 如果没有找到D公司，说明是BC模式，BC模式不发送邮件
+    if d_company is None:
+        project.project_type = 'BC'
+        db.add(project)
+        db.commit()
+        db.refresh(project)
+
+        logger.info("%s是BC类型项目，不发送邮件", req.contract_number)
+
+        return {
+            "message": f"BC项目类型不发送邮件"
+         } 
 
     actual_serial_number = ''
 
@@ -767,6 +781,13 @@ def settlement(
         logger.info("没有找到项目信息，不发送邮件，合同号为: %s", req.contract_number)
         return {"message": "没有找到项目信息"}
 
+    # BC类型项目不发送结算单邮件
+    if project_information.project_type == 'BC':
+        logger.info("%s是BC类型项目，不发送邮件", req.contract_number)
+        return {
+            "message": f"BC项目类型不发送邮件"
+         } 
+
     # 已经发送过结算单的，不用再发送
     is_sent = project_information.fee_details.is_sent
     if is_sent:
@@ -819,6 +840,9 @@ def settlement(
     # 回传的下载链接
     BC_download_url = ""
     BD_download_url = ""
+
+
+    
 
     if project_information.project_type == 'BCD':
         result = send_email_tasks.schedule_settlement_BCD(
