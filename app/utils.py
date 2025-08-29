@@ -132,12 +132,12 @@ def get_project_info_instance_id(contract_number: str):
         "operator": "eq",
         "componentName": "TextField"
         }]
-
+    print(json.dumps(search_conditions, ensure_ascii=False))
     body = {
         "appType": "APP_R55Z1QDKMB0VILUQRNJA",             # 固定为 APP（宜搭应用）
         "systemToken": "6Q866L81UPU4TY6NBOTYZBB28OUC3K1N7EM9LG91",  # 宜搭 System Token
         "formUuid": "FORM-TP866D91MJO5MFN08AMJGA8H52ZV3HPX6XRALD1",
-        "useLatestVersion": True,
+        # "useLatestVersion": True,
         # "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
         "userId": "571848422",           # 这里换成有权限访问该宜搭应用/表单的用户
         "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
@@ -146,7 +146,7 @@ def get_project_info_instance_id(contract_number: str):
     try:
         resp = requests.post("https://api.dingtalk.com/v2.0/yida/forms/instances/search", headers=headers, data=json.dumps(body))
         data = resp.json()
-        print("data: ", data)
+        # print("data: ", data)
         formInstanceId = data["data"][0]['formInstanceId']
         return formInstanceId
     except requests.HTTPError as e:
