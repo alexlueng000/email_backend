@@ -142,7 +142,7 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
         "systemToken": "6Q866L81UPU4TY6NBOTYZBB28OUC3K1N7EM9LG91",  # 宜搭 System Token
         "formUuid": "FORM-TP866D91MJO5MFN08AMJGA8H52ZV3HPX6XRALD1",
         "useLatestVersion": True,
-        "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
+        # "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
         "userId": "571848422",           # 这里换成有权限访问该宜搭应用/表单的用户
         # "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
         "updateFormDataJson": json.dumps(formDataJson, ensure_ascii=False),
