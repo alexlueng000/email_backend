@@ -146,7 +146,8 @@ def get_project_info_instance_id(contract_number: str):
     try:
         resp = requests.post("https://api.dingtalk.com/v2.0/yida/forms/instances/search", headers=headers, data=json.dumps(body))
         data = resp.json()
-        formInstanceId = data["result"][0]["formInstanceId"]
+        print("data: ", data)
+        formInstanceId = data["data"][0]['formInstanceId']
         return formInstanceId
     except requests.HTTPError as e:
         logger.error(f"❌ HTTP错误：{e}，响应：{getattr(e.response, 'text', '')}")
