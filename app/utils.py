@@ -132,7 +132,10 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
         "componentName": "TextField"
         }]
 
-    formDataJson = "{\"textField_mewf9y72\":[{\"value\":\"" + company_d_name + "\"}]}"
+    formDataJson = {
+        "textField_mewh66f8": company_d_name
+    }
+    print("formDataJson: ", formDataJson)
 
     body = {
         "appType": "APP_R55Z1QDKMB0VILUQRNJA",             # 固定为 APP（宜搭应用）
@@ -141,7 +144,7 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
         "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
         "userId": "571848422",           # 这里换成有权限访问该宜搭应用/表单的用户
         "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
-        "formDataJson": formDataJson
+        "formDataJson": json.dumps(formDataJson, ensure_ascii=False)
      }
 
     try:
