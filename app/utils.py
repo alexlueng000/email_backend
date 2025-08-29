@@ -144,8 +144,8 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
         "useLatestVersion": True,
         "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
         "userId": "571848422",           # 这里换成有权限访问该宜搭应用/表单的用户
-        "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
-        "formDataJson": json.dumps(formDataJson, ensure_ascii=False),
+        # "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
+        "updateFormDataJson": json.dumps(formDataJson, ensure_ascii=False),
         "formInstanceId": "FINST-AU966L916HAXS1196SGGK8K56HGO3S2SDWXDMKU9"
      }
 
