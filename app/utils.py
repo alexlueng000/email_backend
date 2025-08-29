@@ -147,6 +147,7 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
     try:
         resp = requests.post("https://api.dingtalk.com/v2.0/yida/forms/instances/insertOrUpdate", headers=headers, data=json.dumps(body))
         logger.info("✅ 回写项目信息表单，D公司更新成功，ID：%s", resp.json()["result"])
+        print("✅ 回写项目信息表单，D公司更新成功，ID：%s", resp.json()["result"])
         return "更新表单成功"
     except requests.HTTPError as e:
         logger.error(f"❌ HTTP错误：{e}，响应：{getattr(e.response, 'text', '')}")
