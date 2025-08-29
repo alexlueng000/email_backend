@@ -109,6 +109,53 @@ def create_yida_form_instance(
         return {"success": False, "error": str(e)}
 
 
+def update_project_info_company_D(contract_number: str, company_d_name: str) -> str:
+    """
+    access_token: x-acs-dingtalk-access-token
+    system_token: 宜搭应用的 System Token（不是钉钉 appSecret）
+    form_uuid:    FORM-xxxxx（宜搭表单UUID）
+    user_id_type: "userId" | "openId" | "unionId"
+    """
+
+    access_token = get_dingtalk_access_token()
+
+    headers = {
+        "x-acs-dingtalk-access-token": access_token,
+        "Content-Type": "application/json"
+    }
+
+    search_conditions = [{
+        "key": "textField_ky9zhf07",
+        "value": contract_number,
+        "type": "TEXT",
+        "operator": "eq",
+        "componentName": "TextField"
+        }]
+
+    formDataJson = "{\"textField_mew98rlz\":[{\"value\":\"" + company_d_name + "\"}]}"
+
+    body = {
+        "appType": "APP_R55Z1QDKMB0VILUQRNJA",             # 固定为 APP（宜搭应用）
+        "systemToken": "6Q866L81UPU4TY6NBOTYZBB28OUC3K1N7EM9LG91",  # 宜搭 System Token
+        "formUuid": "FORM-TP866D91MJO5MFN08AMJGA8H52ZV3HPX6XRALD1",
+        "dataCreateFrom": 0,          # 可选：0=全部；1=我创建；2=我参与
+        "userId": "571848422",           # 这里换成有权限访问该宜搭应用/表单的用户
+        "searchCondition": json.dumps(search_conditions, ensure_ascii=False),
+        "formDataJson": formDataJson
+     }
+
+    try:
+        resp = requests.post("https://api.dingtalk.com/v2.0/yida/forms/instances/insertOrUpdate", headers=headers, data=json.dumps(body))
+        logger.info("✅ 回写项目信息表单，D公司更新成功，ID：%s", resp.json()["result"])
+        return "更新表单成功"
+    except requests.HTTPError as e:
+        logger.error(f"❌ HTTP错误：{e}，响应：{getattr(e.response, 'text', '')}")
+    except Exception as e:
+        logger.error(f"❌ 请求失败：{e}")
+    return "更新表单失败"
+
+
+
 def simplify_to_traditional(text: str) -> str:
     """
     将简体中文转换为繁体中文。

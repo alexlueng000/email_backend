@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import simplify_to_traditional
+from app.utils import simplify_to_traditional, update_project_info_company_D
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
@@ -560,6 +560,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         return {
             "message": f"BC项目类型不发送邮件"
          } 
+
+    # 把D公司更新到宜搭-项目信息中
+    update_project_info_company_D(req.contract_number, d_company_name)
 
     actual_serial_number = ''
 
