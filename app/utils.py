@@ -135,7 +135,8 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
     formDataJson = {
         "textField_mewh66f8": company_d_name
     }
-    print("formDataJson: ", formDataJson)
+    print("formDataJson: ", json.dumps(formDataJson, ensure_ascii=False))
+
 
     body = {
         "appType": "APP_R55Z1QDKMB0VILUQRNJA",             # 固定为 APP（宜搭应用）
@@ -157,6 +158,7 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
     except requests.HTTPError as e:
         logger.error(f"❌ HTTP错误：{e}，响应：{getattr(e.response, 'text', '')}")
     except Exception as e:
+        print(resp.status_code, resp)
         logger.error(f"❌ 请求失败：{e}")
     return "更新表单失败"
 
