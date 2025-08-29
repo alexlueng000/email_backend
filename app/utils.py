@@ -132,7 +132,7 @@ def update_project_info_company_D(contract_number: str, company_d_name: str) -> 
         "componentName": "TextField"
         }]
 
-    formDataJson = "{\"textField_mew98rlz\":[{\"value\":\"" + company_d_name + "\"}]}"
+    formDataJson = "{\"textField_mewf9y72\":[{\"value\":\"" + company_d_name + "\"}]}"
 
     body = {
         "appType": "APP_R55Z1QDKMB0VILUQRNJA",             # 固定为 APP（宜搭应用）
