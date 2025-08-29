@@ -144,7 +144,7 @@ def get_project_info_instance_id(contract_number: str):
      }
 
     try:
-        resp = requests.put("https://api.dingtalk.com/v2.0/yida/forms/instances/search", headers=headers, data=json.dumps(body))
+        resp = requests.post("https://api.dingtalk.com/v2.0/yida/forms/instances/search", headers=headers, data=json.dumps(body))
         data = resp.json()
         formInstanceId = data["result"][0]["formInstanceId"]
         return formInstanceId
