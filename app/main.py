@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import simplify_to_traditional, update_project_info_company_D
+from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
@@ -562,7 +562,8 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
          } 
 
     # 把D公司更新到宜搭-项目信息中
-    update_project_info_company_D(req.contract_number, d_company_name)
+    form_instance_id = get_project_info_instance_id(req.contract_number)
+    update_project_info_company_D(req.contract_number, d_company_name, form_instance_id)
 
     actual_serial_number = ''
 
