@@ -425,6 +425,149 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
 
     return {"message": "委托投标登记成功"}
 
+# 手动发送A2邮件
+@app.post("/receive_bidding_register_manual")
+async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, db: Session = Depends(database.get_db)):
+
+    req = strip_request_fields(req)
+
+    # B公司邮箱
+    company_name = req.b_company_name.replace('\xa0', '').strip()
+    logger.info("B公司名称：%s", company_name)
+    b_company_info = (
+        db.query(models.CompanyInfo)
+        .filter(models.CompanyInfo.company_name == company_name)
+        .first()
+    )
+
+    if not b_company_info: 
+        logger.error("没有找到 B 公司")
+        return {"message": " B公司不在数据库中，无法发送邮件"}
+
+    logger.info("B公司信息：%s", b_company_info.company_name)
+
+
+    b_smtp = {
+        "host": b_company_info.smtp_host,
+        "port": b_company_info.smtp_port,
+        "username": b_company_info.smtp_username,
+        "password": b_company_info.smtp_password,
+        "from": b_company_info.smtp_from
+    }
+
+    template_name = "A2_" + b_company_info.short_name + ".html"
+
+    # 组装三封A2邮件内容，B-> D
+
+    FR_A2_subject = email_utils.render_email_subject(
+        stage="A2", 
+        company_short_name=b_company_info.short_name, 
+        project_name=req.project_name,
+        serial_number=req.f_serial_number
+    )
+    # FRAUN SCIENCE AND TECHNOLOGY SERVICE COMPANY LIMITED
+    fr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "FR", models.CompanyInfo.company_type == "D").first()
+    content = email_utils.render_invitation_template_content(
+        # purchase_department=req.purchase_department,
+        project_name=req.project_name,
+        template_name=template_name,
+        full_name=fr_company.contact_person,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
+    )
+
+    delay_FR_A2 = random.randint(5, max_sending_time)
+    task_FR_A2 = {
+        "to_email": fr_company.email,
+        "subject": FR_A2_subject,
+        "content": content,
+        "smtp_config": b_smtp,
+        "stage": "A2",
+        # "project_id": project_id,
+        "followup_task_args": None,
+        "followup_delay": delay_FR_A2 * 60
+    }
+            
+    # LEADERFIRM TECHNOLOGY COMPANY LIMITED   
+    LF_A2_subject = email_utils.render_email_subject(
+        stage="A2", 
+        company_short_name=b_company_info.short_name, 
+        project_name=req.project_name,
+        serial_number=req.l_serial_number
+    )
+    # LEADERFIRM TECHNOLOGY COMPANY LIMITED
+    lf_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "LF", models.CompanyInfo.company_type == "D").first()
+    content = email_utils.render_invitation_template_content(
+        # purchase_department=req.purchase_department,
+        project_name=req.project_name,
+        template_name=template_name,
+        full_name=lf_company.contact_person,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
+    )
+
+    delay_LF_A2 = random.randint(5, max_sending_time)
+    task_LF_A2 = {
+        "to_email": lf_company.email,
+        "subject": LF_A2_subject,
+        "content": content,
+        "smtp_config": b_smtp,
+        "stage": "A2",
+        # "project_id": project_id,
+        "followup_task_args": task_FR_A2,
+        "followup_delay": delay_LF_A2 * 60
+    }
+        
+        
+    PR_A2_subject = email_utils.render_email_subject(
+        stage="A2", 
+        company_short_name=b_company_info.short_name, 
+        project_name=req.project_name,
+        serial_number=req.p_serial_number
+    )
+    pr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "PR", models.CompanyInfo.company_type == "D").first()
+    content = email_utils.render_invitation_template_content(
+        # purchase_department=req.purchase_department,
+        project_name=req.project_name,
+        template_name=template_name,
+        full_name=pr_company.contact_person,
+        # 发送人落款信息
+        contact_person=b_company_info.contact_person,
+        company_name=b_company_info.company_name,
+        phone=b_company_info.phone,
+        email=b_company_info.email,
+        address=b_company_info.address,
+        english_address=b_company_info.english_address,
+        pingyin=b_company_info.pingyin,
+    )
+    
+    delay_PR_A2 = random.randint(5, max_sending_time)
+    task_PR_A2 = {
+        "to_email": pr_company.email,
+        "subject": PR_A2_subject,
+        "content": content,
+        "smtp_config": b_smtp,
+        "stage": "A2",
+        # "project_id": project_id,
+        "followup_task_args": task_LF_A2,
+        "followup_delay": delay_PR_A2 * 60
+    }
+    
+    tasks.send_email_with_followup_delay.apply_async(kwargs=task_PR_A2, countdown=0)
+
+    return {"message": "重发A2成功"}
 
 
 # === 项目中标信息 ===
