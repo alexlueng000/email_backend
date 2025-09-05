@@ -274,16 +274,16 @@ def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
     发送通知邮件
     """
     message = EmailMessage()
-    message["From"] = "494762262@qq.com"
-    message["To"] = "peterlcylove@163.com"
+    message["From"] = "syjz_notify"
+    message["To"] = "494762262@qq.com"
     message["Subject"] = stage
     message.add_alternative(body, subtype="html")
 
     smtp_config = {
-        "host": "smtp.qq.com",
+        "host": "smtp.163.com",
         "port": 465,  # 改用587
-        "username": "494762262@qq.com",
-        "password": "jqzefarewuxfcage"  # QQ邮箱授权码
+        "username": "peterlcylove@163.com",
+        "password": "FFSKF6Z39NFDx2WD"  # QQ邮箱授权码
     }
 
     try:
