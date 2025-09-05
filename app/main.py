@@ -166,10 +166,9 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     db.commit()
     db.refresh(project_info) # 获取插入后的主键ID
 
-    notify_result = send_notification_email("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。")
-    if not notify_result[0]:
-        logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
-
+    # tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
+    tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
+    
     # B公司邮箱
     company_name = req.b_company_name.replace('\xa0', '').strip()
     logger.info("B公司名称：%s", company_name)
@@ -721,9 +720,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         actual_serial_number = project.l_serial_number
     else:
         actual_serial_number = project.p_serial_number
-        notify_result = send_notification_email("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。")
-        if not notify_result[0]:
-            logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
+        tasks.send_notification_email_task("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
+        tasks.send_notification_email_task("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
+        
 
 
     project.serial_number = actual_serial_number
@@ -988,9 +987,9 @@ def settlement(
         return {"message": "没有找到D公司"}
     
     if d_company.short_name == 'PR':
-        notify_result = send_notification_email("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。")
-        if not notify_result[0]:
-            logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
+        tasks.send_notification_email_task("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
+        tasks.send_notification_email_task("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
+        
 
     c_company = db.query(models.CompanyInfo).filter_by(company_name=project_information.company_c_name).first()
     if not c_company:
