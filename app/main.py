@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D, send_notification_email, strip_request_fields
+from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D, send_notification_email
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
