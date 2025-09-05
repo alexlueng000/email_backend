@@ -15,6 +15,8 @@ import paramiko
 from email.message import EmailMessage
 import smtplib
 
+import traceback
+
 load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -271,37 +273,29 @@ def upload_file_to_sftp(local_file: str, filename: str) -> bool:
 
 def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
     """
-    发送通知邮件
+    发送通知邮件（网易163邮箱示例）
     """
     message = EmailMessage()
-    message["From"] = "syjz_notify"
+    message["From"] = "peterlcylove@163.com"
     message["To"] = "494762262@qq.com"
     message["Subject"] = stage
     message.add_alternative(body, subtype="html")
 
-    # smtp_config = {
-    #     "host": "smtp.163.com",
-    #     "port": 465,  # 改用587
-    #     "username": "peterlcylove@163.com",
-    #     "password": "FFSKF6Z39NFDx2WD"  # QQ邮箱授权码
-    # }
-
     smtp_config = {
         "host": "smtp.163.com",
-        "port": 465,
+        "port": 465,  # 465 用 SSL
         "username": "peterlcylove@163.com",
-        "password": "FFSKF6Z39NFDx2WD",
-        "from": "peterlcylove@163.com"
+        "password": "FFSKF6Z39NFDx2WD",  # 163 邮箱授权码
     }
 
     try:
-        with smtplib.SMTP(smtp_config["host"], smtp_config["port"]) as smtp:
-            smtp.ehlo()
-            smtp.starttls()  # 用 STARTTLS 加密
+        # 465 端口用 SMTP_SSL
+        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"]) as smtp:
             smtp.login(smtp_config["username"], smtp_config["password"])
             smtp.send_message(message)
-            return True, ""
+            return True, "发送成功"
+
     except Exception as e:
-        return False, str(e)
-
-
+        # 输出完整错误堆栈，方便排查
+        err_detail = traceback.format_exc()
+        return False, f"{type(e).__name__}: {e}\n{err_detail}"
