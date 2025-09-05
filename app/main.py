@@ -166,7 +166,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     db.commit()
     db.refresh(project_info) # 获取插入后的主键ID
 
-    # tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
+    tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
     tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
     
     # B公司邮箱
