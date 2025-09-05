@@ -281,16 +281,17 @@ def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
 
     smtp_config = {
         "host": "smtp.qq.com",
-        "port": 465,
+        "port": 587,  # 改用587
         "username": "syjz_notify@foxmail.com",
-        "password": "jqzefarewuxfcage"
+        "password": "jqzefarewuxfcage"  # QQ邮箱授权码
     }
 
     try:
-        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"]) as smtp:
+        with smtplib.SMTP(smtp_config["host"], smtp_config["port"]) as smtp:
+            smtp.ehlo()
+            smtp.starttls()  # 用 STARTTLS 加密
             smtp.login(smtp_config["username"], smtp_config["password"])
             smtp.send_message(message)
-
             return True, ""
     except Exception as e:
         return False, str(e)
