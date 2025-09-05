@@ -31,6 +31,17 @@ T = TypeVar('T', bound=BaseModel)
 
 max_sending_time = 60
 
+def strip_request_fields(req: T) -> T:
+    """
+    去除所有字符串字段两端的空白字符，包括普通空格、不间断空格（\xa0）和全角空格（\u3000）。
+    适用于任意继承自 BaseModel 的 Pydantic 请求对象。
+    """
+    for field, value in req.__dict__.items():
+        if isinstance(value, str):
+            cleaned = re.sub(r'^[\s\u00A0\u3000]+|[\s\u00A0\u3000]+$', '', value)
+            setattr(req, field, cleaned)
+    return req
+
 
 app = FastAPI()
 
