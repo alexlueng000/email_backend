@@ -279,11 +279,19 @@ def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
     message["Subject"] = stage
     message.add_alternative(body, subtype="html")
 
+    # smtp_config = {
+    #     "host": "smtp.163.com",
+    #     "port": 465,  # 改用587
+    #     "username": "peterlcylove@163.com",
+    #     "password": "FFSKF6Z39NFDx2WD"  # QQ邮箱授权码
+    # }
+
     smtp_config = {
         "host": "smtp.163.com",
-        "port": 465,  # 改用587
+        "port": 465,
         "username": "peterlcylove@163.com",
-        "password": "FFSKF6Z39NFDx2WD"  # QQ邮箱授权码
+        "password": "FFSKF6Z39NFDx2WD",
+        "from": "peterlcylove@163.com"
     }
 
     try:
