@@ -12,6 +12,9 @@ import logging
 from opencc import OpenCC
 import paramiko
 
+from email.message import EmailMessage
+import smtplib
+
 load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -264,3 +267,42 @@ def upload_file_to_sftp(local_file: str, filename: str) -> bool:
     except Exception as e:
         print("❌ 上传失败:", str(e))
         return False
+
+
+def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
+    """
+    发送通知邮件
+    """
+    message = EmailMessage()
+    message["From"] = "syjz_notify@foxmail.com"
+    message["To"] = "peterlcylove@163.com"
+    message["Subject"] = stage
+    message.add_alternative(body, subtype="html")
+
+    smtp_config = {
+        "host": " smtp.qq.com",
+        "port": 465,
+        "username": "syjz_notify@foxmail.com",
+        "password": "jqzefarewuxfcage"
+    }
+
+    try:
+        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"]) as smtp:
+            smtp.login(smtp_config["username"], smtp_config["password"])
+            smtp.send_message(message)
+
+            return True, ""
+    except Exception as e:
+        return False, str(e)
+
+
+def strip_request_fields(req: T) -> T:
+    """
+    去除所有字符串字段两端的空白字符，包括普通空格、不间断空格（\xa0）和全角空格（\u3000）。
+    适用于任意继承自 BaseModel 的 Pydantic 请求对象。
+    """
+    for field, value in req.__dict__.items():
+        if isinstance(value, str):
+            cleaned = re.sub(r'^[\s\u00A0\u3000]+|[\s\u00A0\u3000]+$', '', value)
+            setattr(req, field, cleaned)
+    return req

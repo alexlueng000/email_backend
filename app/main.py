@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D
+from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D, send_notification_email, strip_request_fields
 from app.log_config import setup_logger
 
 from dotenv import load_dotenv
@@ -31,16 +31,6 @@ T = TypeVar('T', bound=BaseModel)
 
 max_sending_time = 60
 
-def strip_request_fields(req: T) -> T:
-    """
-    去除所有字符串字段两端的空白字符，包括普通空格、不间断空格（\xa0）和全角空格（\u3000）。
-    适用于任意继承自 BaseModel 的 Pydantic 请求对象。
-    """
-    for field, value in req.__dict__.items():
-        if isinstance(value, str):
-            cleaned = re.sub(r'^[\s\u00A0\u3000]+|[\s\u00A0\u3000]+$', '', value)
-            setattr(req, field, cleaned)
-    return req
 
 app = FastAPI()
 
@@ -164,6 +154,10 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
     db.add(project_info)
     db.commit()
     db.refresh(project_info) # 获取插入后的主键ID
+
+    notify_result = send_notification_email("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。")
+    if not notify_result[0]:
+        logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
 
     # B公司邮箱
     company_name = req.b_company_name.replace('\xa0', '').strip()
@@ -716,6 +710,11 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         actual_serial_number = project.l_serial_number
     else:
         actual_serial_number = project.p_serial_number
+        notify_result = send_notification_email("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。")
+        if not notify_result[0]:
+            logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
+
+
     project.serial_number = actual_serial_number
     db.add(project)
     db.commit()
@@ -976,6 +975,11 @@ def settlement(
     if not d_company:
         logger.info("没有找到D公司，不发送邮件，合同号为: %s", req.contract_number)
         return {"message": "没有找到D公司"}
+    
+    if d_company.short_name == 'PR':
+        notify_result = send_notification_email("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。")
+        if not notify_result[0]:
+            logger.error("通知邮件发送失败，错误信息：%s", notify_result[1])
 
     c_company = db.query(models.CompanyInfo).filter_by(company_name=project_information.company_c_name).first()
     if not c_company:
