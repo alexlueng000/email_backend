@@ -276,7 +276,7 @@ def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
     发送通知邮件（网易163邮箱示例）
     """
     message = EmailMessage()
-    message["From"] = "peterlcylove@163.com"
+    message["From"] = "syjz_notify"
     message["To"] = "494762262@qq.com"
     message["Subject"] = stage
     message.add_alternative(body, subtype="html")
