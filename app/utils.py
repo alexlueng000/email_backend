@@ -280,7 +280,7 @@ def send_notification_email(stage: str, body: str) -> tuple[bool, str]:
     message.add_alternative(body, subtype="html")
 
     smtp_config = {
-        "host": " smtp.qq.com",
+        "host": "smtp.qq.com",
         "port": 465,
         "username": "syjz_notify@foxmail.com",
         "password": "jqzefarewuxfcage"
