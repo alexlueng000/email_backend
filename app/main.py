@@ -225,7 +225,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=fr_company.company_en,
+        company_en=b_company_info.company_en,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -262,7 +262,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=lf_company.company_en,
+        company_en=b_company_info.company_en,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -298,7 +298,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=pr_company.company_en,
+        company_en=b_company_info.company_en,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)
@@ -497,7 +497,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=fr_company.company_en,
+        company_en=b_company_info.company_en,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -534,7 +534,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=lf_company.company_en,
+        company_en=b_company_info.company_en,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -570,7 +570,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
-        company_en=pr_company.company_en,
+        company_en=b_company_info.company_en,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)
