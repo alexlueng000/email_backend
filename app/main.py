@@ -88,6 +88,8 @@ def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Dep
     if not company_info:
         return {"message": "没有找到公司信息"}
     
+    print("更新公司信息|公司信息：%s", company_info)
+
     company_info.company_name = req.company_name
     company_info.company_type = req.company_type
     company_info.short_name = req.company_short_name
