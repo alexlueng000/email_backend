@@ -84,11 +84,10 @@ def ping_db():
 @app.post("/update_company_info")
 def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Depends(database.get_db)):
     logger.info("更新公司信息|请求参数：%s", req.model_dump())
-    company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name and models.CompanyInfo.company_type == req.company_type).first()
+    company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name, models.CompanyInfo.company_type == req.company_type).first()
     if not company_info:
         return {"message": "没有找到公司信息"}
     
-    print("更新公司信息|公司信息：%s", company_info)
 
     company_info.company_name = req.company_name
     company_info.company_type = req.company_type
@@ -101,7 +100,11 @@ def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Dep
     company_info.english_address = req.address_en
     company_info.phone = req.phone 
     company_info.company_en = req.company_en
+
+
+    
     db.commit()
+    
     return {"message": "公司信息更新成功"}
 
 '''
