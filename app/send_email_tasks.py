@@ -102,6 +102,7 @@ def schedule_bid_conversation_BCD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
     
     logger.info("B3-B公司邮件主题：%s", b_email_subject_b3)
@@ -144,6 +145,7 @@ def schedule_bid_conversation_BCD(
         address=c_company.address,
         english_address=c_company.english_address,
         pingyin=c_company.pingyin,
+        company_en=c_company.company_en,
     )
     
     # delay2 = random.randint(5, 60)
@@ -186,6 +188,7 @@ def schedule_bid_conversation_BCD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
 
     # delay3 = delay2 + random.randint(5, 60)
@@ -229,6 +232,7 @@ def schedule_bid_conversation_BCD(
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
+        company_en=d_company.company_en,
     )
     # delay4 = delay3 + random.randint(5, 60)
     # delay4 = delay3 + 1
@@ -375,6 +379,7 @@ def schedule_bid_conversation_CCD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
     
     logger.info("CCD B5-C公司邮件主题：%s", c_email_subject_b5)
@@ -415,6 +420,7 @@ def schedule_bid_conversation_CCD(
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
+        company_en=d_company.company_en,
     )
     # delay = random.randint(5, 60)
     # delay = 1
@@ -530,6 +536,7 @@ def schedule_bid_conversation_BD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
     # 第一封邮件：B ➝ D
     # task1 = send_reply_email.apply_async(
@@ -566,6 +573,7 @@ def schedule_bid_conversation_BD(
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
+        company_en=d_company.company_en,
     )
     # delay = random.randint(5, 60)
     # delay = 1
@@ -708,6 +716,7 @@ def schedule_settlement_BCD(
         address=c_company.address,
         english_address=c_company.english_address,
         pingyin=c_company.pingyin,
+        company_en=c_company.company_en,
     )
 
     # 生成C->B结算单
@@ -790,6 +799,7 @@ def schedule_settlement_BCD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
 
     BD_filename = f"{contract_number}_{contract_serial_number}_BCD模式_BD结算单.xlsx"
@@ -869,6 +879,7 @@ def schedule_settlement_BCD(
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
+        company_en=d_company.company_en,
     )
 
     # 第四封邮件：B ➝ C
@@ -902,6 +913,7 @@ def schedule_settlement_BCD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
 
     # 最后一封邮件任务 C10：B ➝ C（无 follow up）
@@ -1061,6 +1073,7 @@ def schedule_settlement_CCD_BD(
         address=b_company.address,
         english_address=b_company.english_address,
         pingyin=b_company.pingyin,
+        company_en=b_company.company_en,
     )
 
     BD_filename = ""
@@ -1146,6 +1159,7 @@ def schedule_settlement_CCD_BD(
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
+        company_en=d_company.company_en,
     )
 
     # 第二封邮件：D ➝ B（由 C8 成功后调度）

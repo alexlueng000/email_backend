@@ -83,6 +83,7 @@ def ping_db():
 
 @app.post("/update_company_info")
 def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Depends(database.get_db)):
+    logger.info("更新公司信息|请求参数：%s", req.model_dump())
     company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name and models.CompanyInfo.company_type == req.company_type).first()
     if not company_info:
         return {"message": "没有找到公司信息"}
@@ -96,7 +97,7 @@ def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Dep
     company_info.email = req.email
     company_info.address = req.address
     company_info.english_address = req.address_en
-    company_info.phone = req.phone
+    company_info.phone = req.phone 
     company_info.company_en = req.company_en
     db.commit()
     return {"message": "公司信息更新成功"}
@@ -219,6 +220,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=fr_company.company_en,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -255,6 +257,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=lf_company.company_en,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -290,6 +293,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=pr_company.company_en,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)
@@ -331,6 +335,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=lf_company.address,
         english_address=lf_company.english_address,
         pingyin=lf_company.pingyin,
+        company_en=lf_company.company_en,
     )
 
     task_LF_A1 = {
@@ -369,6 +374,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         address=fr_company.address,
         english_address=fr_company.english_address,
         pingyin=fr_company.pingyin,
+        company_en=fr_company.company_en,
     )
 
     task_FR_A1 = {
@@ -408,6 +414,7 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         english_address=pr_company.english_address,
         pingyin=pr_company.pingyin,
         contact_person=pr_company.contact_person,
+        company_en=pr_company.company_en,
     )
 
     task_PR_A1 = {
@@ -485,6 +492,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=fr_company.company_en,
     )
 
     delay_FR_A2 = random.randint(5, max_sending_time)
@@ -521,6 +529,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=lf_company.company_en,
     )
 
     delay_LF_A2 = random.randint(5, max_sending_time)
@@ -556,6 +565,7 @@ async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, d
         address=b_company_info.address,
         english_address=b_company_info.english_address,
         pingyin=b_company_info.pingyin,
+        company_en=pr_company.company_en,
     )
     
     delay_PR_A2 = random.randint(5, max_sending_time)

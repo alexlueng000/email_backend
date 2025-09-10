@@ -226,7 +226,7 @@ def render_invitation_template_content(
     address: str | None = None,
     english_address: str | None = None,
     pingyin: str | None = None,
-
+    company_en: str | None = None,
 ):
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -255,6 +255,7 @@ def render_invitation_template_content(
         address=address,
         english_address=english_address,
         pingyin=pingyin,
+        company_en=company_en,
     )
     
 
