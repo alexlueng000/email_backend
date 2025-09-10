@@ -79,6 +79,7 @@ class UpdateCompanyInfoRequest(BaseModel):
     email: Optional[EmailStr] = None # 邮箱
     address: Optional[str] = None # 地址
     address_en: Optional[str] = None # 地址（英文）
+    company_en: Optional[str] = None # 公司英文名
 
 
 '''

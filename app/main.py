@@ -97,6 +97,7 @@ def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Dep
     company_info.address = req.address
     company_info.english_address = req.address_en
     company_info.phone = req.phone
+    company_info.company_en = req.company_en
     db.commit()
     return {"message": "公司信息更新成功"}
 

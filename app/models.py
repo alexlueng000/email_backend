@@ -41,6 +41,7 @@ class CompanyInfo(Base):
     smtp_password = Column(String(255))                      # SMTP 密码
     smtp_from = Column(String(255))                          # SMTP 发件人
     pingyin = Column(String(255))
+    company_en = Column(String(255)) # 公司英文名
 
 
 class ProjectInfo(Base):
