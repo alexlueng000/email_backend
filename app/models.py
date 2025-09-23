@@ -73,6 +73,9 @@ class ProjectInfo(Base):
     c10 = Column(Boolean)
     created_at = Column(TIMESTAMP, default=datetime.now(timezone.utc)) # UTC时间
 
+    # 新增：项目当前使用的“PLSS邮箱”(A\B\C)
+    current_plss_email = Column(String(255), nullable=True, index=True)
+
     fee_details = relationship("ProjectFeeDetails", back_populates="project", uselist=False, cascade="all, delete")
 
 # 邮件标题表

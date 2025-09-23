@@ -9,7 +9,6 @@ from email.mime.text import MIMEText
 from email.message import EmailMessage
 import traceback
 
-
 import paramiko
 
 from celery import Celery, Task
@@ -311,21 +310,6 @@ def send_reply_email_with_attachments_delay(
         success, error = email_utils.send_email_with_attachments(
             to_email, subject, content, smtp_config, attachments, stage
         )
-
-        # 保存记录
-        # record = models.EmailRecord(
-        #     to=to_email,
-        #     subject=subject,
-        #     body=content,
-        #     status="success" if success else "failed",
-        #     error_message=error if not success else None,
-        #     actual_sending_time=datetime.now(),
-        #     stage=stage,
-        #     project_id=project_id
-        # )
-        # db.add(record)
-        # db.commit()
-        # db.refresh(record)
 
         if not success:
             logger.warning(f"[{stage}] ❌ 带附件邮件发送失败，将重试：{error}")

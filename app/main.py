@@ -19,8 +19,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app import email_utils, models, database, schemas, tasks, send_email_tasks, tasks
-from app.utils import simplify_to_traditional, get_project_info_instance_id, update_project_info_company_D
+from app.utils import simplify_to_traditional
 from app.log_config import setup_logger
+
+from app.stage_utils.stage_A1_A2_utils import normalize_company_name, make_a1_task_from_d_to_b, make_a2_task_for_target_d, get_company_by_short, get_company_by_name
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -41,7 +43,6 @@ def strip_request_fields(req: T) -> T:
             cleaned = re.sub(r'^[\s\u00A0\u3000]+|[\s\u00A0\u3000]+$', '', value)
             setattr(req, field, cleaned)
     return req
-
 
 app = FastAPI()
 
@@ -80,33 +81,6 @@ def ping_db():
     except Exception as e:
         return {"status": "error", "message": "❌ 数据库连接失败", "detail": str(e)}
 
-
-@app.post("/update_company_info")
-def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Depends(database.get_db)):
-    logger.info("更新公司信息|请求参数：%s", req.model_dump())
-    company_info = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == req.company_name, models.CompanyInfo.company_type == req.company_type).first()
-    if not company_info:
-        return {"message": "没有找到公司信息"}
-    
-
-    company_info.company_name = req.company_name
-    company_info.company_type = req.company_type
-    company_info.short_name = req.company_short_name
-    company_info.contact_person = req.contact_person
-    company_info.last_name = req.last_name
-    company_info.last_name_traditional = req.last_name_tc
-    company_info.email = req.email
-    company_info.address = req.address
-    company_info.english_address = req.address_en
-    company_info.phone = req.phone 
-    company_info.company_en = req.company_en
-
-
-    
-    db.commit()
-    
-    return {"message": "公司信息更新成功"}
-
 '''
 1. 委托投标
 第一封邮件：三家D公司给B公司发送邮件    
@@ -133,24 +107,29 @@ def update_company_info(req: schemas.UpdateCompanyInfoRequest, db: Session = Dep
 """
 
 @app.post("/receive_bidding_register")
-async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Session = Depends(database.get_db)):
-
+async def receive_bidding_register(
+    req: schemas.BiddingRegisterRequest,
+    db: Session = Depends(database.get_db)
+):
     logger.info("1委托投标登记|请求参数：%s", req.model_dump())
 
-    # 提前生成每封邮件的发送时间
+    # 1) 随机延迟
     LF_A1_delay = random.randint(1, 5)
     FR_A1_delay = random.randint(1, 5)
     PR_A1_delay = random.randint(1, 5)
 
+    # 清洗请求
     req = strip_request_fields(req)
 
-    # 新增一条项目信息
+    # 2) 确定本项目邮箱别名 (A/B/C)
+    current_plss = email_utils.get_last_plss_email()
+
+    # 3) 新增项目
     project_info = models.ProjectInfo(
         project_name=req.project_name,
         contract_number="",
-        tender_number=req.bidding_code, # 招标编号
+        tender_number=req.bidding_code,
         project_type="",
-        # project_stage="A",
         p_serial_number=req.p_serial_number,
         l_serial_number=req.l_serial_number,
         f_serial_number=req.f_serial_number,
@@ -158,437 +137,107 @@ async def receive_bidding_register(req: schemas.BiddingRegisterRequest, db: Sess
         company_b_name=req.b_company_name,
         company_c_name="",
         company_d_name="",
-        a1=False,
-        a2=False,
-        b3=False,
-        b4=False,
-        b5=False, 
-        b6=False,
-        c7=False,
-        c8=False,
-        c9=False,
-        c10=False
+        a1=False, a2=False, b3=False, b4=False, b5=False, b6=False,
+        c7=False, c8=False, c9=False, c10=False,
+        current_plss_email=current_plss
     )
     db.add(project_info)
     db.commit()
-    db.refresh(project_info) # 获取插入后的主键ID
+    db.refresh(project_info)
 
-    tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
-    tasks.send_notification_email_task("委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
-    
-    # B公司邮箱
-    company_name = req.b_company_name.replace('\xa0', '').strip()
-    logger.info("B公司名称：%s", company_name)
-    b_company_info = (
-        db.query(models.CompanyInfo)
-        .filter(models.CompanyInfo.company_name == company_name)
-        .first()
+    # 4) 通知邮件
+    tasks.send_notification_email_task(
+        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
+    )
+    tasks.send_notification_email_task(
+        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
     )
 
-    if not b_company_info: 
-        logger.error("没有找到 B 公司")
+    # 5) 查询公司信息
+    b_name = normalize_company_name(req.b_company_name)
+    logger.info("B公司名称：%s", b_name)
+    b_company = get_company_by_name(db, b_name)
+    if not b_company:
         return {"message": " B公司不在数据库中，无法发送邮件"}
 
-    logger.info("B公司信息：%s", b_company_info.company_name)
+    lf_company = get_company_by_short(db, "LF", "D")
+    fr_company = get_company_by_short(db, "FR", "D")
 
+    # TODO 要修改为实际的PLSS邮箱信息
+    pr_company = get_company_by_short(db, "PR", "D")
 
-    b_smtp = {
-        "host": b_company_info.smtp_host,
-        "port": b_company_info.smtp_port,
-        "username": b_company_info.smtp_username,
-        "password": b_company_info.smtp_password,
-        "from": b_company_info.smtp_from
-    }
-
-    template_name = "A2_" + b_company_info.short_name + ".html"
-
-    # 组装三封A2邮件内容，B-> D
-
-    FR_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.f_serial_number
-    )
-    # FRAUN SCIENCE AND TECHNOLOGY SERVICE COMPANY LIMITED
-    fr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "FR", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=fr_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-
+    # 6) A2 任务
     delay_FR_A2 = random.randint(5, max_sending_time)
-    task_FR_A2 = {
-        "to_email": fr_company.email,
-        "subject": FR_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": None,
-        "followup_delay": delay_FR_A2 * 60
-    }
-            
-    # LEADERFIRM TECHNOLOGY COMPANY LIMITED   
-    LF_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.l_serial_number
-    )
-    # LEADERFIRM TECHNOLOGY COMPANY LIMITED
-    lf_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "LF", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=lf_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-
     delay_LF_A2 = random.randint(5, max_sending_time)
-    task_LF_A2 = {
-        "to_email": lf_company.email,
-        "subject": LF_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": None,
-        "followup_delay": delay_LF_A2 * 60
-    }
-        
-        
-    PR_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.p_serial_number
-    )
-    pr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "PR", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=pr_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-    
     delay_PR_A2 = random.randint(5, max_sending_time)
-    task_PR_A2 = {
-        "to_email": pr_company.email,
-        "subject": PR_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": None,
-        "followup_delay": delay_PR_A2 * 60
-    }
-        
-    # 领先
 
-    lf_subject = f" { simplify_to_traditional(req.project_name) }- 投標委託 | { simplify_to_traditional(req.purchase_department) }| { req.l_serial_number }"
-    template_name = "A1_LF.html"
-
-    smtp_config = {
-        "host": lf_company.smtp_host,
-        "port": lf_company.smtp_port,
-        "username": lf_company.smtp_username,
-        "password": lf_company.smtp_password,
-        "from": lf_company.smtp_from
-    }
-
-    #TODO 每个公司有不同的发送模板 
-    content = email_utils.render_invitation_template_content(
-        buyer_name=simplify_to_traditional(req.purchase_department),
-        project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name,
-        # 发送人落款信息
-        contact_person=lf_company.contact_person,
-        company_name=lf_company.company_name,
-        full_name=lf_company.contact_person,
-        phone=lf_company.phone,
-        email=lf_company.email,
-        address=lf_company.address,
-        english_address=lf_company.english_address,
-        pingyin=lf_company.pingyin,
-        company_en=lf_company.company_en,
+    task_FR_A2 = make_a2_task_for_target_d(
+        b_company=b_company, target_d=fr_company,
+        project_name=req.project_name, serial_number=req.f_serial_number,
+        delay_minutes=delay_FR_A2,
+    )
+    task_LF_A2 = make_a2_task_for_target_d(
+        b_company=b_company, target_d=lf_company,
+        project_name=req.project_name, serial_number=req.l_serial_number,
+        delay_minutes=delay_LF_A2,
+    )
+    task_PR_A2 = make_a2_task_for_target_d(
+        b_company=b_company, target_d=pr_company,
+        project_name=req.project_name, serial_number=req.p_serial_number,
+        delay_minutes=delay_PR_A2,
     )
 
-    task_LF_A1 = {
-        "to_email": b_company_info.email,
-        "subject": lf_subject,
-        "content": content,
-        "smtp_config": smtp_config,
-        "stage": "A1",
-        # "project_id": project_id,
-        "followup_task_args": task_LF_A2,
-        "followup_delay": LF_A1_delay
-    }
+    # === 根据项目邮箱别名确定 PR 抄送人 ===
+    cc_list = []
+    if project_info.current_plss_email in ("A", "B"):
+        cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 邮件抄送人: %s", cc_list if cc_list else "无")
+
+    if cc_list:
+        task_PR_A2["cc"] = cc_list
+
+    # 7) A1 任务
+    # LF
+    lf_subject = f"{simplify_to_traditional(req.project_name)}- 投標委託 | {simplify_to_traditional(req.purchase_department)}| {req.l_serial_number}"
+    task_LF_A1 = make_a1_task_from_d_to_b(
+        d_company=lf_company, b_company=b_company,
+        subject=lf_subject, template_name="A1_LF.html",
+        buyer_name=simplify_to_traditional(req.purchase_department),
+        project_name=simplify_to_traditional(req.project_name),
+        a1_delay_minutes=LF_A1_delay, follow_a2_task=task_LF_A2,
+    )
     tasks.send_email_with_followup_delay.apply_async(kwargs=task_LF_A1, countdown=LF_A1_delay * 60)
-        
-    # 弗劳恩
-    fr_subject = f"【誠邀合作】{ simplify_to_traditional(req.project_name) }投標{req.f_serial_number}"
-    template_name = "A1_FR.html"
-    smtp_config = {
-        "host": fr_company.smtp_host,
-        "port": fr_company.smtp_port,
-        "username": fr_company.smtp_username,
-        "password": fr_company.smtp_password,
-        "from": fr_company.smtp_from
-    }
-    
-    content = email_utils.render_invitation_template_content(
+
+    # FR
+    fr_subject = f"【誠邀合作】{simplify_to_traditional(req.project_name)}投標{req.f_serial_number}"
+    task_FR_A1 = make_a1_task_from_d_to_b(
+        d_company=fr_company, b_company=b_company,
+        subject=fr_subject, template_name="A1_FR.html",
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name,
-        # 发送人落款信息
-        contact_person=fr_company.contact_person,
-        company_name=fr_company.company_name,
-        full_name=fr_company.contact_person,
-        phone=fr_company.phone,
-        email=fr_company.email,
-        address=fr_company.address,
-        english_address=fr_company.english_address,
-        pingyin=fr_company.pingyin,
-        company_en=fr_company.company_en,
+        a1_delay_minutes=FR_A1_delay, follow_a2_task=task_FR_A2,
     )
-
-    task_FR_A1 = {
-        "to_email": b_company_info.email,
-        "subject": fr_subject,
-        "content": content,
-        "smtp_config": smtp_config,
-        "stage": "A1",
-        # "project_id": project_id,
-        "followup_task_args": task_FR_A2,
-        "followup_delay": FR_A1_delay
-    }
     tasks.send_email_with_followup_delay.apply_async(kwargs=task_FR_A1, countdown=FR_A1_delay * 60)
-        
-        
-    # 普利赛斯
-    pr_subject = f"{ simplify_to_traditional(req.project_name) }投標委託{ req.p_serial_number }"
-    template_name = "A1_PRESICE.html"
-    smtp_config = {
-        "host": pr_company.smtp_host,
-        "port": pr_company.smtp_port,
-        "username": pr_company.smtp_username,
-        "password": pr_company.smtp_password,
-        "from": pr_company.smtp_from
-    }
-            
-    content = email_utils.render_invitation_template_content(
+
+    # PR
+    pr_subject = f"{simplify_to_traditional(req.project_name)}投標委託{req.p_serial_number}"
+    task_PR_A1 = make_a1_task_from_d_to_b(
+        d_company=pr_company, b_company=b_company,
+        subject=pr_subject, template_name="A1_PRESICE.html",
         buyer_name=simplify_to_traditional(req.purchase_department),
         project_name=simplify_to_traditional(req.project_name),
-        template_name=template_name,
-        # 发送人落款信息
-        company_name=pr_company.company_name,
-        full_name=pr_company.contact_person,
-        phone=pr_company.phone,
-        email=pr_company.email,
-        address=pr_company.address,
-        english_address=pr_company.english_address,
-        pingyin=pr_company.pingyin,
-        contact_person=pr_company.contact_person,
-        company_en=pr_company.company_en,
+        a1_delay_minutes=PR_A1_delay, follow_a2_task=task_PR_A2,
     )
+    if cc_list:
+        task_PR_A1["cc"] = cc_list
 
-    task_PR_A1 = {
-        "to_email": b_company_info.email,
-        "subject": pr_subject,
-        "content": content,
-        "smtp_config": smtp_config,
-        "stage": "A1",
-        # "project_id": project_id,
-        "followup_task_args": task_PR_A2,
-        "followup_delay": PR_A1_delay
-    }
     tasks.send_email_with_followup_delay.apply_async(kwargs=task_PR_A1, countdown=PR_A1_delay * 60)
 
-    # project_info.a1 = True
-    # db.commit()
-
+    # 8) 日志
     logger.info("A1邮件调度延迟（分钟）: LF=%s, FR=%s, PR=%s", LF_A1_delay, FR_A1_delay, PR_A1_delay)
     logger.info("A2邮件后续延迟（分钟）: LF=%s, FR=%s, PR=%s", delay_LF_A2, delay_FR_A2, delay_PR_A2)
 
     return {"message": "委托投标登记成功"}
-
-# 手动发送A2邮件
-@app.post("/receive_bidding_register_manual")
-async def receive_bidding_register_manual(req: schemas.BiddingRegisterRequest, db: Session = Depends(database.get_db)):
-
-    req = strip_request_fields(req)
-
-    # B公司邮箱
-    company_name = req.b_company_name.replace('\xa0', '').strip()
-    logger.info("B公司名称：%s", company_name)
-    b_company_info = (
-        db.query(models.CompanyInfo)
-        .filter(models.CompanyInfo.company_name == company_name)
-        .first()
-    )
-
-    if not b_company_info: 
-        logger.error("没有找到 B 公司")
-        return {"message": " B公司不在数据库中，无法发送邮件"}
-
-    logger.info("B公司信息：%s", b_company_info.company_name)
-
-
-    b_smtp = {
-        "host": b_company_info.smtp_host,
-        "port": b_company_info.smtp_port,
-        "username": b_company_info.smtp_username,
-        "password": b_company_info.smtp_password,
-        "from": b_company_info.smtp_from
-    }
-
-    template_name = "A2_" + b_company_info.short_name + ".html"
-
-    # 组装三封A2邮件内容，B-> D
-
-    FR_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.f_serial_number
-    )
-    # FRAUN SCIENCE AND TECHNOLOGY SERVICE COMPANY LIMITED
-    fr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "FR", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=fr_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-
-    delay_FR_A2 = random.randint(5, max_sending_time)
-    task_FR_A2 = {
-        "to_email": fr_company.email,
-        "subject": FR_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": None,
-        "followup_delay": delay_FR_A2 * 60
-    }
-            
-    # LEADERFIRM TECHNOLOGY COMPANY LIMITED   
-    LF_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.l_serial_number
-    )
-    # LEADERFIRM TECHNOLOGY COMPANY LIMITED
-    lf_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "LF", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=lf_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-
-    delay_LF_A2 = random.randint(5, max_sending_time)
-    task_LF_A2 = {
-        "to_email": lf_company.email,
-        "subject": LF_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": task_FR_A2,
-        "followup_delay": delay_LF_A2 * 60
-    }
-        
-        
-    PR_A2_subject = email_utils.render_email_subject(
-        stage="A2", 
-        company_short_name=b_company_info.short_name, 
-        project_name=req.project_name,
-        serial_number=req.p_serial_number
-    )
-    pr_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.short_name == "PR", models.CompanyInfo.company_type == "D").first()
-    content = email_utils.render_invitation_template_content(
-        # purchase_department=req.purchase_department,
-        project_name=req.project_name,
-        template_name=template_name,
-        full_name=pr_company.contact_person,
-        # 发送人落款信息
-        contact_person=b_company_info.contact_person,
-        company_name=b_company_info.company_name,
-        phone=b_company_info.phone,
-        email=b_company_info.email,
-        address=b_company_info.address,
-        english_address=b_company_info.english_address,
-        pingyin=b_company_info.pingyin,
-        company_en=b_company_info.company_en,
-    )
-    
-    delay_PR_A2 = random.randint(5, max_sending_time)
-    task_PR_A2 = {
-        "to_email": pr_company.email,
-        "subject": PR_A2_subject,
-        "content": content,
-        "smtp_config": b_smtp,
-        "stage": "A2",
-        # "project_id": project_id,
-        "followup_task_args": task_LF_A2,
-        "followup_delay": delay_PR_A2 * 60
-    }
-    
-    tasks.send_email_with_followup_delay.apply_async(kwargs=task_PR_A2, countdown=0)
-
-    return {"message": "重发A2成功"}
-
 
 # === 项目中标信息 ===
 # 更新项目中标信息的合同号，招标编号
@@ -701,7 +350,6 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同"),
         None
     )
-
     # 更新project_info表中的D公司信息
     project.company_d_name = d_company_name
 
@@ -711,22 +359,12 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         models.CompanyInfo.company_name == d_company_name
     ).first()
 
-    # 如果没有找到D公司，说明是BC模式，BC模式不发送邮件
-    if d_company is None:
-        project.project_type = 'BC'
-        db.add(project)
-        db.commit()
-        db.refresh(project)
-
-        logger.info("%s是BC类型项目，不发送邮件", req.contract_number)
-
-        return {
-            "message": f"BC项目类型不发送邮件"
-         } 
-
-    # 把D公司更新到宜搭-项目信息中
-    form_instance_id = get_project_info_instance_id(req.contract_number)
-    update_project_info_company_D(req.contract_number, d_company_name, form_instance_id)
+    # d_company的邮箱信息根据当前的ABC修改
+    # 决定本项目实际发信邮箱（A/B/C）
+    if d_company.short_name == 'PR':
+        plss_alias = project.current_plss_email  # 'A' / 'B' / 'C'
+        d_company.email = email_utils.MAIL_ACCOUNTS[plss_alias]['email']
+        d_company.smtp_password = email_utils.MAIL_ACCOUNTS[plss_alias]['password']
 
     actual_serial_number = ''
 
@@ -736,11 +374,6 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         actual_serial_number = project.l_serial_number
     else:
         actual_serial_number = project.p_serial_number
-        tasks.send_notification_email_task("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
-        tasks.send_notification_email_task("合同审批", project.contract_number + "项目流已走合同审批，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
-        
-
-
     project.serial_number = actual_serial_number
     db.add(project)
     db.commit()
@@ -953,13 +586,6 @@ def settlement(
         logger.info("没有找到项目信息，不发送邮件，合同号为: %s", req.contract_number)
         return {"message": "没有找到项目信息"}
 
-    # BC类型项目不发送结算单邮件
-    if project_information.project_type == 'BC':
-        logger.info("%s是BC类型项目，不发送邮件", req.contract_number)
-        return {
-            "message": f"BC项目类型不发送邮件"
-         } 
-
     # 已经发送过结算单的，不用再发送
     is_sent = project_information.fee_details.is_sent
     if is_sent:
@@ -1001,11 +627,6 @@ def settlement(
     if not d_company:
         logger.info("没有找到D公司，不发送邮件，合同号为: %s", req.contract_number)
         return {"message": "没有找到D公司"}
-    
-    if d_company.short_name == 'PR':
-        tasks.send_notification_email_task("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com")
-        tasks.send_notification_email_task("结算", project_information.contract_number + "项目流已走结算，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com")
-        
 
     c_company = db.query(models.CompanyInfo).filter_by(company_name=project_information.company_c_name).first()
     if not c_company:
@@ -1017,9 +638,6 @@ def settlement(
     # 回传的下载链接
     BC_download_url = ""
     BD_download_url = ""
-
-
-    
 
     if project_information.project_type == 'BCD':
         result = send_email_tasks.schedule_settlement_BCD(

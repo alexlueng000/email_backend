@@ -1,6 +1,7 @@
 # app/email_utils.py
 import os
 from datetime import datetime
+from typing import Optional, Union, Iterable, List
 
 import smtplib
 from email.message import EmailMessage
@@ -28,7 +29,97 @@ def get_db_session():
     finally:
         db.close()
 
-def send_email(to, subject, body, smtp_config, stage):
+# settings_mail.py
+MAIL_ACCOUNTS = {
+    "A": {
+        "alias": "A",
+        "email": "a@example.com",
+        "smtp_host": "smtp.example.com",
+        "smtp_port": 465,
+        "username": "a@example.com",
+        "password": "****",
+        "from": "a@example.com",
+        "active": True,
+    },
+    "B": {
+        "alias": "B",
+        "email": "b@example.com",
+        "smtp_host": "smtp.example.com",
+        "smtp_port": 465,
+        "username": "b@example.com",
+        "password": "****",
+        "from": "b@example.com",
+        "active": True,
+    },
+    "C": {
+        "alias": "C",
+        "email": "c@example.com",
+        "smtp_host": "smtp.example.com",
+        "smtp_port": 465,
+        "username": "c@example.com",
+        "password": "****",
+        "from": "c@example.com",
+        "active": True,
+    },
+}
+
+# 如果上一个是A，那就返回B；如果是B，就返回C；否则返回A
+def get_last_plss_email() -> str:
+    
+    with get_db_session() as db:
+        last_project = (
+            db.execute(
+                select(models.ProjectInfo)
+                .where(models.ProjectInfo.current_plss_email != None)  # 只取已有分配的
+                .order_by(desc(models.ProjectInfo.created_at))
+                .limit(1)
+            ).scalars().first()
+        )
+
+        if not last_project or not last_project.current_plss_email:
+            # 没有历史项目，默认从 A 开始
+            return "A"
+
+        prev_alias = last_project.current_plss_email
+
+        if prev_alias == "A":
+            return "B"
+        elif prev_alias == "B":
+            return "C"
+        else:  # 包括 "C" 或其它异常值
+            return "A"
+
+
+def normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
+    """
+    将 cc 归一化为字符串列表：
+    - None -> []
+    - 'a@x.com,b@x.com' / 'a@x.com; b@x.com' -> ['a@x.com','b@x.com']
+    - ['a@x.com', 'b@x.com'] -> ['a@x.com','b@x.com']
+    - 自动去空格与过滤空串
+    """
+    if cc is None:
+        return []
+    if isinstance(cc, str):
+        # 支持逗号或分号分隔
+        parts = [p.strip() for p in cc.replace(";", ",").split(",")]
+        return [p for p in parts if p]
+    try:
+        return [str(p).strip() for p in cc if str(p).strip()]
+    except TypeError:
+        # 不是可迭代：当作单一字符串
+        s = str(cc).strip()
+        return [s] if s else []
+
+
+def send_email(
+    to: str,
+    subject: str,
+    body: str,
+    smtp_config: dict,
+    stage: str,
+    cc: Optional[Union[str, Iterable[str]]] = None,  # ← 新增：可选抄送
+):
     print("✅ 执行同步 send_email 函数")
     message = EmailMessage()
     message["From"] = smtp_config["from"]
@@ -36,6 +127,24 @@ def send_email(to, subject, body, smtp_config, stage):
     message["Subject"] = subject
     message.add_alternative(body, subtype="html")
 
+    # 规范化 cc，并写入头
+    def _normalize_cc(cc_val) -> list[str]:
+        if cc_val is None:
+            return []
+        if isinstance(cc_val, str):
+            parts = [p.strip() for p in cc_val.replace(";", ",").split(",")]
+            return [p for p in parts if p]
+        try:
+            return [str(p).strip() for p in cc_val if str(p).strip()]
+        except TypeError:
+            s = str(cc_val).strip()
+            return [s] if s else []
+
+    cc_list = _normalize_cc(cc)
+    if cc_list:
+        message["Cc"] = ", ".join(cc_list)
+
+    # DB 查询保持不变（注意：这里只记录 From 与 To 的公司信息；如需记录 CC，可在表单中追加一项文本字段）
     with get_db_session() as db:
         from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
         to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to).first()
@@ -47,33 +156,40 @@ def send_email(to, subject, body, smtp_config, stage):
             logger.info("📧 登录 SMTP...username: %s, password: %s", smtp_config["username"], smtp_config["password"])
             smtp.login(smtp_config["username"], smtp_config["password"])
             logger.info("📧 登录成功，开始发送邮件...")
+            # send_message 若未提供 to_addrs，会自动使用消息头中的 To/Cc/Bcc
             smtp.send_message(message)
 
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
-        logger.info("✅ #########发送邮件成功，时间：%s", now_str)
+        logger.info("✅ #########发送邮件成功，时间：%s; cc=%s", now_str, cc_list if cc_list else "[]")
+
+        # 如果你希望把 CC 也落到钉钉表单，可以加一个字段（文本拼接）
+        cc_text = ", ".join(cc_list) if cc_list else ""
 
         create_yida_form_instance(
             access_token=get_dingtalk_access_token(),
             user_id=os.getenv("USER_ID"),
-                app_type=os.getenv("APP_TYPE"),
-                system_token=os.getenv("SYSTEM_TOKEN"),
-                form_uuid=os.getenv("FORM_UUID"),
-                form_data={
-                    "textField_m8sdofy7": to_company.company_name,
-                    "textField_m8sdofy8": from_company.company_name,
-                    "textfield_G00FCbMy": subject,
-                    "editorField_m8sdofy9": body,
-                    "radioField_manpa6yh": "发送成功",
-                    "textField_mbyq9ksm": now_str,
-                    "textField_mbyq9ksn": now_str,
-                    "textField_mc8eps0i": stage
-                }
-            )
+            app_type=os.getenv("APP_TYPE"),
+            system_token=os.getenv("SYSTEM_TOKEN"),
+            form_uuid=os.getenv("FORM_UUID"),
+            form_data={
+                "textField_m8sdofy7": getattr(to_company, "company_name", to),
+                "textField_m8sdofy8": getattr(from_company, "company_name", smtp_config["from"]),
+                "textfield_G00FCbMy": subject,
+                "editorField_m8sdofy9": body,
+                "radioField_manpa6yh": "发送成功",
+                "textField_mbyq9ksm": now_str,
+                "textField_mbyq9ksn": now_str,
+                "textField_mc8eps0i": stage,
+                # 如需展示 CC，可在钉钉表单里新增一个文本字段并替换成真实字段ID
+                # "textField_cc_list": cc_text,
+            }
+        )
 
         return True, ""
     except Exception as e:
         logger.exception("❌ send_email 执行失败，异常如下：")
         return False, str(e)
+
 
 def send_email_in_main(to: str, subject: str, body: str, smtp_config: dict):
     message = EmailMessage()
@@ -93,19 +209,31 @@ def send_email_in_main(to: str, subject: str, body: str, smtp_config: dict):
 
 
 # 发送带附件的邮件
-def send_email_with_attachments(to_email, subject, content, smtp_config, attachments, stage):
+
+def send_email_with_attachments(
+    to_email: str,
+    subject: str,
+    content: str,
+    smtp_config: dict,
+    attachments: list[str],
+    stage: str,
+    cc: Optional[Union[str, Iterable[str]]] = None,  # ← 新增
+):
     message = MIMEMultipart()
     message["From"] = smtp_config["from"]
     message["To"] = to_email
     message["Subject"] = subject
+
+    cc_list = _normalize_cc(cc)
+    if cc_list:
+        message["Cc"] = ", ".join(cc_list)
 
     # 添加正文
     message.attach(MIMEText(content, "html", "utf-8"))
 
     with get_db_session() as db:
         from_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == smtp_config["from"]).first()
-    to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to_email).first()
-
+        to_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.email == to_email).first()
 
     # 添加附件
     if not attachments:
@@ -121,13 +249,15 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
                 return False, f"附件读取失败: {file_path}，错误信息：{str(e)}"
 
     try:
-        server = smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30)
-        server.login(smtp_config["username"], smtp_config["password"])
-        server.sendmail(smtp_config["from"], [to_email], message.as_string())
-        server.quit()
+        logger.info("📧 开始建立 SMTP 连接")
+        with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30) as server:
+            server.login(smtp_config["username"], smtp_config["password"])
+            # 收件人列表必须包含 To + Cc
+            recipients = [to_email] + cc_list
+            server.sendmail(smtp_config["from"], recipients, message.as_string())
 
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
-        logger.info("✅ #########发送邮件成功，时间：%s", now_str)
+        logger.info("✅ #########发送邮件成功，时间：%s, 抄送=%s", now_str, cc_list if cc_list else "[]")
 
         create_yida_form_instance(
             access_token=get_dingtalk_access_token(),
@@ -136,21 +266,22 @@ def send_email_with_attachments(to_email, subject, content, smtp_config, attachm
             system_token=os.getenv("SYSTEM_TOKEN"),
             form_uuid=os.getenv("FORM_UUID"),
             form_data={
-                "textField_m8sdofy7": to_company.company_name,
-                "textField_m8sdofy8": from_company.company_name,
+                "textField_m8sdofy7": getattr(to_company, "company_name", to_email),
+                "textField_m8sdofy8": getattr(from_company, "company_name", smtp_config["from"]),
                 "textfield_G00FCbMy": subject,
                 "editorField_m8sdofy9": content,
                 "radioField_manpa6yh": "发送成功",
                 "textField_mbyq9ksm": now_str,
                 "textField_mbyq9ksn": now_str,
-                "textField_mc8eps0i": stage
+                "textField_mc8eps0i": stage,
+                # 如需记录抄送人，可加一个字段： "textField_cc": ", ".join(cc_list)
             }
         )
 
         return True, ""
     except Exception as e:
+        logger.exception("❌ send_email_with_attachments 执行失败")
         return False, str(e)
-
 
 
 # 获取对应公司邮件发送标题

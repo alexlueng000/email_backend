@@ -28,24 +28,32 @@ def get_db_session():
     finally:
         db.close()
 
-
-# BCD 项目类型发送邮件
 def schedule_bid_conversation_BCD(
+    project_info: models.ProjectInfo,
     b_company: models.CompanyInfo, 
     c_company: models.CompanyInfo, 
     d_company: models.CompanyInfo, 
-    contract_number: str, # 合同号
-    winning_amount: str,  # 中标金额
-    winning_time: str,    # 中标时间
-    contract_serial_number: str, #流水号
+    contract_number: str,  # 合同号
+    winning_amount: str,   # 中标金额
+    winning_time: str,     # 中标时间
+    contract_serial_number: str,  # 流水号
     project_name: str,
     tender_number: str,    # 招标编号
-    purchase_department: str # 采购单位
+    purchase_department: str  # 采购单位
 ):
+    """
+    调度 BCD 项目类型的邮件对话链：B3 → B4 → B5 → B6
+    如果 D 公司是 PR，则根据项目 current_plss_email 确定是否加抄送人。
+    """
 
-    # with get_db_session() as db:
-    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
-        
+    # === 判断抄送人逻辑（仅对 PR 生效） ===
+    cc_list = []
+    if d_company.short_name == "PR":
+        if project_info.current_plss_email in ("A", "B"):
+            cc_list = [MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
+
+    # === SMTP 配置 ===
     b_smtp = {
         "host": b_company.smtp_host,
         "port": b_company.smtp_port,
@@ -70,11 +78,7 @@ def schedule_bid_conversation_BCD(
         "from": d_company.smtp_from
     }
 
-    # b_email = b_company.email
-    # c_email = c_company.email
-    # d_email = d_company.email
-
-    # 获取对应B公司的邮件模板
+    # === B3：B ➝ C ===
     b_email_subject_b3 = email_utils.render_email_subject(
         stage="B3", 
         company_short_name=b_company.short_name, 
@@ -93,7 +97,7 @@ def schedule_bid_conversation_BCD(
         full_name=c_company.contact_person,
         winning_amount=winning_amount,
         contract_number=contract_number,
-        template_name="B3_"+b_company.short_name+".html",
+        template_name="B3_" + b_company.short_name + ".html",
         # 发送人落款信息
         contact_person=b_company.contact_person,
         company_name=b_company.company_name,
@@ -104,17 +108,9 @@ def schedule_bid_conversation_BCD(
         pingyin=b_company.pingyin,
         company_en=b_company.company_en,
     )
-    
     logger.info("B3-B公司邮件主题：%s", b_email_subject_b3)
-    
-    # 第一封邮件：B ➝ C（立即）
-    # task1 = send_reply_email.apply_async(
-    #     args=[c_email, b_email_subject_b3, b_email_content_b3, b_smtp, 0, "B3", project_info.id],
-    #     countdown=0  # 立即
-    # )
 
-    # 第二封邮件：C ➝ B 回复
-    # 随机延迟 5–60 分钟
+    # === B4：C ➝ B ===
     c_email_subject_b4 = email_utils.render_email_subject(
         stage="B4", 
         company_short_name=c_company.short_name, 
@@ -126,9 +122,6 @@ def schedule_bid_conversation_BCD(
         winning_time=winning_time,
         contract_number=contract_number
     )
-    
-    logger.info("B4-C公司邮件主题：%s", c_email_subject_b4)
-    
     c_email_content_b4 = email_utils.render_invitation_template_content(
         buyer_name=c_company.company_name, 
         project_name=project_name, 
@@ -136,7 +129,7 @@ def schedule_bid_conversation_BCD(
         first_name=b_company.last_name,
         winning_amount=winning_amount,
         contract_number=contract_number,
-        template_name="B4_"+c_company.short_name+".html",
+        template_name="B4_" + c_company.short_name + ".html",
         # 发送人落款信息
         contact_person=c_company.contact_person,
         company_name=c_company.company_name,
@@ -147,15 +140,9 @@ def schedule_bid_conversation_BCD(
         pingyin=c_company.pingyin,
         company_en=c_company.company_en,
     )
-    
-    # delay2 = random.randint(5, 60)
-    # delay2 =  1
-    # task2 = send_reply_email.apply_async(
-    #     args=[b_email, c_email_subject_b4, c_email_content_b4, c_smtp, delay2, "B4", project_info.id],
-    #     countdown=delay2 * 60  # 相对第一封
-    # )
+    logger.info("B4-C公司邮件主题：%s", c_email_subject_b4)
 
-    # 第三封：B ➝ D（延迟第2封基础上 5–60分钟）
+    # === B5：B ➝ D ===
     b_email_subject_b5 = email_utils.render_email_subject(
         stage="B5", 
         company_short_name=b_company.short_name, 
@@ -165,10 +152,6 @@ def schedule_bid_conversation_BCD(
         winning_amount=winning_amount,
         winning_time=winning_time
     )
-    
-    logger.info("B5-B公司邮件主题：%s", b_email_subject_b5)
-    logger.info("C公司名称：%s", c_company.company_name)
-    
     b_email_content_b5 = email_utils.render_invitation_template_content(
         buyer_name=b_company.company_name, 
         first_name=d_company.last_name,
@@ -179,7 +162,7 @@ def schedule_bid_conversation_BCD(
         project_name=project_name, 
         winning_time=winning_time,
         c_company_name=c_company.company_name,
-        template_name="B5_"+b_company.short_name+".html",
+        template_name="B5_" + b_company.short_name + ".html",
         # 发送人落款信息
         contact_person=b_company.contact_person,
         company_name=b_company.company_name,
@@ -190,16 +173,9 @@ def schedule_bid_conversation_BCD(
         pingyin=b_company.pingyin,
         company_en=b_company.company_en,
     )
+    logger.info("B5-B公司邮件主题：%s", b_email_subject_b5)
 
-    # delay3 = delay2 + random.randint(5, 60)
-    # delay3 = delay2 + 1
-    # task3 = send_reply_email.apply_async(
-    #     args=[d_email, b_email_subject_b5, b_email_content_b5, b_smtp, delay3, "B5", project_info.id],
-    #     countdown=delay3 * 60
-    # )
-
-
-    # 第四封：D ➝ B（在第3封后延迟 5–60分钟）
+    # === B6：D ➝ B ===
     d_email_subject_b6 = email_utils.render_email_subject(
         stage="B6",
         company_short_name=d_company.short_name,
@@ -211,9 +187,6 @@ def schedule_bid_conversation_BCD(
         purchase_department=simplify_to_traditional(purchase_department),
         contract_number=contract_number
     )
-    
-    logger.info("B6-D公司邮件主题：%s", d_email_subject_b6)
-    
     d_email_content_b6 = email_utils.render_invitation_template_content(
         buyer_name=d_company.company_name, 
         first_name=b_company.last_name_traditional,
@@ -223,7 +196,7 @@ def schedule_bid_conversation_BCD(
         serial_number=contract_serial_number,
         project_name=project_name, 
         winning_time=winning_time,
-        template_name="B6_"+d_company.short_name+".html",
+        template_name="B6_" + d_company.short_name + ".html",
         # 发送人落款信息
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
@@ -234,29 +207,22 @@ def schedule_bid_conversation_BCD(
         pingyin=d_company.pingyin,
         company_en=d_company.company_en,
     )
-    # delay4 = delay3 + random.randint(5, 60)
-    # delay4 = delay3 + 1
-    # task4 = send_reply_email.apply_async(
-    #     args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp, delay4, "B6", project_info.id],
-    #     countdown=delay4 * 60
-    # )
+    logger.info("B6-D公司邮件主题：%s", d_email_subject_b6)
 
-
-    # B6：D ➝ B
-    delay_b6 = random.randint(5, max_sending_time) * 60  # 没有后续任务
+    # === 构造任务链 ===
+    delay_b6 = random.randint(5, max_sending_time) * 60
     task_b6 = {
         "to_email": b_company.email,
         "subject": d_email_subject_b6,
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        # "project_id": project_info.id,
         "followup_task_args": None,
         "followup_delay": delay_b6
     }
-    logger.info(f"[B6] 💌 邮件准备完毕，将在前一任务完成后立即发送，目标：{b_company.email}")
+    if cc_list:
+        task_b6["cc"] = cc_list
 
-    # B5：B ➝ D
     delay_b5 = random.randint(5, max_sending_time) * 60
     task_b5 = {
         "to_email": d_company.email,
@@ -264,13 +230,12 @@ def schedule_bid_conversation_BCD(
         "content": b_email_content_b5,
         "smtp_config": b_smtp,
         "stage": "B5",
-        # "project_id": project_info.id,
         "followup_task_args": task_b6,
         "followup_delay": delay_b5
     }
-    logger.info(f"[B5] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b5 // 60} 分钟发送，目标：{d_company.email}")
+    if cc_list:
+        task_b5["cc"] = cc_list
 
-    # B4：C ➝ B
     delay_b4 = random.randint(5, max_sending_time) * 60
     task_b4 = {
         "to_email": b_company.email,
@@ -278,13 +243,10 @@ def schedule_bid_conversation_BCD(
         "content": c_email_content_b4,
         "smtp_config": c_smtp,
         "stage": "B4",
-        # "project_id": project_info.id,
         "followup_task_args": task_b5,
         "followup_delay": delay_b4
     }
-    logger.info(f"[B4] 💌 邮件准备完毕，将在前一任务完成后延迟 {delay_b4 // 60} 分钟发送，目标：{b_company.email}")
 
-    # B3：B ➝ C（起点）
     delay_b3 = random.randint(5, max_sending_time) * 60
     task_b3 = {
         "to_email": c_company.email,
@@ -292,21 +254,19 @@ def schedule_bid_conversation_BCD(
         "content": b_email_content_b3,
         "smtp_config": b_smtp,
         "stage": "B3",
-        # "project_id": project_info.id,
         "followup_task_args": task_b4,
         "followup_delay": delay_b3
     }
-    logger.info(f"[B3] 💌 邮件准备完毕，将立即调度，后续依次触发 B4→B5→B6，目标：{c_company.email}")
 
-    # 调度 B3
+    logger.info(f"[B3] 💌 调度链准备完成，目标：{c_company.email}")
+
+    # === 调度起点 (B3) ===
     send_email_with_followup_delay.apply_async(
         kwargs=task_b3,
-        countdown=0  # 或 random delay
+        countdown=0
     )
-    logger.info("[B3] 🚀 已调度，Celery任务开始执行邮件链")
 
-
-    return {"message": "email sent!"}
+    return {"message": "BCD email chain scheduled"}
 
 
 # CCD 项目类型发送邮件
@@ -344,8 +304,6 @@ def schedule_bid_conversation_CCD(
         "password": d_company.smtp_password,
         "from": d_company.smtp_from
     }
-    # b_email = b_company.email
-    # d_email = d_company.email
 
     # C公司的特殊B5邮件模板
     c_email_subject_b5 = email_utils.render_email_subject(
@@ -502,9 +460,6 @@ def schedule_bid_conversation_BD(
         "from": d_company.smtp_from
     }
 
-    # b_email = b_company.email
-    # d_email = d_company.email
-
     # 获取对应B公司的邮件模板
     b_email_subject_b5 = email_utils.render_email_subject(
         stage="B5", 
@@ -624,13 +579,14 @@ def schedule_bid_conversation_BD(
     }
 
 
+
+'''
 # BCD 项目类型发送结算单
 # 1. 发送C-B间结算单
 # 2. 上一封邮件发出5-60分钟后，发送B-D间结算单
 # 3. 上一封邮件发出5-60分钟后，B-D间结算单确认
 # 4. 上一封邮件发出5-60分钟后，C-D间结算单确认
 
-'''
     amount: str # 收款金额
     three_fourth: str # 三方/四方货款
     import_service_fee: str # C进口服务费
@@ -1204,53 +1160,5 @@ def schedule_settlement_CCD_BD(
         "BD_download_url": BD_settlement_path
     }
 
-# BD 项目类型发送结算单
-def schedule_settlement_BD(b_company_name: str, d_company_name: str):
-    b_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == b_company_name).first()
-    d_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == d_company_name).first()
 
-    b_email = b_company.email
-    d_email = d_company.email
-    
-    b_smtp = {
-        "host": b_company.smtp_host,
-        "port": b_company.smtp_port,
-        "username": b_company.smtp_username,
-        "password": b_company.smtp_password,
-        "from": b_company.smtp_from
-    }
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
-
-    # 获取对应B公司的邮件模板
-    b_email_subject_b1 = render_email_subject("B1", b_company.short_name, project_name, b_company.serial_number)
-    b_email_content_b1 = render_invitation_template_content(b_company_name, project_name, "b1_"+b_company.short_name+".txt")
-    
-    # 第一封邮件：B ➝ D
-    task1 = send_reply_email.apply_async(
-        args=[d_email, b_email_subject_b1, b_email_content_b1, b_smtp],
-        countdown=0  # 立即
-    )
-    
-    # 随机延迟 5–60 分钟
-    d_email_subject_d1 = render_email_subject("D1", d_company.short_name, project_name, d_company.serial_number)
-    d_email_content_d1 = render_invitation_template_content(d_company_name, project_name, "d1_"+d_company.short_name+".txt")
-    delay1 = random.randint(5, 60)
-    task2 = send_reply_email.apply_async(
-        args=[b_email, d_email_subject_d1, d_email_content_d1, d_smtp],
-        countdown=delay1 * 60  # 相对第一封
-    )
-    
-    return {
-        "tasks": [
-            {"step": "B ➝ D", "task_id": task1.id, "delay_min": 0},
-            {"step": "D ➝ B", "task_id": task2.id, "delay_min": delay1},
-        ]
-    }
-            
 
