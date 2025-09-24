@@ -359,17 +359,18 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         models.CompanyInfo.company_name == d_company_name
     ).first()
 
-    # d_company的邮箱信息根据当前的ABC修改
-    # 决定本项目实际发信邮箱（A/B/C）
-    if d_company.short_name == 'PR':
-        plss_alias = project.current_plss_email  # 'A' / 'B' / 'C'
-        d_company.email = email_utils.MAIL_ACCOUNTS[plss_alias]['email']
-        d_company.smtp_password = email_utils.MAIL_ACCOUNTS[plss_alias]['password']
+    
 
     actual_serial_number = ''
 
     if d_company.short_name == 'FR': 
         actual_serial_number = project.f_serial_number
+        # d_company的邮箱信息根据当前的ABC修改
+        # 决定本项目实际发信邮箱（A/B/C）
+        plss_alias = project.current_plss_email  # 'A' / 'B' / 'C'
+        d_company.email = email_utils.MAIL_ACCOUNTS[plss_alias]['email']
+        d_company.smtp_password = email_utils.MAIL_ACCOUNTS[plss_alias]['password']
+        
     elif d_company.short_name == 'LF':
         actual_serial_number = project.l_serial_number
     else:
