@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from app import models, email_utils
 
-import logger
+from app.log_config import setup_logger
+
+logger = setup_logger(__name__)
 
 # 统一把 CompanyInfo 转成 SMTP 配置
 def smtp_from_company(c: "models.CompanyInfo") -> Dict[str, Any]:

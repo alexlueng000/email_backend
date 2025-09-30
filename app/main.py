@@ -31,7 +31,7 @@ logger = setup_logger(__name__)
 
 T = TypeVar('T', bound=BaseModel)
 
-max_sending_time = 60
+max_sending_time = 1
 
 def strip_request_fields(req: T) -> T:
     """
@@ -114,15 +114,16 @@ async def receive_bidding_register(
     logger.info("1委托投标登记|请求参数：%s", req.model_dump())
 
     # 1) 随机延迟
-    LF_A1_delay = random.randint(1, 5)
-    FR_A1_delay = random.randint(1, 5)
-    PR_A1_delay = random.randint(1, 5)
+    LF_A1_delay = random.randint(0, 1)
+    FR_A1_delay = random.randint(0, 1)
+    PR_A1_delay = random.randint(0, 1)
 
     # 清洗请求
     req = strip_request_fields(req)
 
     # 2) 确定本项目邮箱别名 (A/B/C)
     current_plss = email_utils.get_last_plss_email()
+    print("2) 确定本项目邮箱别名 (A/B/C):", current_plss)
 
     # 3) 新增项目
     project_info = models.ProjectInfo(
@@ -146,12 +147,12 @@ async def receive_bidding_register(
     db.refresh(project_info)
 
     # 4) 通知邮件
-    tasks.send_notification_email_task(
-        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
-    )
-    tasks.send_notification_email_task(
-        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
-    )
+    # tasks.send_notification_email_task(
+    #     "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
+    # )
+    # tasks.send_notification_email_task(
+    #     "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
+    # )
 
     # 5) 查询公司信息
     b_name = normalize_company_name(req.b_company_name)
@@ -163,13 +164,13 @@ async def receive_bidding_register(
     lf_company = get_company_by_short(db, "LF", "D")
     fr_company = get_company_by_short(db, "FR", "D")
 
-    # TODO 要修改为实际的PLSS邮箱信息
+    # TODO 要修改为实际的PLSS邮箱信息 
     pr_company = get_company_by_short(db, "PR", "D")
 
     # 6) A2 任务
-    delay_FR_A2 = random.randint(5, max_sending_time)
-    delay_LF_A2 = random.randint(5, max_sending_time)
-    delay_PR_A2 = random.randint(5, max_sending_time)
+    delay_FR_A2 = random.randint(0, max_sending_time)
+    delay_LF_A2 = random.randint(0, max_sending_time)
+    delay_PR_A2 = random.randint(0, max_sending_time)
 
     task_FR_A2 = make_a2_task_for_target_d(
         b_company=b_company, target_d=fr_company,

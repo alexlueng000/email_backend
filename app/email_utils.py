@@ -33,64 +33,55 @@ def get_db_session():
 MAIL_ACCOUNTS = {
     "A": {
         "alias": "A",
-        "email": "a@example.com",
-        "smtp_host": "smtp.example.com",
+        "email": "3982802236@qq.com",
+        "smtp_host": "smtp.qq.com",
         "smtp_port": 465,
-        "username": "a@example.com",
-        "password": "****",
-        "from": "a@example.com",
+        "username": "3982802236@qq.com",
+        "password": "hcnlwyjtplnecebg",
+        "from": "3982802236@qq.com",
         "active": True,
     },
     "B": {
         "alias": "B",
-        "email": "b@example.com",
-        "smtp_host": "smtp.example.com",
+        "email": "494762262@qq.com",
+        "smtp_host": "smtp.qq.com",
         "smtp_port": 465,
-        "username": "b@example.com",
-        "password": "****",
-        "from": "b@example.com",
+        "username": "494762262@qq.com",
+        "password": "tahlkqtmxgtpbibd",
+        "from": "494762262@qq.com",
         "active": True,
     },
     "C": {
         "alias": "C",
-        "email": "c@example.com",
-        "smtp_host": "smtp.example.com",
+        "email": "19128326936@163.com",
+        "smtp_host": "smtp.163.com",
         "smtp_port": 465,
-        "username": "c@example.com",
-        "password": "****",
-        "from": "c@example.com",
+        "username": "19128326936@163.com",
+        "password": "ABed9jSdeUMvJp2s",
+        "from": "19128326936@163.com",
         "active": True,
     },
 }
 
 # 如果上一个是A，那就返回B；如果是B，就返回C；否则返回A
 def get_last_plss_email() -> str:
-    
     with get_db_session() as db:
         last_project = (
-            db.execute(
-                select(models.ProjectInfo)
-                .where(models.ProjectInfo.current_plss_email != None)  # 只取已有分配的
-                .order_by(desc(models.ProjectInfo.created_at))
-                .limit(1)
-            ).scalars().first()
+            db.query(models.ProjectInfo)
+              .filter(models.ProjectInfo.current_plss_email.isnot(None))
+              .order_by(models.ProjectInfo.created_at.desc())
+              .first()
         )
-
-        if not last_project or not last_project.current_plss_email:
-            # 没有历史项目，默认从 A 开始
-            return "A"
-
-        prev_alias = last_project.current_plss_email
-
+        prev_alias = last_project.current_plss_email if last_project else None
         if prev_alias == "A":
             return "B"
         elif prev_alias == "B":
             return "C"
-        else:  # 包括 "C" 或其它异常值
+        else:
             return "A"
 
 
-def normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
+def _normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
     """
     将 cc 归一化为字符串列表：
     - None -> []

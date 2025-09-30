@@ -8,6 +8,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.message import EmailMessage
 import traceback
+from typing import List, Optional, Union, Iterable
 
 import paramiko
 
@@ -22,7 +23,7 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-celery = Celery(
+celery = Celery( 
     "syjz_emails",
     broker="redis://localhost:6379/0",      # Redis 作为 broker
     backend="redis://localhost:6379/0"      # 可用于任务结果存储（可选）
@@ -32,6 +33,27 @@ class EmailSendFailed(Exception):
     """自定义异常：表示邮件逻辑上发送失败"""
     pass
 
+
+def _normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
+    """
+    将 cc 归一化为字符串列表：
+    - None -> []
+    - 'a@x.com,b@x.com' / 'a@x.com; b@x.com' -> ['a@x.com','b@x.com']
+    - ['a@x.com', 'b@x.com'] -> ['a@x.com','b@x.com']
+    - 自动去空格与过滤空串
+    """
+    if cc is None:
+        return []
+    if isinstance(cc, str):
+        # 支持逗号或分号分隔
+        parts = [p.strip() for p in cc.replace(";", ",").split(",")]
+        return [p for p in parts if p]
+    try:
+        return [str(p).strip() for p in cc if str(p).strip()]
+    except TypeError:
+        # 不是可迭代：当作单一字符串
+        s = str(cc).strip()
+        return [s] if s else []
 
 def send_sync_email(to_email, subject, content, smtp_config):
     msg = MIMEText(content, "html", "utf-8")
@@ -162,15 +184,18 @@ def send_email_with_followup_delay(
     smtp_config: dict,
     stage: str,
     followup_task_args: dict | None = None,
-    followup_delay: int = 0
+    followup_delay: int = 0,
+    cc: Optional[Union[str, Iterable[str]]] = None, 
 ):
     from app import database
     db = database.SessionLocal()
 
     try:
         logger.info(f"[{stage}] 🚀 发送邮件任务开始，to={to_email}")
+        cc_list = _normalize_cc(cc)
+        logger.info(f"[{stage}] 🚀 发送邮件任务开始，to={to_email}, cc={cc_list or '[]'}")
         
-        success, error = email_utils.send_email(to_email, subject, content, smtp_config, stage)
+        success, error = email_utils.send_email(to_email, subject, content, smtp_config, stage, cc=cc_list)
         scheduled_time = datetime.now()
 
         if not success:
