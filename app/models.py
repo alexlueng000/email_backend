@@ -43,6 +43,18 @@ class CompanyInfo(Base):
     pingyin = Column(String(255))
     company_en = Column(String(255)) # 公司英文名
 
+    def __repr__(self):
+        return (f"<CompanyInfo id={self.id} short_name={self.short_name} "
+                f"type={self.company_type} name={getattr(self, 'name', None)}>")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "short_name": self.short_name,
+            "company_type": self.company_type,
+            "name": getattr(self, "name", None),
+        }
+
 
 class ProjectInfo(Base):
     __tablename__ = "project_info"

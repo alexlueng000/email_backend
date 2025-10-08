@@ -33,26 +33,26 @@ def get_db_session():
 MAIL_ACCOUNTS = {
     "A": {
         "alias": "A",
-        "email": "3982802236@qq.com",
-        "smtp_host": "smtp.qq.com",
+        "email": "19128387174@163.com",
+        "smtp_host": "smtp.163.com",
         "smtp_port": 465,
-        "username": "3982802236@qq.com",
-        "password": "hcnlwyjtplnecebg",
-        "from": "3982802236@qq.com",
-        "active": True,
-    },
-    "B": {
-        "alias": "B",
-        "email": "494762262@qq.com",
-        "smtp_host": "smtp.qq.com",
-        "smtp_port": 465,
-        "username": "494762262@qq.com",
-        "password": "tahlkqtmxgtpbibd",
-        "from": "494762262@qq.com",
+        "username": "19128387174@163.com",
+        "password": "ED7Us3Abwt5Ygcms",
+        "from": "19128387174@163.com",
         "active": True,
     },
     "C": {
         "alias": "C",
+        "email": "494762262@qq.com",
+        "smtp_host": "smtp.qq.com",
+        "smtp_port": 465,
+        "username": "494762262@qq.com",
+        "password": "cqbunbcethlqcaib",
+        "from": "494762262@qq.com",
+        "active": True,
+    },
+    "B": {
+        "alias": "B",
         "email": "19128326936@163.com",
         "smtp_host": "smtp.163.com",
         "smtp_port": 465,
@@ -73,6 +73,7 @@ def get_last_plss_email() -> str:
               .first()
         )
         prev_alias = last_project.current_plss_email if last_project else None
+        print("上一个PLSS邮箱别名:", prev_alias)
         if prev_alias == "A":
             return "B"
         elif prev_alias == "B":
@@ -142,6 +143,15 @@ def send_email(
 
     try:
         logger.info("📧 开始建立 SMTP 连接")
+        logger.info("host", smtp_config["host"])
+        logger.info("port", smtp_config["port"])
+        logger.info("username", smtp_config["username"])
+        logger.info("password", smtp_config["password"])
+        logger.info("from", smtp_config["from"])
+        logger.info("to", to)
+        logger.info("subject", subject)
+        print("body", body)
+        print("cc", cc)
         with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30) as smtp:
             logger.info("📧 登录 SMTP...")
             logger.info("📧 登录 SMTP...username: %s, password: %s", smtp_config["username"], smtp_config["password"])

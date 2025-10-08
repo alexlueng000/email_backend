@@ -1,0 +1,57 @@
+2025-09-29 16:28:10,826 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:28:10,830 - ERROR - app.main - ❌ 未处理异常: NameError("name 'select' is not defined")
+2025-09-29 16:30:52,042 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:30:52,057 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'project_info.serial_number\' in \'field list\'")')
+2025-09-29 16:31:40,622 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:31:40,673 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:31:40,683 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'company_info.pingyin\' in \'field list\'")')
+2025-09-29 16:32:33,777 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:32:33,786 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:32:33,787 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'company_info.pingyin\' in \'field list\'")')
+2025-09-29 16:33:05,145 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:33:05,156 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:33:05,158 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'company_info.company_en\' in \'field list\'")')
+2025-09-29 16:33:26,369 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:33:26,376 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:33:26,407 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 16:33:32,986 - ERROR - app.main - ❌ 未处理异常: TypeError("send_email_with_followup_delay() got an unexpected keyword argument 'cc'")
+2025-09-29 16:39:06,219 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '兰香绿茶', 'l_serial_number': 'l001', 'p_serial_number': 'p001', 'f_serial_number': 'f001', 'bidding_code': '123456789'}
+2025-09-29 16:39:06,238 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:39:06,256 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 16:39:12,851 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=0, PR=1
+2025-09-29 16:39:12,852 - INFO - app.main - A2邮件后续延迟（分钟）: LF=1, FR=1, PR=0
+2025-09-29 16:40:25,245 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart002', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬', 'l_serial_number': 'l002', 'p_serial_number': 'p002', 'f_serial_number': 'f002', 'bidding_code': '123456789'}
+2025-09-29 16:40:25,255 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 16:40:25,269 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 16:40:25,613 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-09-29 16:40:25,613 - INFO - app.main - A2邮件后续延迟（分钟）: LF=1, FR=0, PR=1
+2025-09-29 17:02:13,392 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart003', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬111', 'l_serial_number': 'l003', 'p_serial_number': 'p003', 'f_serial_number': 'f003', 'bidding_code': '123456789'}
+2025-09-29 17:02:13,402 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:02:13,430 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 17:02:13,889 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=0, PR=0
+2025-09-29 17:02:13,889 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=1, PR=1
+2025-09-29 17:03:14,132 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart004', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬444', 'l_serial_number': 'l004', 'p_serial_number': 'p004', 'f_serial_number': 'f004', 'bidding_code': '123456789'}
+2025-09-29 17:03:14,153 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:03:14,170 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 17:03:20,740 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=0, PR=0
+2025-09-29 17:03:20,740 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=1, PR=1
+2025-09-29 17:04:51,564 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart005', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬555', 'l_serial_number': 'l005', 'p_serial_number': 'p005', 'f_serial_number': 'f005', 'bidding_code': '123456789'}
+2025-09-29 17:04:51,586 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:04:51,604 - INFO - app.main - PR 邮件抄送人: 无
+2025-09-29 17:04:58,181 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=1, PR=0
+2025-09-29 17:04:58,182 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=0, PR=0
+2025-09-29 17:07:08,952 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart006', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬666', 'l_serial_number': 'l006', 'p_serial_number': 'p006', 'f_serial_number': 'f006', 'bidding_code': '123456789'}
+2025-09-29 17:07:08,959 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:07:08,970 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 17:07:09,336 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=1
+2025-09-29 17:07:09,336 - INFO - app.main - A2邮件后续延迟（分钟）: LF=1, FR=1, PR=1
+2025-09-29 17:14:31,165 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart007', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬777', 'l_serial_number': 'l007', 'p_serial_number': 'p007', 'f_serial_number': 'f007', 'bidding_code': '123456789'}
+2025-09-29 17:14:31,190 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:14:31,209 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 17:14:37,776 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-09-29 17:14:37,777 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=0, PR=1
+2025-09-29 17:32:25,687 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test_depart008', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '李强会见朝鲜外相崔善姬888', 'l_serial_number': 'l008', 'p_serial_number': 'p008', 'f_serial_number': 'f008', 'bidding_code': '123456789'}
+2025-09-29 17:32:25,697 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-09-29 17:32:25,709 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-09-29 17:32:26,053 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-09-29 17:32:26,054 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=0, PR=1

@@ -31,6 +31,86 @@ def get_company_by_short(db: Session, short_name: str, company_type: str) -> Opt
         logger.error("未找到公司：short=%s, type=%s", short_name, company_type)
     return company
 
+from typing import Optional
+from sqlalchemy.orm import Session
+from app import models, email_utils
+
+from typing import Optional
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
+from app import models, email_utils
+
+def update_D_company_by_alias(db: Session, alias: str) -> models.CompanyInfo:
+    # 1) 选中要更新的 D 公司（你现在逻辑写死 PR，如需按 alias 选择可改 filter）
+    company = (
+        db.query(models.CompanyInfo)
+        .filter(
+            models.CompanyInfo.short_name == "PR",
+            models.CompanyInfo.company_type == "D",
+        )
+        .first()
+    )
+    if not company:
+        raise ValueError("未找到符合条件的 D 公司（short_name='PR', company_type='D'）。")
+
+    # 2) 取发信账号配置（按别名 A/B/C）
+    acc = email_utils.MAIL_ACCOUNTS.get(alias)
+    if not acc:
+        raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{alias}")
+
+    # 3) 兼容老/新键名读取
+    def getf(d, *keys, default=None):
+        for k in keys:
+            if k in d and d[k] not in (None, ""):
+                return d[k]
+        return default
+
+    new_values = {
+        "email": getf(acc, "email"),
+        "smtp_host": getf(acc, "smtp_host", "host"),
+        "smtp_port": int(getf(acc, "smtp_port", "port", default=465)),
+        "smtp_username": getf(acc, "smtp_username", "username"),
+        "smtp_password": getf(acc, "smtp_password", "password"),
+        "smtp_from": getf(acc, "smtp_from", "from")
+                    or getf(acc, "smtp_username", "username"),
+    }
+
+    # 4) 基本校验
+    missing = [k for k, v in new_values.items() if not v]
+    if missing:
+        raise ValueError(f"别名 {alias} 的发信配置缺失字段：{', '.join(missing)}")
+
+    # 5) 仅在值变化时赋值，减少无谓 UPDATE
+    for k, v in new_values.items():
+        if getattr(company, k, None) != v:
+            setattr(company, k, v)
+
+    # 6) 事务提交（失败回滚）
+    try:
+        db.flush()       # 先 flush 让 ORM 检查列是否存在/类型是否匹配
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+    # 7) 刷新得到数据库中的最新值
+    db.refresh(company)
+
+    # 8) 打印脱敏信息（勿打印密码）
+    print("D公司已更新（脱敏）=>", {
+        "id": company.id,
+        "short_name": company.short_name,
+        "smtp_host": company.smtp_host,
+        "smtp_port": company.smtp_port,
+        "smtp_username": company.smtp_username,
+        "smtp_from": company.smtp_from,
+        # "smtp_password": "******"
+    })
+
+    return company
+
+
+
 # 按公司名（可选限定类型）拿公司
 def get_company_by_name(db: Session, company_name: str, company_type: Optional[str] = None) -> Optional["models.CompanyInfo"]:
     q = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == company_name)

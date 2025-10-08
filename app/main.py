@@ -22,7 +22,7 @@ from app import email_utils, models, database, schemas, tasks, send_email_tasks,
 from app.utils import simplify_to_traditional
 from app.log_config import setup_logger
 
-from app.stage_utils.stage_A1_A2_utils import normalize_company_name, make_a1_task_from_d_to_b, make_a2_task_for_target_d, get_company_by_short, get_company_by_name
+from app.stage_utils.stage_A1_A2_utils import normalize_company_name, make_a1_task_from_d_to_b, make_a2_task_for_target_d, get_company_by_name, update_D_company_by_alias
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -31,7 +31,7 @@ logger = setup_logger(__name__)
 
 T = TypeVar('T', bound=BaseModel)
 
-max_sending_time = 1
+max_sending_time = 60
 
 def strip_request_fields(req: T) -> T:
     """
@@ -123,7 +123,7 @@ async def receive_bidding_register(
 
     # 2) 确定本项目邮箱别名 (A/B/C)
     current_plss = email_utils.get_last_plss_email()
-    print("2) 确定本项目邮箱别名 (A/B/C):", current_plss)
+    logger.info("(2) 确定本项目邮箱别名 (A/B/C): %s", current_plss)
 
     # 3) 新增项目
     project_info = models.ProjectInfo(
@@ -147,12 +147,12 @@ async def receive_bidding_register(
     db.refresh(project_info)
 
     # 4) 通知邮件
-    # tasks.send_notification_email_task(
-    #     "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
-    # )
-    # tasks.send_notification_email_task(
-    #     "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
-    # )
+    tasks.send_notification_email_task(
+        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
+    )
+    tasks.send_notification_email_task(
+        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
+    )
 
     # 5) 查询公司信息
     b_name = normalize_company_name(req.b_company_name)
@@ -164,8 +164,8 @@ async def receive_bidding_register(
     lf_company = get_company_by_short(db, "LF", "D")
     fr_company = get_company_by_short(db, "FR", "D")
 
-    # TODO 要修改为实际的PLSS邮箱信息 
-    pr_company = get_company_by_short(db, "PR", "D")
+    # 更新D公司邮箱信息 
+    pr_company = update_D_company_by_alias(db, current_plss)
 
     # 6) A2 任务
     delay_FR_A2 = random.randint(0, max_sending_time)
@@ -366,12 +366,6 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 
     if d_company.short_name == 'FR': 
         actual_serial_number = project.f_serial_number
-        # d_company的邮箱信息根据当前的ABC修改
-        # 决定本项目实际发信邮箱（A/B/C）
-        plss_alias = project.current_plss_email  # 'A' / 'B' / 'C'
-        d_company.email = email_utils.MAIL_ACCOUNTS[plss_alias]['email']
-        d_company.smtp_password = email_utils.MAIL_ACCOUNTS[plss_alias]['password']
-        
     elif d_company.short_name == 'LF':
         actual_serial_number = project.l_serial_number
     else:
@@ -415,6 +409,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 
                 if project.project_type == 'BCD':
                     send_email_tasks.schedule_bid_conversation_BCD(
+                        project_info=project,
                         b_company=b_company,
                         c_company=c_company,
                         d_company=d_company,
@@ -428,6 +423,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
                     )
                 elif project.project_type == 'CCD':
                     send_email_tasks.schedule_bid_conversation_CCD(
+                        project_info=project,
                         b_company=b_company,
                         # c_company=c_company,
                         d_company=d_company,
@@ -505,6 +501,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     if project_type == 'BCD':
         logger.info("BCD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_BCD(
+            project_info=project,
             b_company=b_company,
             c_company=c_company,
             d_company=d_company,
@@ -520,6 +517,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     elif project_type == 'CCD':
         logger.info("CCD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_CCD(
+            project_info=project,
             b_company=b_company,
             # c_company=c_company,
             d_company=d_company,
@@ -535,6 +533,7 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     else:
         logger.info("BD 类型项目: %s", project.project_name)
         send_email_tasks.schedule_bid_conversation_BD(
+            project_info=project,
             b_company=b_company,
             c_company_name=c_company_name,
             d_company=d_company,
@@ -643,6 +642,7 @@ def settlement(
 
     if project_information.project_type == 'BCD':
         result = send_email_tasks.schedule_settlement_BCD(
+            project_info=project_information,
             b_company=b_company,
             c_company=c_company,
             d_company=d_company,
@@ -665,6 +665,7 @@ def settlement(
         BD_download_url = result["BD_download_url"]
     else:
         result = send_email_tasks.schedule_settlement_CCD_BD(
+            project_info=project_information,
             b_company=b_company,
             c_company=c_company,
             d_company=d_company,

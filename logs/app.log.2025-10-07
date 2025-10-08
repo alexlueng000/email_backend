@@ -1,0 +1,62 @@
+2025-10-07 01:41:10,402 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡0', 'l_serial_number': 'l010', 'p_serial_number': 'p010', 'f_serial_number': 'f010', 'bidding_code': '123456789'}
+2025-10-07 01:41:10,426 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'project_info.serial_number\' in \'field list\'")')
+2025-10-07 01:50:40,706 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡0', 'l_serial_number': 'l010', 'p_serial_number': 'p010', 'f_serial_number': 'f010', 'bidding_code': '123456789'}
+2025-10-07 01:50:40,721 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'project_info.serial_number\' in \'field list\'")')
+2025-10-07 01:51:45,343 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡0', 'l_serial_number': 'l010', 'p_serial_number': 'p010', 'f_serial_number': 'f010', 'bidding_code': '123456789'}
+2025-10-07 01:51:45,360 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'project_info.serial_number\' in \'field list\'")')
+2025-10-07 01:56:09,121 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡0', 'l_serial_number': 'l010', 'p_serial_number': 'p010', 'f_serial_number': 'f010', 'bidding_code': '123456789'}
+2025-10-07 01:56:09,150 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 01:56:09,176 - INFO - app.main - PR 邮件抄送人: 无
+2025-10-07 01:56:09,523 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=0, PR=0
+2025-10-07 01:56:09,523 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=0, PR=0
+2025-10-07 02:04:26,921 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡1', 'l_serial_number': 'l011', 'p_serial_number': 'p011', 'f_serial_number': 'f011', 'bidding_code': '123456789'}
+2025-10-07 02:04:26,943 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 02:04:26,965 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 02:04:27,312 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-10-07 02:04:27,312 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=1, PR=0
+2025-10-07 02:16:38,642 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡2', 'l_serial_number': 'l012', 'p_serial_number': 'p012', 'f_serial_number': 'f012', 'bidding_code': '123456789'}
+2025-10-07 02:16:38,662 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 02:16:38,687 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 02:16:39,018 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=1, PR=1
+2025-10-07 02:16:39,018 - INFO - app.main - A2邮件后续延迟（分钟）: LF=0, FR=0, PR=1
+2025-10-07 02:25:36,662 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡3', 'l_serial_number': 'l013', 'p_serial_number': 'p013', 'f_serial_number': 'f013', 'bidding_code': '123456789'}
+2025-10-07 02:25:36,703 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 02:25:36,736 - INFO - app.main - PR 邮件抄送人: 无
+2025-10-07 02:25:37,080 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=0, PR=0
+2025-10-07 02:25:37,080 - INFO - app.main - A2邮件后续延迟（分钟）: LF=1, FR=0, PR=1
+2025-10-07 02:45:47,092 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡4', 'l_serial_number': 'l014', 'p_serial_number': 'p014', 'f_serial_number': 'f014', 'bidding_code': '123456789'}
+2025-10-07 02:45:47,132 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 02:45:47,149 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 02:45:47,284 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=0, PR=1
+2025-10-07 03:02:05,682 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡5', 'l_serial_number': 'l015', 'p_serial_number': 'p015', 'f_serial_number': 'f015', 'bidding_code': '123456789'}
+2025-10-07 03:02:05,706 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:02:05,711 - ERROR - app.main - ❌ 未处理异常: TypeError("'NoneType' object is not subscriptable")
+2025-10-07 03:03:08,924 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡5', 'l_serial_number': 'l015', 'p_serial_number': 'p015', 'f_serial_number': 'f015', 'bidding_code': '123456789'}
+2025-10-07 03:03:08,944 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:03:08,949 - ERROR - app.main - ❌ 未处理异常: KeyError('host')
+2025-10-07 03:08:37,780 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡6', 'l_serial_number': 'l016', 'p_serial_number': 'p016', 'f_serial_number': 'f016', 'bidding_code': '123456789'}
+2025-10-07 03:08:37,802 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:08:37,819 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 03:08:37,957 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=0, PR=1
+2025-10-07 03:28:52,151 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡7', 'l_serial_number': 'l017', 'p_serial_number': 'p017', 'f_serial_number': 'f017', 'bidding_code': '123456789'}
+2025-10-07 03:28:52,194 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:28:52,234 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 03:28:52,372 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-10-07 03:28:53,437 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡7', 'l_serial_number': 'l017', 'p_serial_number': 'p017', 'f_serial_number': 'f017', 'bidding_code': '123456789'}
+2025-10-07 03:28:53,469 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:28:53,490 - INFO - app.main - PR 邮件抄送人: 无
+2025-10-07 03:28:53,587 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=1, PR=0
+2025-10-07 03:33:19,403 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡8', 'l_serial_number': 'l018', 'p_serial_number': 'p018', 'f_serial_number': 'f018', 'bidding_code': '123456789'}
+2025-10-07 03:33:19,423 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): C
+2025-10-07 03:33:19,438 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:33:19,468 - INFO - app.main - PR 邮件抄送人: 无
+2025-10-07 03:33:19,605 - INFO - app.main - A1邮件调度延迟（分钟）: LF=0, FR=0, PR=0
+2025-10-07 03:35:07,833 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': 'test00001', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '第239期 - 山顶咖啡9', 'l_serial_number': 'l019', 'p_serial_number': 'p019', 'f_serial_number': 'f019', 'bidding_code': '123456789'}
+2025-10-07 03:35:07,844 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2025-10-07 03:35:07,857 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2025-10-07 03:35:07,875 - INFO - app.main - PR 邮件抄送人: ['19128326936@163.com']
+2025-10-07 03:35:07,977 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=1, PR=0
+2025-10-07 16:33:19,147 - ERROR - app.main - ❌ 未处理异常: TypeError('Object of type ValueError is not JSON serializable')
+2025-10-07 16:33:50,594 - ERROR - app.main - ❌ 未处理异常: TypeError('Object of type ValueError is not JSON serializable')
+2025-10-07 16:37:23,779 - INFO - app.main - 2项目中标信息|请求参数：{'project_name': '第239期 - 山顶咖啡9', 'l_serial_number': 'l019', 'p_serial_number': 'p019', 'f_serial_number': 'f019', 'bidding_code': '9999999', 'contract_number': '123321', 'winning_amount': 9999999.0, 'winning_time': datetime.datetime(2025, 10, 7, 16, 35, 30), 'actual_winning_company': '深圳市深业晋展物料供应有限公司'}
+2025-10-07 16:37:23,822 - ERROR - app.main - ❌ 未处理异常: OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'is_sent\' in \'field list\'")')

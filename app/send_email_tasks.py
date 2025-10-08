@@ -50,7 +50,7 @@ def schedule_bid_conversation_BCD(
     cc_list = []
     if d_company.short_name == "PR":
         if project_info.current_plss_email in ("A", "B"):
-            cc_list = [MAIL_ACCOUNTS["C"]["email"]]
+            cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
     # === SMTP 配置 ===
@@ -273,6 +273,7 @@ def schedule_bid_conversation_BCD(
 # 仅有BD公司之间发送两封邮件
 # 特殊B5模板
 def schedule_bid_conversation_CCD(
+    project_info: models.ProjectInfo,
     b_company: models.CompanyInfo, 
     d_company: models.CompanyInfo, 
     contract_serial_number: str,
@@ -286,6 +287,12 @@ def schedule_bid_conversation_CCD(
 
     # with get_db_session() as db:
     #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+    # === 判断抄送人逻辑（仅对 PR 生效） ===
+    cc_list = []
+    if d_company.short_name == "PR":
+        if project_info.current_plss_email in ("A", "B"):
+            cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
 
     b_smtp = {
@@ -401,6 +408,8 @@ def schedule_bid_conversation_CCD(
         "followup_task_args": None,
         "followup_delay": delay_b6  # 无后续任务
     }
+    if cc_list:
+        task_b6["cc"] = cc_list
     logger.info(f"[B6] 💌 邮件准备完毕，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送，目标：{b_company.email}")
 
     # 第一封邮件：B ➝ D（成功后调度 B6）
@@ -429,6 +438,7 @@ def schedule_bid_conversation_CCD(
 
 # BD 项目类型发送邮件
 def schedule_bid_conversation_BD(
+    project_info: models.ProjectInfo,
     b_company: models.CompanyInfo, 
     c_company_name: str,
     d_company: models.CompanyInfo,
@@ -441,8 +451,11 @@ def schedule_bid_conversation_BD(
     tender_number: str
 ):
 
-    # with get_db_session() as db:
-    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.project_name == project_name).first()
+    cc_list = []
+    if d_company.short_name == "PR":
+        if project_info.current_plss_email in ("A", "B"):
+            cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
     b_smtp = {
         "host": b_company.smtp_host,
@@ -552,6 +565,8 @@ def schedule_bid_conversation_BD(
         "followup_delay": delay_b6  # 无下一级任务
     }
     logger.info(f"[B6] 💌 准备完毕，目标: {b_company.email}，将在 B5 成功后延迟 {delay_b6 // 60} 分钟发送")
+    if cc_list:
+        task_b6["cc"] = cc_list
 
     # 生成 B5 邮件发送的延迟时间（单位：秒）
     delay_b5 = random.randint(5, max_sending_time) * 60
@@ -598,6 +613,7 @@ def schedule_bid_conversation_BD(
 '''
 
 def schedule_settlement_BCD(
+    project_info: models.ProjectInfo,
     b_company: models.CompanyInfo,
     c_company: models.CompanyInfo,
     d_company: models.CompanyInfo,
@@ -616,6 +632,12 @@ def schedule_settlement_BCD(
     purchase_department: str, # 购买部门
     tender_number: str # 招标编号
 ):
+
+    cc_list = []
+    if d_company.short_name == "PR":
+        if project_info.current_plss_email in ("A", "B"):
+            cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
 
     b_smtp = {
@@ -900,6 +922,9 @@ def schedule_settlement_BCD(
         "followup_task_args": task_c10,
         "followup_delay": delay_c9
     }
+
+    if cc_list:
+        task_c9["cc"] = cc_list
     logger.info(f"[C9] 💌 准备完毕，目标：{b_company.email}，成功后将在 {delay_c9 // 60} 分钟后调度 C10")
 
     # C8：B ➝ D（成功后调度 C9）
@@ -954,6 +979,7 @@ def schedule_settlement_BCD(
 # CCD 项目类型发送结算单
 # BD之间发送结算单
 def schedule_settlement_CCD_BD(
+    project_info: models.ProjectInfo,
     b_company: models.CompanyInfo,
     c_company: models.CompanyInfo,
     d_company: models.CompanyInfo,
@@ -973,10 +999,12 @@ def schedule_settlement_CCD_BD(
     purchase_department: str, # 购买部门
     tender_number: str # 招标编号
 ):
-    
-    # with get_db_session() as db:
-    #     project_info = db.query(models.ProjectInfo).filter(models.ProjectInfo.contract_number == contract_number).first()
-    
+
+    cc_list = []
+    if d_company.short_name == "PR":
+        if project_info.current_plss_email in ("A", "B"):
+            cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
+    logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
     b_email = b_company.email
     d_email = d_company.email
@@ -1131,6 +1159,8 @@ def schedule_settlement_CCD_BD(
         "followup_task_args": None,
         "followup_delay": delay_c9
     }
+    if cc_list:
+        task_c9["cc"] = cc_list
     logger.info(f"[C9] 💌 准备完毕，目标：{b_email}，将在 C8 成功后延迟 {delay_c9 // 60} 分钟发送")
 
     # 第一封邮件：B ➝ D（启动任务）
