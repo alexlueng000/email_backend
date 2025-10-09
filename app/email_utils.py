@@ -31,8 +31,8 @@ def get_db_session():
 
 # settings_mail.py
 MAIL_ACCOUNTS = {
-    "A": {
-        "alias": "A",
+    "C": {
+        "alias": "C",
         "email": "19128387174@163.com",
         "smtp_host": "smtp.163.com",
         "smtp_port": 465,
@@ -41,14 +41,14 @@ MAIL_ACCOUNTS = {
         "from": "19128387174@163.com",
         "active": True,
     },
-    "C": {
-        "alias": "C",
-        "email": "494762262@qq.com",
+    "A": {
+        "alias": "A",
+        "email": "infotech@001precise.com",
         "smtp_host": "smtp.qq.com",
         "smtp_port": 465,
-        "username": "494762262@qq.com",
-        "password": "cqbunbcethlqcaib",
-        "from": "494762262@qq.com",
+        "username": "infotech@001precise.com",
+        "password": "bQRhcBDhKufmuTfC",
+        "from": "infotech@001precise.com",
         "active": True,
     },
     "B": {
