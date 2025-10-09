@@ -22,7 +22,7 @@ from app import email_utils, models, database, schemas, tasks, send_email_tasks,
 from app.utils import simplify_to_traditional
 from app.log_config import setup_logger
 
-from app.stage_utils.stage_A1_A2_utils import normalize_company_name, make_a1_task_from_d_to_b, make_a2_task_for_target_d, get_company_by_name, update_D_company_by_alias
+from app.stage_utils.stage_A1_A2_utils import normalize_company_name, make_a1_task_from_d_to_b, make_a2_task_for_target_d, get_company_by_name, update_D_company_by_alias, get_company_by_short
 
 from dotenv import load_dotenv
 load_dotenv()
