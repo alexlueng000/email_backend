@@ -13,6 +13,7 @@ from email.mime.application import MIMEApplication
 from app import database, models
 from app.utils import get_dingtalk_access_token, create_yida_form_instance
 
+from sqlalchemy import desc, nullslast
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from contextlib import contextmanager
@@ -68,19 +69,23 @@ def get_last_plss_email() -> str:
     with get_db_session() as db:
         last_project = (
             db.query(models.ProjectInfo)
-              .filter(models.ProjectInfo.current_plss_email.isnot(None))
-              .order_by(models.ProjectInfo.created_at.desc())
-              .first()
+            .filter(models.ProjectInfo.current_plss_email.isnot(None))
+            .order_by(
+                nullslast(desc(models.ProjectInfo.created_at)),  # 按创建时间降序，NULL 排最后
+                desc(models.ProjectInfo.id),                    # 同时再按 id 降序做并列打破
+            )
+            .first()
         )
-        prev_alias = last_project.current_plss_email if last_project else None
+
+        prev_alias = getattr(last_project, "current_plss_email", None)
         print("上一个PLSS邮箱别名:", prev_alias)
+
         if prev_alias == "A":
             return "B"
         elif prev_alias == "B":
             return "C"
         else:
             return "A"
-
 
 def _normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
     """

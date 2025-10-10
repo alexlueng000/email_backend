@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from app import database, models, email_utils, excel_utils
 from app.tasks import send_reply_email, upload_file_to_sftp_task, send_email_with_followup_delay, send_reply_email_with_attachments_delay
 from app.utils import simplify_to_traditional
+from app.email_utils import MAIL_ACCOUNTS
 
 from celery import chain
 
@@ -70,13 +71,28 @@ def schedule_bid_conversation_BCD(
         "from": c_company.smtp_from
     }
 
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
+    # === D SMTP 配置 ===
+    if d_company.short_name == "PR":
+
+        acc = email_utils.MAIL_ACCOUNTS.get(project_info.current_plss_email)
+        if not acc:
+            raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{project_info.current_plss_email}")
+
+        d_smtp = {
+            "host": acc["smtp_host"],
+            "port": acc["smtp_port"],
+            "username": acc["smtp_username"],
+            "password": acc["smtp_password"],
+            "from": acc["smtp_from"]
+        }
+    else:
+        d_smtp = {
+            "host": d_company.smtp_host,
+            "port": d_company.smtp_port,
+            "username": d_company.smtp_username,
+            "password": d_company.smtp_password,
+            "from": d_company.smtp_from
+        }
 
     # === B3：B ➝ C ===
     b_email_subject_b3 = email_utils.render_email_subject(
@@ -304,13 +320,35 @@ def schedule_bid_conversation_CCD(
     }
 
 
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
+    # === D SMTP 配置 ===
+    if d_company.short_name == "PR":
+
+        acc = email_utils.MAIL_ACCOUNTS.get(project_info.current_plss_email)
+        if not acc:
+            raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{project_info.current_plss_email}")
+
+        # 3) 兼容老/新键名读取
+        def getf(d, *keys, default=None):
+            for k in keys:
+                if k in d and d[k] not in (None, ""):
+                    return d[k]
+            return default
+
+        d_smtp = {
+            "host": acc["smtp_host"],
+            "port": acc["smtp_port"],
+            "username": acc["smtp_username"],
+            "password": acc["smtp_password"],
+            "from": acc["smtp_from"]
+        }
+    else:
+        d_smtp = {
+            "host": d_company.smtp_host,
+            "port": d_company.smtp_port,
+            "username": d_company.smtp_username,
+            "password": d_company.smtp_password,
+            "from": d_company.smtp_from
+        }
 
     # C公司的特殊B5邮件模板
     c_email_subject_b5 = email_utils.render_email_subject(
@@ -465,13 +503,28 @@ def schedule_bid_conversation_BD(
         "from": b_company.smtp_from
     }
 
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
+    # === D SMTP 配置 ===
+    if d_company.short_name == "PR":
+
+        acc = email_utils.MAIL_ACCOUNTS.get(project_info.current_plss_email)
+        if not acc:
+            raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{project_info.current_plss_email}")
+
+        d_smtp = {
+            "host": acc["smtp_host"],
+            "port": acc["smtp_port"],
+            "username": acc["smtp_username"],
+            "password": acc["smtp_password"],
+            "from": acc["smtp_from"]
+        }
+    else:
+        d_smtp = {
+            "host": d_company.smtp_host,
+            "port": d_company.smtp_port,
+            "username": d_company.smtp_username,
+            "password": d_company.smtp_password,
+            "from": d_company.smtp_from
+        }
 
     # 获取对应B公司的邮件模板
     b_email_subject_b5 = email_utils.render_email_subject(
@@ -543,12 +596,6 @@ def schedule_bid_conversation_BD(
         pingyin=d_company.pingyin,
         company_en=d_company.company_en,
     )
-    # delay = random.randint(5, 60)
-    # delay = 1
-    # task2 = send_reply_email.apply_async(
-    #     args=[b_email, d_email_subject_b6, d_email_content_b6, d_smtp],
-    #     countdown=delay * 60  # 相对第一封
-    # )
 
     # 生成 B6 邮件发送的延迟时间（单位：秒）
     delay_b6 = random.randint(5, max_sending_time) * 60
@@ -560,7 +607,6 @@ def schedule_bid_conversation_BD(
         "content": d_email_content_b6,
         "smtp_config": d_smtp,
         "stage": "B6",
-        # "project_id": project_info.id,
         "followup_task_args": None,
         "followup_delay": delay_b6  # 无下一级任务
     }
@@ -656,13 +702,29 @@ def schedule_settlement_BCD(
         "from": c_company.smtp_from
     }
 
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
+    # === D SMTP 配置 ===
+    if d_company.short_name == "PR":
+
+        acc = email_utils.MAIL_ACCOUNTS.get(project_info.current_plss_email)
+        if not acc:
+            raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{project_info.current_plss_email}")
+
+        d_smtp = {
+            "host": acc["smtp_host"],
+            "port": acc["smtp_port"],
+            "username": acc["smtp_username"],
+            "password": acc["smtp_password"],
+            "from": acc["smtp_from"]
+        }
+    else:
+        d_smtp = {
+            "host": d_company.smtp_host,
+            "port": d_company.smtp_port,
+            "username": d_company.smtp_username,
+            "password": d_company.smtp_password,
+            "from": d_company.smtp_from
+        }
+
 
 
     # 获取对应C公司的邮件模板
@@ -737,12 +799,6 @@ def schedule_settlement_BCD(
     #TODO 1. FTP将生成的文件回传到归档服务器
     
     upload_file_to_sftp_task.delay("~/settlements/"+BC_filename, BC_filename)
-
-    # 第一封邮件：C ➝ B
-    # task1 = send_reply_email_with_attachments.apply_async(
-    #     args=[b_email, c_email_subject_c7, c_email_content_c7, c_smtp, [CB_settlement_path], 0, "C7", 1], # TODO 换成真实的附件路径
-    #     countdown=0  # 立即
-    # )
 
     # 第二封邮件：B ➝ D
     # 随机延迟 5–60 分钟发出B-D间结算单
@@ -1017,13 +1073,29 @@ def schedule_settlement_CCD_BD(
         "from": b_company.smtp_from
     }
 
-    d_smtp = {
-        "host": d_company.smtp_host,
-        "port": d_company.smtp_port,
-        "username": d_company.smtp_username,
-        "password": d_company.smtp_password,
-        "from": d_company.smtp_from
-    }
+    # === D SMTP 配置 ===
+    if d_company.short_name == "PR":
+
+        acc = email_utils.MAIL_ACCOUNTS.get(project_info.current_plss_email)
+        if not acc:
+            raise KeyError(f"MAIL_ACCOUNTS 中不存在别名：{project_info.current_plss_email}")
+
+        d_smtp = {
+            "host": acc["smtp_host"],
+            "port": acc["smtp_port"],
+            "username": acc["smtp_username"],
+            "password": acc["smtp_password"],
+            "from": acc["smtp_from"]
+        }
+    else:
+        d_smtp = {
+            "host": d_company.smtp_host,
+            "port": d_company.smtp_port,
+            "username": d_company.smtp_username,
+            "password": d_company.smtp_password,
+            "from": d_company.smtp_from
+        }
+
 
     # 第一封邮件：B ➝ D
     # 随机延迟 5–60 分钟发出B-D间结算单
