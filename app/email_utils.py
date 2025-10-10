@@ -33,12 +33,12 @@ def get_db_session():
 MAIL_ACCOUNTS = {
     "C": {
         "alias": "C",
-        "email": "19128387174@163.com",
+        "email": "xu.p@001precise.com",
         "smtp_host": "smtp.163.com",
         "smtp_port": 465,
-        "username": "19128387174@163.com",
-        "password": "ED7Us3Abwt5Ygcms",
-        "from": "19128387174@163.com",
+        "username": "xu.p@001precise.com",
+        "password": "FPRZYgLRVcUQ81W8",
+        "from": "xu.p@001precise.com",
         "active": True,
     },
     "A": {
@@ -53,12 +53,12 @@ MAIL_ACCOUNTS = {
     },
     "B": {
         "alias": "B",
-        "email": "19128326936@163.com",
+        "email": "huang.bh@001precise.com",
         "smtp_host": "smtp.163.com",
         "smtp_port": 465,
-        "username": "19128326936@163.com",
-        "password": "ABed9jSdeUMvJp2s",
-        "from": "19128326936@163.com",
+        "username": "huang.bh@001precise.com",
+        "password": "tqax4ABWarc3WrAp",
+        "from": "huang.bh@001precise.com",
         "active": True,
     },
 }

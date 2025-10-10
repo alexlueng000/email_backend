@@ -547,6 +547,13 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
         )
     
     logger.info("合同审批阶段邮件已成功发送，合同号为%s", project.contract_number)
+    # 4) 通知邮件
+    tasks.send_notification_email_task(
+        "合同审批阶段邮件已成功发送", "合同审批阶段邮件已成功发送，合同号为%s" % project.contract_number, "739266989@qq.com"
+    )
+    tasks.send_notification_email_task(
+        "合同审批阶段邮件已成功发送", "合同审批阶段邮件已成功发送，合同号为%s" % project.contract_number, "494762262@qq.com"
+    )
 
 
     #TODO 返回邮件实际发送时间
@@ -696,6 +703,14 @@ def settlement(
     db.add(fee)
     db.commit()
     db.refresh(fee)
+
+    # 4) 通知邮件
+    tasks.send_notification_email_task(
+        "结算邮件已成功发送", "结算邮件已成功发送，合同号为%s" % req.contract_number, "739266989@qq.com"
+    )
+    tasks.send_notification_email_task(
+        "结算邮件已成功发送", "结算邮件已成功发送，合同号为%s" % req.contract_number, "494762262@qq.com"
+    )
 
     return {
         "message": f"结算邮件已成功发送，合同号为{req.contract_number}",
