@@ -114,9 +114,9 @@ async def receive_bidding_register(
     logger.info("1委托投标登记|请求参数：%s", req.model_dump())
 
     # 1) 随机延迟
-    LF_A1_delay = random.randint(0, 1)
-    FR_A1_delay = random.randint(0, 1)
-    PR_A1_delay = random.randint(0, 1)
+    LF_A1_delay = random.randint(0, 5)
+    FR_A1_delay = random.randint(0, 5)
+    PR_A1_delay = random.randint(0, 5)
 
     # 清洗请求
     req = strip_request_fields(req)

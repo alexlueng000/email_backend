@@ -71,8 +71,8 @@ def get_last_plss_email() -> str:
             db.query(models.ProjectInfo)
             .filter(models.ProjectInfo.current_plss_email.isnot(None))
             .order_by(
-                nullslast(desc(models.ProjectInfo.created_at)),  # 按创建时间降序，NULL 排最后
-                desc(models.ProjectInfo.id),                    # 同时再按 id 降序做并列打破
+                models.ProjectInfo.created_at.desc(),  # 先按时间倒序
+                models.ProjectInfo.id.desc(),          # 时间相同再按自增ID倒序
             )
             .first()
         )
