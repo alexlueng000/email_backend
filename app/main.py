@@ -308,14 +308,18 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     logger.info("3合同审核|请求参数: %s", req.model_dump())
     
     # 判断是否包含“三方/四方合同”  且 收付控制（selectField_l7ps2ca5） == "付"
+    # has_target_contract_type = any(
+    #     contract.selectField_l7ps2ca3 == "三方/四方合同" and contract.selectField_l7ps2ca5 == "付"
+    #     for contract in req.contracts
+    # )
+
     has_target_contract_type = any(
-    contract.selectField_l7ps2ca3 == "三方/四方合同" and contract.selectField_l7ps2ca5 == "付"
-    for contract in req.contracts
-)
+        contract.selectField_l7ps2ca3 == "三方/四方合同" for contract in req.contracts
+    )
 
     if not has_target_contract_type:
-        logger.info("没有找到三方/四方合同且收付控制=付的合同，不发送邮件，合同号为%s", req.contract_number)
-        return {"message": "没有找到三方/四方合同且收付控制=付的合同，不发送邮件"}
+        logger.info("没有找到'三方/四方合同'的合同，不发送邮件，合同号为%s", req.contract_number)
+        return {"message": "没有找到'三方/四方合同'的合同，不发送邮件"}
     
     # 如果没有L流水号，P流水号，F流水号，说明不是委托投标登记项目，不发送邮件
     if not req.l_serial_number or not req.p_serial_number or not req.f_serial_number:
@@ -345,22 +349,28 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     # 更新project_info表中的C公司信息
     project.company_c_name = c_company_name
 
-    
-    # D公司名字是 selectField_l7ps2ca7 的值
-    d_company_name = next(
-        (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同"),
-        None
-    )
+    c_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == c_company_name, models.CompanyInfo.company_type == 'C').first()
+    # 如果找到了C公司，说明是内部公司，如果没有找到，说明是外部公司
+
+    d_company_name = ''
+
+    if not c_company:
+        d_company_name = next(
+            (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同" and contract.selectField_l7ps2ca5 == "收"),
+            None
+        )
+    else:
+        d_company_name = next(
+            (contract.selectField_l7ps2ca7 for contract in req.contracts if contract.selectField_l7ps2ca3 == "三方/四方合同" and contract.selectField_l7ps2ca5 == "付"),
+            None
+        )
     # 更新project_info表中的D公司信息
     project.company_d_name = d_company_name
-
 
     # 项目流水号是根据D公司的值来确认的
     d_company = db.query(models.CompanyInfo).filter(
         models.CompanyInfo.company_name == d_company_name
     ).first()
-
-    
 
     actual_serial_number = ''
 
@@ -371,9 +381,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     else:
         actual_serial_number = project.p_serial_number
     project.serial_number = actual_serial_number
-    db.add(project)
-    db.commit()
-    db.refresh(project)
+    # db.add(project)
+    # db.commit()
+    # db.refresh(project)
 
 
     # 从project_fee_details表中获取中标金额，中标时间
@@ -460,7 +470,6 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     project_type = ''           
     # 确定B、C、D公司是否内部公司，B、D公司是内部公司才发送邮件
     logger.info("B公司名称：%s", project.company_b_name)
-    # logger.info("B gongsi mingcheng: %s", )
     logger.info("C公司名称：%s", c_company_name)
     logger.info("D公司名称：%s", d_company_name)
     b_company = db.query(models.CompanyInfo).filter(
@@ -469,13 +478,11 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     # 如果找到了B公司，说明是内部公司
     if not b_company:
         return {"message": "没有找到B公司，不发送邮件"}
+
     d_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == d_company_name, models.CompanyInfo.company_type == 'D').first()
     # 如果找到了D公司，说明是内部公司
     if not d_company:
         return {"message": "没有找到D公司，不发送邮件"}
-
-    c_company = db.query(models.CompanyInfo).filter(models.CompanyInfo.company_name == c_company_name, models.CompanyInfo.company_type == 'C').first()
-    # 如果找到了C公司，说明是内部公司，如果没有找到，说明是外部公司
 
     logger.info("@@@@@@@@@@@@@@C公司名称：%s", c_company_name)
 
