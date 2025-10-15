@@ -81,9 +81,9 @@ def schedule_bid_conversation_BCD(
         d_smtp = {
             "host": acc["smtp_host"],
             "port": acc["smtp_port"],
-            "username": acc["smtp_username"],
-            "password": acc["smtp_password"],
-            "from": acc["smtp_from"]
+            "username": acc["username"],
+            "password": acc["password"],
+            "from": acc["from"]
         }
     else:
         d_smtp = {
@@ -337,9 +337,9 @@ def schedule_bid_conversation_CCD(
         d_smtp = {
             "host": acc["smtp_host"],
             "port": acc["smtp_port"],
-            "username": acc["smtp_username"],
-            "password": acc["smtp_password"],
-            "from": acc["smtp_from"]
+            "username": acc["username"],
+            "password": acc["password"],
+            "from": acc["from"]
         }
     else:
         d_smtp = {
@@ -513,9 +513,9 @@ def schedule_bid_conversation_BD(
         d_smtp = {
             "host": acc["smtp_host"],
             "port": acc["smtp_port"],
-            "username": acc["smtp_username"],
-            "password": acc["smtp_password"],
-            "from": acc["smtp_from"]
+            "username": acc["username"],
+            "password": acc["password"],
+            "from": acc["from"]
         }
     else:
         d_smtp = {
@@ -712,9 +712,9 @@ def schedule_settlement_BCD(
         d_smtp = {
             "host": acc["smtp_host"],
             "port": acc["smtp_port"],
-            "username": acc["smtp_username"],
-            "password": acc["smtp_password"],
-            "from": acc["smtp_from"]
+            "username": acc["username"],
+            "password": acc["password"],
+            "from": acc["from"]
         }
     else:
         d_smtp = {
@@ -1083,9 +1083,9 @@ def schedule_settlement_CCD_BD(
         d_smtp = {
             "host": acc["smtp_host"],
             "port": acc["smtp_port"],
-            "username": acc["smtp_username"],
-            "password": acc["smtp_password"],
-            "from": acc["smtp_from"]
+            "username": acc["username"],
+            "password": acc["password"],
+            "from": acc["from"]
         }
     else:
         d_smtp = {
