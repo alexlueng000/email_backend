@@ -241,7 +241,7 @@ def schedule_bid_conversation_BCD(
 
     delay_b5 = random.randint(5, max_sending_time) * 60
     task_b5 = {
-        "to_email": d_company.email,
+        "to_email": d_smtp["from"],
         "subject": b_email_subject_b5,
         "content": b_email_content_b5,
         "smtp_config": b_smtp,
@@ -452,7 +452,7 @@ def schedule_bid_conversation_CCD(
 
     # 第一封邮件：B ➝ D（成功后调度 B6）
     task_b5 = {
-        "to_email": d_company.email,
+        "to_email": d_smtp["from"],
         "subject": c_email_subject_b5,
         "content": c_email_content_b5,
         "smtp_config": b_smtp,
@@ -517,6 +517,7 @@ def schedule_bid_conversation_BD(
             "password": acc["password"],
             "from": acc["from"]
         }
+        print("PR 公司SMTP配置：", d_smtp)
     else:
         d_smtp = {
             "host": d_company.smtp_host,
@@ -525,6 +526,9 @@ def schedule_bid_conversation_BD(
             "password": d_company.smtp_password,
             "from": d_company.smtp_from
         }
+        print("非PR 公司SMTP配置：", d_smtp)
+
+    
 
     # 获取对应B公司的邮件模板
     b_email_subject_b5 = email_utils.render_email_subject(
@@ -618,7 +622,7 @@ def schedule_bid_conversation_BD(
     delay_b5 = random.randint(5, max_sending_time) * 60
     # 第一封邮件：B ➝ D
     task_b5 = {
-        "to_email": d_company.email,
+        "to_email": d_smtp["from"],
         "subject": b_email_subject_b5,
         "content": b_email_content_b5,
         "smtp_config": b_smtp,
@@ -986,7 +990,7 @@ def schedule_settlement_BCD(
     # C8：B ➝ D（成功后调度 C9）
     delay_c8 = random.randint(5, max_sending_time) * 60
     task_c8 = {
-        "to_email": d_company.email,
+        "to_email": d_smtp["from"],
         "subject": b_email_subject_c8,
         "content": b_email_content_c8,
         "smtp_config": b_smtp,
@@ -1238,7 +1242,7 @@ def schedule_settlement_CCD_BD(
     # 第一封邮件：B ➝ D（启动任务）
     delay_c8 = random.randint(5, max_sending_time) * 60
     task_c8 = {
-        "to_email": d_email,
+        "to_email": d_smtp["from"],
         "subject": b_email_subject_c8,
         "content": b_email_content_c8,
         "smtp_config": b_smtp,
