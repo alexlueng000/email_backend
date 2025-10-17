@@ -33,7 +33,7 @@ def get_db_session():
 # settings_mail.py
 MAIL_ACCOUNTS = {
     "C": {
-        "alias": "C",
+        "alias": "B",
         "email": "xu.p@001precise.com",
         "smtp_host": "smtphz.qiye.163.com",
         "smtp_port": 465,
@@ -53,7 +53,7 @@ MAIL_ACCOUNTS = {
         "active": True,
     },
     "B": {
-        "alias": "B",
+        "alias": "C",
         "email": "huang.bh@001precise.com",
         "smtp_host": "smtphz.qiye.163.com",
         "smtp_port": 465,
