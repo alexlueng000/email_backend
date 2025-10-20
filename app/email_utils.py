@@ -32,7 +32,7 @@ def get_db_session():
 
 # settings_mail.py
 MAIL_ACCOUNTS = {
-    "C": {
+    "B": {
         "alias": "B",
         "email": "xu.p@001precise.com",
         "smtp_host": "smtphz.qiye.163.com",
@@ -52,7 +52,7 @@ MAIL_ACCOUNTS = {
         "from": "infotech@001precise.com",
         "active": True,
     },
-    "B": {
+    "C": {
         "alias": "C",
         "email": "huang.bh@001precise.com",
         "smtp_host": "smtphz.qiye.163.com",
