@@ -173,9 +173,9 @@ async def receive_bidding_register(
     db.refresh(project_info)
 
     # 4) 通知邮件
-    tasks.send_notification_email_task(
-        "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
-    )
+    # tasks.send_notification_email_task(
+    #     "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "739266989@qq.com"
+    # )
     tasks.send_notification_email_task(
         "委托投标登记", "已有项目委托投标登记，邮件正在发出，预估半天后发送完毕。", "494762262@qq.com"
     )
@@ -581,9 +581,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
     
     logger.info("合同审批阶段邮件已成功发送，合同号为%s", project.contract_number)
     # 4) 通知邮件
-    tasks.send_notification_email_task(
-        "合同审批阶段邮件已成功发送", "合同审批阶段邮件已成功发送，合同号为%s" % project.contract_number, "739266989@qq.com"
-    )
+    # tasks.send_notification_email_task(
+    #     "合同审批阶段邮件已成功发送", "合同审批阶段邮件已成功发送，合同号为%s" % project.contract_number, "739266989@qq.com"
+    # )
     tasks.send_notification_email_task(
         "合同审批阶段邮件已成功发送", "合同审批阶段邮件已成功发送，合同号为%s" % project.contract_number, "494762262@qq.com"
     )
@@ -738,9 +738,9 @@ def settlement(
     db.refresh(fee)
 
     # 4) 通知邮件
-    tasks.send_notification_email_task(
-        "结算邮件已成功发送", "结算邮件已成功发送，合同号为%s" % req.contract_number, "739266989@qq.com"
-    )
+    # tasks.send_notification_email_task(
+    #     "结算邮件已成功发送", "结算邮件已成功发送，合同号为%s" % req.contract_number, "739266989@qq.com"
+    # )
     tasks.send_notification_email_task(
         "结算邮件已成功发送", "结算邮件已成功发送，合同号为%s" % req.contract_number, "494762262@qq.com"
     )
