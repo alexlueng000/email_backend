@@ -1255,10 +1255,15 @@ def schedule_settlement_CCD_BD(
     logger.info(f"[C8] 🚀 调度任务，目标：{d_email}，成功后将在 {delay_c9 // 60} 分钟后发送 C9")
 
     # 执行任务 C8（立即）
+    logger.info(f"[C8] 📋 准备调用apply_async，task_c8参数: {list(task_c8.keys())}")
+    logger.info(f"[C8] 📋 task_c8['followup_task_args']的keys: {list(task_c8['followup_task_args'].keys()) if task_c8.get('followup_task_args') else 'None'}")
+
     send_reply_email_with_attachments_delay.apply_async(
         kwargs=task_c8,
         countdown=0
     )
+
+    logger.info(f"[C8] ✅ apply_async调用完成")
 
 
     return {

@@ -21,6 +21,18 @@ import logging
 from dotenv import load_dotenv
 load_dotenv()
 
+# 配置日志输出到控制台和文件
+os.makedirs("logs", exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # 控制台输出
+        logging.FileHandler('logs/celery_tasks.log', encoding='utf-8')  # 文件输出
+    ]
+)
+
 logger = logging.getLogger(__name__)
 
 celery = Celery( 
@@ -329,48 +341,112 @@ def send_reply_email_with_attachments_delay(
     from app import database
     db = database.SessionLocal()
 
-    try:
-        logger.info(f"[{stage}] 📎 开始发送带附件邮件，to={to_email}, 附件数={len(attachments) if attachments else 0}")
+    # 获取当前重试次数
+    retry_count = self.request.retries
+    task_id = self.request.id
 
+    try:
+        logger.info("=" * 60)
+        logger.info(f"[{stage}] 📋 ========== 任务开始 ==========")
+        logger.info(f"[{stage}] 📋 Task ID: {task_id}")
+        logger.info(f"[{stage}] 📋 收件人: {to_email}")
+        logger.info(f"[{stage}] 📋 主题: {subject[:50]}..." if len(subject) > 50 else f"[{stage}] 📋 主题: {subject}")
+        logger.info(f"[{stage}] 📋 附件数: {len(attachments) if attachments else 0}")
+        logger.info(f"[{stage}] 📋 重试次数: {retry_count}/3")
+        if followup_task_args:
+            logger.info(f"[{stage}] 📋 后续任务: {followup_task_args.get('stage')}, 延迟: {followup_delay}秒")
+            logger.info(f"[{stage}] 📋 followup_task_args包含的键: {list(followup_task_args.keys())}")
+        logger.info("=" * 60)
+
+        logger.info(f"[{stage}] 📧 开始发送邮件...")
         success, error = email_utils.send_email_with_attachments(
             to_email, subject, content, smtp_config, attachments, stage
         )
 
         if not success:
             logger.warning(f"[{stage}] ❌ 带附件邮件发送失败，将重试：{error}")
+            logger.warning(f"[{stage}] 🔄 准备进行第 {retry_count + 1} 次重试...")
             raise EmailSendFailed(error)
+
+        logger.info(f"[{stage}] ✅ SMTP 邮件发送成功！")
+        logger.info(f"[{stage}] ✅ 钉钉表单创建成功！")
 
         # 调度后续任务（若有）
         if followup_task_args:
-            next_delay = followup_task_args.pop("followup_delay", 60)
-            logger.info(
-                f"[{stage}] 🕐 调度后续任务 {followup_task_args.get('stage')}，"
-                f"目标：{followup_task_args.get('to_email')}，延迟 {next_delay} 秒"
-            )
-            send_reply_email_with_attachments_delay.apply_async(
-                kwargs=followup_task_args,
-                countdown=next_delay
-            )
+            logger.info(f"[{stage}] 🔍 检测到后续任务，准备调度...")
+            logger.info(f"[{stage}] 🔍 followup_task_args类型: {type(followup_task_args)}")
+            logger.info(f"[{stage}] 🔍 followup_task_args内容: {followup_task_args}")
 
-        logger.info(f"[{stage}] ✅ 带附件邮件任务成功完成")
+            next_stage = followup_task_args.get('stage')
+            next_to = followup_task_args.get('to_email')
+
+            logger.info(f"[{stage}] 🔍 准备pop followup_delay...")
+            logger.info(f"[{stage}] 🔍 pop前的keys: {list(followup_task_args.keys())}")
+            next_delay = followup_task_args.pop("followup_delay", 60)
+            logger.info(f"[{stage}] 🔍 pop后的keys: {list(followup_task_args.keys())}")
+            logger.info(f"[{stage}] 🔍 获取到的next_delay: {next_delay}")
+
+            logger.info("=" * 60)
+            logger.info(f"[{stage}] 📤 ========== 调度后续任务 ==========")
+            logger.info(f"[{stage}] 📤 下一阶段: {next_stage}")
+            logger.info(f"[{stage}] 📤 目标收件人: {next_to}")
+            logger.info(f"[{stage}] 📤 延迟时间: {next_delay} 秒 ({next_delay // 60} 分钟)")
+            logger.info(f"[{stage}] 📤 调度参数: {list(followup_task_args.keys())}")
+            logger.info("=" * 60)
+
+            try:
+                logger.info(f"[{stage}] 🚀 开始调用apply_async...")
+                result = send_reply_email_with_attachments_delay.apply_async(
+                    kwargs=followup_task_args,
+                    countdown=next_delay
+                )
+                logger.info(f"[{stage}] ✅ 后续任务 {next_stage} 调度成功！Task ID: {result.id}")
+            except Exception as e:
+                logger.error(f"[{stage}] ❌ 调度后续任务失败：{e}")
+                logger.exception(f"[{stage}] 详细错误信息：")
+                logger.error(f"[{stage}] ⚠️ 注意：后续任务调度失败，但当前任务将继续完成")
+        else:
+            logger.info(f"[{stage}] ℹ️ 无后续任务，流程结束")
+
+        logger.info("=" * 60)
+        logger.info(f"[{stage}] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅")
+        logger.info("=" * 60)
         return {"success": True, "error": ""}
 
     except EmailSendFailed as e:
         db.rollback()
-        logger.warning(f"[{stage}] 📧 邮件逻辑失败，准备 retry：{e}")
+        logger.warning("=" * 60)
+        logger.warning(f"[{stage}] ❌ ========== 邮件逻辑失败 ==========")
+        logger.warning(f"[{stage}] ❌ Task ID: {task_id}")
+        logger.warning(f"[{stage}] ❌ 错误信息: {e}")
+        logger.warning(f"[{stage}] 🔄 当前重试次数: {retry_count}/3")
+        logger.warning("=" * 60)
         try:
+            logger.warning(f"[{stage}] 🔄 触发重试...")
             raise self.retry(exc=e)
         except MaxRetriesExceededError:
-            logger.error(f"[{stage}] 📧 达到最大重试次数（逻辑失败）：{e}")
+            logger.error("=" * 60)
+            logger.error(f"[{stage}] ❌❌❌ 达到最大重试次数（逻辑失败）❌❌❌")
+            logger.error(f"[{stage}] ❌ Task ID: {task_id}")
+            logger.error(f"[{stage}] ❌ 最终错误: {e}")
+            logger.error("=" * 60)
             return {"success": False, "error": str(e)}
 
     except Exception as e:
         db.rollback()
-        logger.exception(f"[{stage}] ❌ 系统异常，将重试：")
+        logger.error("=" * 60)
+        logger.error(f"[{stage}] ❌ ========== 系统异常 ==========")
+        logger.error(f"[{stage}] ❌ Task ID: {task_id}")
+        logger.error(f"[{stage}] ❌ 异常类型: {type(e).__name__}")
+        logger.error(f"[{stage}] ❌ 异常信息: {e}")
+        logger.exception(f"[{stage}] 完整堆栈:")
+        logger.error("=" * 60)
         try:
+            logger.error(f"[{stage}] 🔄 触发重试...")
             raise self.retry(exc=e)
         except MaxRetriesExceededError:
-            logger.error(f"[{stage}] ❌ 达到最大重试次数（系统异常）：{e}")
+            logger.error(f"[{stage}] ❌❌❌ 达到最大重试次数（系统异常）❌❌❌")
+            logger.error(f"[{stage}] ❌ 最终错误: {e}")
             return {"success": False, "error": str(e)}
 
     finally:

@@ -619,7 +619,9 @@ async def contract_audit(req: schemas.ContractAuditRequest, db: Session = Depend
 def settlement(
     req: schemas.SettlementRequest, db: Session = Depends(database.get_db)):
 
+    logger.info("=" * 80)
     logger.info("4结算|请求参数：%s", req.model_dump())
+    logger.info("=" * 80)
 
 
     project_information = db.query(models.ProjectInfo).filter_by(contract_number=req.contract_number).first()
@@ -681,6 +683,7 @@ def settlement(
     BD_download_url = ""
 
     if project_information.project_type == 'BCD':
+        logger.info("🔵 检测到BCD项目，调用schedule_settlement_BCD")
         result = send_email_tasks.schedule_settlement_BCD(
             project_info=project_information,
             b_company=b_company,
@@ -703,7 +706,9 @@ def settlement(
         )
         BC_download_url = result["BC_download_url"]
         BD_download_url = result["BD_download_url"]
+        logger.info("✅ BCD项目邮件任务调度完成")
     else:
+        logger.info(f"🟠 检测到{project_information.project_type}项目，调用schedule_settlement_CCD_BD")
         result = send_email_tasks.schedule_settlement_CCD_BD(
             project_info=project_information,
             b_company=b_company,
@@ -727,6 +732,7 @@ def settlement(
         )
         # BC_download_url = result["BC_download_url"]
         BD_download_url = result["BD_download_url"]
+        logger.info(f"✅ {project_information.project_type}项目邮件任务调度完成")
 
     logger.info("BC_download_url: %s, BD_download_url: %s", BC_download_url, BD_download_url)
 
