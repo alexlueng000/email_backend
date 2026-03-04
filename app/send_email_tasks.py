@@ -1000,6 +1000,8 @@ def schedule_settlement_BCD(
         "followup_task_args": task_c9,
         "followup_delay": delay_c8
     }
+    if cc_list:
+        task_c8["cc"] = cc_list
     logger.info(f"[C8] 💌 准备完毕，目标：{d_company.email}，成功后将在 {delay_c8 // 60} 分钟后调度 C9")
 
     # C7：C ➝ B（入口任务，成功后调度 C8）
@@ -1252,6 +1254,8 @@ def schedule_settlement_CCD_BD(
         "followup_task_args": task_c9,
         "followup_delay": delay_c8
     }
+    if cc_list:
+        task_c8["cc"] = cc_list
     logger.info(f"[C8] 🚀 调度任务，目标：{d_email}，成功后将在 {delay_c9 // 60} 分钟后发送 C9")
 
     # 执行任务 C8（立即）
