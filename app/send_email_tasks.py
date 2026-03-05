@@ -94,6 +94,9 @@ def schedule_bid_conversation_BCD(
             "from": d_company.smtp_from
         }
 
+    # PR 公司实际发件邮箱来自 MAIL_ACCOUNTS，需与落款保持一致
+    d_sender_email = d_smtp["from"] if d_company.short_name == "PR" else d_company.email
+
     # === B3：B ➝ C ===
     b_email_subject_b3 = email_utils.render_email_subject(
         stage="B3", 
@@ -217,7 +220,7 @@ def schedule_bid_conversation_BCD(
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
         phone=d_company.phone,
-        email=d_company.email,
+        email=d_sender_email,
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
@@ -350,6 +353,9 @@ def schedule_bid_conversation_CCD(
             "from": d_company.smtp_from
         }
 
+    # PR 公司实际发件邮箱来自 MAIL_ACCOUNTS，需与落款保持一致
+    d_sender_email = d_smtp["from"] if d_company.short_name == "PR" else d_company.email
+
     # C公司的特殊B5邮件模板
     c_email_subject_b5 = email_utils.render_email_subject(
         stage="B5", 
@@ -419,7 +425,7 @@ def schedule_bid_conversation_CCD(
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
         phone=d_company.phone,
-        email=d_company.email,
+        email=d_sender_email,
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
@@ -528,7 +534,10 @@ def schedule_bid_conversation_BD(
         }
         print("非PR 公司SMTP配置：", d_smtp)
 
-    
+    # PR 公司实际发件邮箱来自 MAIL_ACCOUNTS，需与落款保持一致
+    d_sender_email = d_smtp["from"] if d_company.short_name == "PR" else d_company.email
+
+
 
     # 获取对应B公司的邮件模板
     b_email_subject_b5 = email_utils.render_email_subject(
@@ -594,7 +603,7 @@ def schedule_bid_conversation_BD(
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
         phone=d_company.phone,
-        email=d_company.email,
+        email=d_sender_email,
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
@@ -729,6 +738,8 @@ def schedule_settlement_BCD(
             "from": d_company.smtp_from
         }
 
+    # PR 公司实际发件邮箱来自 MAIL_ACCOUNTS，需与落款保持一致
+    d_sender_email = d_smtp["from"] if d_company.short_name == "PR" else d_company.email
 
 
     # 获取对应C公司的邮件模板
@@ -913,7 +924,7 @@ def schedule_settlement_BCD(
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
         phone=d_company.phone,
-        email=d_company.email,
+        email=d_sender_email,
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
@@ -1102,6 +1113,9 @@ def schedule_settlement_CCD_BD(
             "from": d_company.smtp_from
         }
 
+    # PR 公司实际发件邮箱来自 MAIL_ACCOUNTS，需与落款保持一致
+    d_sender_email = d_smtp["from"] if d_company.short_name == "PR" else d_company.email
+
 
     # 第一封邮件：B ➝ D
     # 随机延迟 5–60 分钟发出B-D间结算单
@@ -1217,7 +1231,7 @@ def schedule_settlement_CCD_BD(
         contact_person=d_company.contact_person,
         company_name=d_company.company_name,
         phone=d_company.phone,
-        email=d_company.email,
+        email=d_sender_email,
         address=d_company.address,
         english_address=d_company.english_address,
         pingyin=d_company.pingyin,
