@@ -336,7 +336,8 @@ def send_reply_email_with_attachments_delay(
     stage: str = "",
     project_id: int = 0,
     followup_task_args: dict | None = None,
-    followup_delay: int = 0
+    followup_delay: int = 0,
+    cc: Optional[Union[str, Iterable[str]]] = None,
 ):
     from app import database
     db = database.SessionLocal()
@@ -360,7 +361,7 @@ def send_reply_email_with_attachments_delay(
 
         logger.info(f"[{stage}] 📧 开始发送邮件...")
         success, error = email_utils.send_email_with_attachments(
-            to_email, subject, content, smtp_config, attachments, stage
+            to_email, subject, content, smtp_config, attachments, stage, cc=cc
         )
 
         if not success:
