@@ -1,0 +1,1060 @@
+2026-03-09 15:16:51,059 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:16:51,230 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2026-03-09 15:16:51,262 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:16:51,274 - ERROR - app.main - ❌ 未处理异常: ValueError('别名 A 的发信配置缺失字段：smtp_username, smtp_password')
+2026-03-09 15:20:11,114 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:20:11,128 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): B
+2026-03-09 15:20:11,140 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:20:11,186 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 15:20:11,477 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:20:11,478 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:20:11,484 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:20:11,841 - ERROR - app.email_utils - ❌ send_email 执行失败，异常如下：
+Traceback (most recent call last):
+  File "E:\code_projects\syjz_emails\backend\app\email_utils.py", line 160, in send_email
+    with smtplib.SMTP_SSL(smtp_config["host"], smtp_config["port"], timeout=30) as smtp:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 1022, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 341, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 1029, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLError: [SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1018)
+2026-03-09 15:20:11,877 - WARNING - app.tasks - [A1] ❌ 邮件发送失败，将重试：[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1018)
+2026-03-09 15:20:11,877 - WARNING - app.tasks - [A1] 重试中（逻辑失败）：[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1018)
+2026-03-09 15:20:11,881 - ERROR - app.main - ❌ 未处理异常: Retry(Retry(...), EmailSendFailed('[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1018)'), 60)
+2026-03-09 15:24:32,458 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:24:32,473 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): C
+2026-03-09 15:24:32,479 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:24:32,510 - INFO - app.main - PR 邮件抄送人: 无
+2026-03-09 15:24:32,736 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:24:32,736 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:24:32,743 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:24:32,896 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:24:32,899 - ERROR - app.email_utils - ❌ send_email 执行失败，异常如下：
+Traceback (most recent call last):
+  File "E:\code_projects\syjz_emails\backend\app\email_utils.py", line 188, in send_email
+    _smtp_login(smtp, smtp_config.get("username"), smtp_config.get("password"))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\code_projects\syjz_emails\backend\app\email_utils.py", line 48, in _smtp_login
+    smtp.login(username, password)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 716, in login
+    raise SMTPNotSupportedError(
+        "SMTP AUTH extension not supported by server.")
+smtplib.SMTPNotSupportedError: SMTP AUTH extension not supported by server.
+2026-03-09 15:24:32,902 - WARNING - app.tasks - [A1] ❌ 邮件发送失败，将重试：SMTP AUTH extension not supported by server.
+2026-03-09 15:24:32,902 - WARNING - app.tasks - [A1] 重试中（逻辑失败）：SMTP AUTH extension not supported by server.
+2026-03-09 15:24:32,906 - ERROR - app.main - ❌ 未处理异常: Retry(Retry(...), EmailSendFailed('SMTP AUTH extension not supported by server.'), 60)
+2026-03-09 15:24:46,774 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:24:46,787 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2026-03-09 15:24:46,796 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:24:46,869 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 15:24:47,074 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:24:47,075 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:24:47,078 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:24:47,245 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:24:47,246 - ERROR - app.email_utils - ❌ send_email 执行失败，异常如下：
+Traceback (most recent call last):
+  File "E:\code_projects\syjz_emails\backend\app\email_utils.py", line 188, in send_email
+    _smtp_login(smtp, smtp_config.get("username"), smtp_config.get("password"))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\code_projects\syjz_emails\backend\app\email_utils.py", line 48, in _smtp_login
+    smtp.login(username, password)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\007\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 716, in login
+    raise SMTPNotSupportedError(
+        "SMTP AUTH extension not supported by server.")
+smtplib.SMTPNotSupportedError: SMTP AUTH extension not supported by server.
+2026-03-09 15:24:47,249 - WARNING - app.tasks - [A1] ❌ 邮件发送失败，将重试：SMTP AUTH extension not supported by server.
+2026-03-09 15:24:47,249 - WARNING - app.tasks - [A1] 重试中（逻辑失败）：SMTP AUTH extension not supported by server.
+2026-03-09 15:24:47,252 - ERROR - app.main - ❌ 未处理异常: Retry(Retry(...), EmailSendFailed('SMTP AUTH extension not supported by server.'), 60)
+2026-03-09 15:27:24,353 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:27:24,368 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): B
+2026-03-09 15:27:24,376 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:27:24,404 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 15:27:24,609 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:27:24,610 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:27:24,615 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:24,761 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:24,762 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:27:24,762 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:24,777 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=[]
+2026-03-09 15:27:24,778 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1320 秒
+2026-03-09 15:27:24,778 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 15:27:24,778 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 15:27:24,781 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:24,938 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:24,939 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:27:24,939 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:24,947 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=[]
+2026-03-09 15:27:24,947 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:24,961 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[11547bff-999e-43d2-9abb-6fa31b9c1603] succeeded in 0.18281410005874932s: None
+2026-03-09 15:27:24,961 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:24,962 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[3c800c35-18e0-4560-b571-9f10ea0bf5e1] succeeded in 0.35235050006303936s: None
+2026-03-09 15:27:25,084 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:27:25,084 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:27:25,088 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:25,248 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:25,249 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:27:25,249 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:25,257 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=[]
+2026-03-09 15:27:25,257 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 900 秒
+2026-03-09 15:27:25,258 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 15:27:25,258 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 15:27:25,262 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:25,424 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:25,424 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:27:25,424 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:25,431 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=[]
+2026-03-09 15:27:25,432 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:25,432 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[1b328a24-d753-43aa-a11a-1756e40d23d8] succeeded in 0.17390910000540316s: None
+2026-03-09 15:27:25,432 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:25,432 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[66821f8d-c55a-4b7d-be03-ee44294cbdd3] succeeded in 0.348498799954541s: None
+2026-03-09 15:27:25,548 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:27:25,548 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 15:27:25,551 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:25,694 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:25,694 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:25,703 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=['huang.bh@001precise.com']
+2026-03-09 15:27:25,704 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 2100 秒
+2026-03-09 15:27:25,705 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=xu.p@001precise.com
+2026-03-09 15:27:25,705 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=xu.p@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 15:27:25,709 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:27:25,877 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:27:25,878 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:27:25,878 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:27:25,886 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:27; cc=['huang.bh@001precise.com']
+2026-03-09 15:27:25,887 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:25,887 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[e9b0435c-a249-45bf-9daf-7cb116d3ea0c] succeeded in 0.1825860000681132s: None
+2026-03-09 15:27:25,888 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:27:25,889 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[b67a435d-9af5-4f0e-8ca1-b13b03b820d4] succeeded in 0.3412275000009686s: None
+2026-03-09 15:27:25,890 - INFO - app.main - A1邮件调度延迟（分钟）: LF=2, FR=1, PR=5
+2026-03-09 15:27:25,890 - INFO - app.main - A2邮件后续延迟（分钟）: LF=22, FR=15, PR=35
+2026-03-09 15:48:01,253 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 15:48:01,265 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2026-03-09 15:48:01,273 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 15:48:01,297 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 15:48:01,442 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:48:01,442 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:48:01,448 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:01,613 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:01,614 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:48:01,614 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:01,624 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=[]
+2026-03-09 15:48:01,625 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 2520 秒
+2026-03-09 15:48:01,625 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 15:48:01,625 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 15:48:01,629 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:01,787 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:01,788 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:48:01,788 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:01,795 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=[]
+2026-03-09 15:48:01,796 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:01,796 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[97bdf8ec-b5e7-4e0e-8baf-e6f83b1c49f2] succeeded in 0.17084290005732328s: None
+2026-03-09 15:48:01,796 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:01,797 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[46436c1b-2bf5-4799-a094-72633c6e6aed] succeeded in 0.3551643000682816s: None
+2026-03-09 15:48:01,898 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:48:01,898 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 15:48:01,902 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:02,049 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:02,050 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:48:02,050 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:02,057 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=[]
+2026-03-09 15:48:02,057 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1380 秒
+2026-03-09 15:48:02,057 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 15:48:02,058 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 15:48:02,061 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:02,200 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:02,201 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:48:02,201 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:02,207 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=[]
+2026-03-09 15:48:02,207 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:02,208 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[77efd4bd-0365-482a-8ddd-c435f2855c0e] succeeded in 0.15038990008179098s: None
+2026-03-09 15:48:02,208 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:02,208 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[f334a86a-0fc7-4ea6-8385-d102d4b76efe] succeeded in 0.31030690006446093s: None
+2026-03-09 15:48:02,309 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 15:48:02,309 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 15:48:02,313 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:02,446 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:02,446 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:02,454 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=['huang.bh@001precise.com']
+2026-03-09 15:48:02,454 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1380 秒
+2026-03-09 15:48:02,454 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com
+2026-03-09 15:48:02,455 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 15:48:02,458 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 15:48:02,597 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 15:48:02,597 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 15:48:02,598 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 15:48:02,606 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 15:48; cc=['huang.bh@001precise.com']
+2026-03-09 15:48:02,606 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:02,607 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[e41e920c-572d-45b7-b2cf-4d8104d6da72] succeeded in 0.152248700032942s: None
+2026-03-09 15:48:02,607 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 15:48:02,607 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[66ac0444-0040-4715-a8e8-c5179e3e8371] succeeded in 0.29841759998816997s: None
+2026-03-09 15:48:02,607 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=5, PR=0
+2026-03-09 15:48:02,608 - INFO - app.main - A2邮件后续延迟（分钟）: LF=42, FR=23, PR=23
+2026-03-09 16:04:25,481 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 16:04:25,497 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2026-03-09 16:04:25,505 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 16:04:25,562 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 16:04:26,292 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:04:26,293 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 16:04:26,298 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:26,443 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:26,449 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:26,450 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:04:26,450 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:26,460 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=[]
+2026-03-09 16:04:26,460 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 660 秒
+2026-03-09 16:04:26,461 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 16:04:26,461 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 16:04:26,464 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:26,599 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:26,602 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:26,603 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:04:26,603 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:26,610 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=[]
+2026-03-09 16:04:26,611 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:26,645 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[98bc1d99-d09f-458c-b69a-58f21f95a285] succeeded in 0.1843439000658691s: None
+2026-03-09 16:04:26,645 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:26,646 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[315c4629-6ddf-4ddb-8050-16e681e4c847] succeeded in 0.35357420006766915s: None
+2026-03-09 16:04:26,751 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:04:26,752 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 16:04:26,756 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:26,894 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:26,896 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:26,896 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:04:26,896 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:26,903 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=[]
+2026-03-09 16:04:26,904 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 60 秒
+2026-03-09 16:04:26,904 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 16:04:26,904 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 16:04:26,908 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:27,044 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:27,047 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:27,047 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:04:27,048 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:27,054 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=[]
+2026-03-09 16:04:27,055 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:27,055 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[42ca7d02-4c85-4073-8596-91fafcac063a] succeeded in 0.15088259999174625s: None
+2026-03-09 16:04:27,055 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:27,055 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[ca83eb94-bb3e-4101-ac51-34849b2a3b58] succeeded in 0.30398139997851104s: None
+2026-03-09 16:04:27,160 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:04:27,161 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:04:27,164 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:27,299 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:27,301 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:27,301 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:27,309 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=['huang.bh@001precise.com']
+2026-03-09 16:04:27,310 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 2580 秒
+2026-03-09 16:04:27,311 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com
+2026-03-09 16:04:27,311 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:04:27,315 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:04:27,457 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:04:27,468 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:04:27,469 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:04:27,469 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:04:27,476 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:04; cc=['huang.bh@001precise.com']
+2026-03-09 16:04:27,476 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:27,476 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[4d07a18c-69aa-412f-b95b-458e6db6afed] succeeded in 0.1654397000093013s: None
+2026-03-09 16:04:27,477 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:04:27,477 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[9677e26e-abf3-4699-94d2-a6c80e2ed36c] succeeded in 0.31663069990463555s: None
+2026-03-09 16:04:27,477 - INFO - app.main - A1邮件调度延迟（分钟）: LF=1, FR=0, PR=0
+2026-03-09 16:04:27,477 - INFO - app.main - A2邮件后续延迟（分钟）: LF=11, FR=1, PR=43
+2026-03-09 16:28:43,555 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市深业晋展物料供应有限公司', 'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001'}
+2026-03-09 16:28:43,574 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): A
+2026-03-09 16:28:43,586 - INFO - app.main - B公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 16:28:43,618 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 16:28:43,772 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:28:43,773 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 16:28:43,782 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:43,929 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:43,943 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:43,944 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:28:43,944 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:43,971 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=[]
+2026-03-09 16:28:43,971 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 3120 秒
+2026-03-09 16:28:43,972 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 16:28:43,972 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 16:28:43,976 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:44,130 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:44,132 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:44,133 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:28:44,133 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:44,137 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=[]
+2026-03-09 16:28:44,138 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,138 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[82995e1c-dc4e-4870-a999-ec0ac2aae4e0] succeeded in 0.16663470002822578s: None
+2026-03-09 16:28:44,139 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,139 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[23315094-c426-410e-8051-1e8dec86a2a3] succeeded in 0.3670266999397427s: None
+2026-03-09 16:28:44,241 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:28:44,241 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 16:28:44,246 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:44,388 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:44,390 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:44,390 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:28:44,390 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:44,395 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=[]
+2026-03-09 16:28:44,395 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1140 秒
+2026-03-09 16:28:44,396 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 16:28:44,396 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 16:28:44,400 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:44,556 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:44,558 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:44,559 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:28:44,561 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:44,564 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=[]
+2026-03-09 16:28:44,565 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,565 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[133075e3-bb27-4a8d-a3cb-0884641cdfea] succeeded in 0.16900319990236312s: None
+2026-03-09 16:28:44,565 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,566 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[6a2284b5-a499-4d78-b164-b2b9cf0fdcc8] succeeded in 0.3251583999954164s: None
+2026-03-09 16:28:44,673 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 16:28:44,673 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:28:44,678 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:44,814 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:44,816 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:44,817 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:44,821 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=['huang.bh@001precise.com']
+2026-03-09 16:28:44,822 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 240 秒
+2026-03-09 16:28:44,822 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com
+2026-03-09 16:28:44,823 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=infotech@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:28:44,827 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:28:44,976 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:28:44,978 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:28:44,979 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:28:44,980 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:28:44,984 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:28; cc=['huang.bh@001precise.com']
+2026-03-09 16:28:44,984 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,984 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[51ebcbc4-4466-428f-b72b-d729f21e07a4] succeeded in 0.16206280002370477s: None
+2026-03-09 16:28:44,985 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 16:28:44,985 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[9943d5d9-56db-4b04-8bd4-e9c1d703fcfa] succeeded in 0.3122846999904141s: None
+2026-03-09 16:28:44,985 - INFO - app.main - A1邮件调度延迟（分钟）: LF=4, FR=3, PR=2
+2026-03-09 16:28:44,985 - INFO - app.main - A2邮件后续延迟（分钟）: LF=52, FR=19, PR=4
+2026-03-09 16:36:48,474 - INFO - app.main - 2项目中标信息|请求参数：{'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'bidding_code': 'ZB-TEST-2026001', 'contract_number': 'HT-TEST-2026001', 'winning_amount': 1000000.0, 'winning_time': datetime.datetime(2025, 3, 1, 8, 0), 'actual_winning_company': '深圳市德贯科技有限公司'}
+2026-03-09 16:42:11,733 - INFO - app.main - 3合同审核|请求参数: {'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'contract_number': 'HT-TEST-2026001', 'contract_serial_number': 'LS-TEST-2026001', 'company_b_name': '深圳市德贯科技有限公司', 'company_c_name': '深圳市立达方圆物料供应有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'winning_amount': 1000000.0, 'contracts': [{'numberField_l7ps2caa': '1000000', 'radioField_lfafvypp': '否', 'selectField_l7ps2ca3': '三方/四方合同', 'numberField_leqpuqk4': '', 'selectField_l7ps2ca8': 'CNY', 'numberField_l7ps2ca9': '1000000', 'selectField_l7ps2ca7': 'PRECISE INSTRUMENT COMPANY LIMITED', 'selectField_l7ps2ca6': '深圳市立达方圆物料供应有限公司', 'numberField_lfafvypq': '', 'selectField_l7ps2ca5': '付'}]}
+2026-03-09 16:42:11,744 - INFO - app.main - 获取到的中标金额为1000000.00，中标时间为2025-03-01
+2026-03-09 16:42:11,745 - INFO - app.main - B公司名称：深圳市德贯科技有限公司
+2026-03-09 16:42:11,745 - INFO - app.main - C公司名称：深圳市立达方圆物料供应有限公司
+2026-03-09 16:42:11,745 - INFO - app.main - D公司名称：PRECISE INSTRUMENT COMPANY LIMITED
+2026-03-09 16:42:11,747 - INFO - app.main - @@@@@@@@@@@@@@C公司名称：深圳市立达方圆物料供应有限公司
+2026-03-09 16:42:11,787 - INFO - app.main - BCD 类型项目: 本地测试项目001
+2026-03-09 16:42:11,789 - INFO - app.send_email_tasks - PR 抄送人: ['huang.bh@001precise.com']
+2026-03-09 16:42:11,798 - INFO - app.send_email_tasks - B3-B公司邮件主题：本地测试项目001 TEST-P-001
+2026-03-09 16:42:11,803 - INFO - app.send_email_tasks - B4-C公司邮件主题：HT-TEST-2026001 本地测试项目001 TEST-P-001
+2026-03-09 16:42:11,809 - INFO - app.send_email_tasks - B5-B公司邮件主题：本地测试项目001 TEST-P-001
+2026-03-09 16:42:11,882 - INFO - app.send_email_tasks - B6-D公司邮件主题：本地測試項目001採購項目TEST-P-001
+2026-03-09 16:42:11,882 - INFO - app.send_email_tasks - [B3] 💌 调度链准备完成，目标：oli91okl6h@yeah.net
+2026-03-09 16:42:11,883 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=oli91okl6h@yeah.net
+2026-03-09 16:42:11,884 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=oli91okl6h@yeah.net, cc=[]
+2026-03-09 16:42:11,888 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:42:12,098 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:42:12,101 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:42:12,101 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:42:12,102 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:42:12,107 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:42; cc=[]
+2026-03-09 16:42:12,107 - INFO - app.tasks - [B3] 🕐 调度 followup 任务（下一阶段 B4），延迟 1860 秒
+2026-03-09 16:42:12,108 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=DGWyT8WlffBMKxWK@126.com
+2026-03-09 16:42:12,109 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=DGWyT8WlffBMKxWK@126.com, cc=[]
+2026-03-09 16:42:12,113 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:42:12,257 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:42:12,259 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:42:12,259 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:42:12,259 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:42:12,263 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:42; cc=[]
+2026-03-09 16:42:12,264 - INFO - app.tasks - [B4] 🕐 调度 followup 任务（下一阶段 B5），延迟 960 秒
+2026-03-09 16:42:12,264 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=infotech@001precise.com
+2026-03-09 16:42:12,265 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=infotech@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:42:12,270 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:42:12,426 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:42:12,428 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:42:12,429 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:42:12,429 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:42:12,433 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:42; cc=['huang.bh@001precise.com']
+2026-03-09 16:42:12,434 - INFO - app.tasks - [B5] 🕐 调度 followup 任务（下一阶段 B6），延迟 3120 秒
+2026-03-09 16:42:12,435 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=DGWyT8WlffBMKxWK@126.com
+2026-03-09 16:42:12,435 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=DGWyT8WlffBMKxWK@126.com, cc=['huang.bh@001precise.com']
+2026-03-09 16:42:12,438 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:42:12,600 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:42:12,602 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 16:42:12,602 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 16:42:12,607 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:42; cc=['huang.bh@001precise.com']
+2026-03-09 16:42:12,607 - INFO - app.tasks - [B6] ✅ 邮件发送任务成功完成
+2026-03-09 16:42:12,607 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[6d3d6e94-2aa8-4cb1-ab2a-6fa4e9847d7f] succeeded in 0.17283139994833618s: None
+2026-03-09 16:42:12,608 - INFO - app.tasks - [B5] ✅ 邮件发送任务成功完成
+2026-03-09 16:42:12,608 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[ed73e4f8-f589-421a-9b2d-aafb0eb9b34a] succeeded in 0.34357060003094375s: None
+2026-03-09 16:42:12,608 - INFO - app.tasks - [B4] ✅ 邮件发送任务成功完成
+2026-03-09 16:42:12,608 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[88f9605e-5eb1-44c3-9c64-b69d1fb6e612] succeeded in 0.5001040999777615s: None
+2026-03-09 16:42:12,609 - INFO - app.tasks - [B3] ✅ 邮件发送任务成功完成
+2026-03-09 16:42:12,609 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[55b6de09-0f17-4e10-a99f-0ad323303deb] succeeded in 0.7254800999071449s: None
+2026-03-09 16:42:12,609 - INFO - app.main - 合同审批阶段邮件已成功发送，合同号为HT-TEST-2026001
+2026-03-09 16:46:54,818 - INFO - app.main - ================================================================================
+2026-03-09 16:46:54,820 - INFO - app.main - 4结算|请求参数：{'project_name': '本地测试项目001', 'l_serial_number': 'TEST-L-001', 'p_serial_number': 'TEST-P-001', 'f_serial_number': 'TEST-F-001', 'contract_number': 'HT-TEST-2026001', 'contract_serial_number': 'LS-TEST-2026001', 'company_b_name': '深圳市深业晋展物料供应有限公司', 'company_c_name': '深圳市立达方圆物料供应有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'contract_type': 'BCD', 'amount': 1000000.0, 'three_fourth': 850000.0, 'import_service_fee': 50000.0, 'third_party_fee': 30000.0, 'service_fee': 20000.0, 'win_bidding_fee': 25000.0, 'bidding_document_fee': 5000.0, 'bidding_service_fee': 20000.0}
+2026-03-09 16:46:54,820 - INFO - app.main - ================================================================================
+2026-03-09 16:46:54,838 - INFO - app.main - 🔵 检测到BCD项目，调用schedule_settlement_BCD
+2026-03-09 16:46:54,838 - INFO - app.send_email_tasks - PR 抄送人: ['huang.bh@001precise.com']
+2026-03-09 16:46:54,840 - INFO - app.send_email_tasks - c_email_subject_c7:TEST-P-001, HT-TEST-2026001 本地测试项目001 结算 TEST-P-001 
+2026-03-09 16:46:54,918 - INFO - app.send_email_tasks - CB_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026001_TEST-P-001_BCD模式_BC结算单.xlsx
+2026-03-09 16:46:54,919 - INFO - app.send_email_tasks - CB_email_attachment_path&&&: C:\Users\007\CB_settlements\结算单.xlsx
+2026-03-09 16:46:56,046 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 16:46:56,897 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 16:46:57,136 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 16:46:57,427 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 16:46:57,443 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[0f7124af-ff36-42b8-9f4d-554f3f9ae14d] succeeded in 2.5201106999302283s: True
+2026-03-09 16:46:57,476 - INFO - app.send_email_tasks - BD_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026001_TEST-P-001_BCD模式_BD结算单.xlsx
+2026-03-09 16:46:57,476 - INFO - app.send_email_tasks - BD_email_attachment_path&&&: C:\Users\007\BD_settlements\结算单.xlsx
+2026-03-09 16:46:57,623 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 16:46:58,443 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 16:46:58,673 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 16:46:58,941 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 16:46:58,942 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[f49e38f5-6be7-4fc7-9ace-0da2de86fd5d] succeeded in 1.465639999951236s: True
+2026-03-09 16:46:59,013 - INFO - app.send_email_tasks - d_email_subject_c9: 本地測試項目001結算確認TEST-P-001
+2026-03-09 16:46:59,051 - INFO - app.send_email_tasks - b_email_subject_c10: 本地测试项目001 TEST-P-001
+2026-03-09 16:46:59,053 - INFO - app.send_email_tasks - [C10] 💌 准备完毕，目标：oli91okl6h@yeah.net，将在 C9 成功后延迟 8 分钟发送
+2026-03-09 16:46:59,054 - INFO - app.send_email_tasks - [C9] 💌 准备完毕，目标：DGWyT8WlffBMKxWK@126.com，成功后将在 41 分钟后调度 C10
+2026-03-09 16:46:59,054 - INFO - app.send_email_tasks - [C8] 💌 准备完毕，目标：infotech@001precise.com，成功后将在 56 分钟后调度 C9
+2026-03-09 16:46:59,054 - INFO - app.send_email_tasks - [C7] 🚀 开始调度，目标：DGWyT8WlffBMKxWK@126.com，成功后将在 42 分钟后调度 C8
+2026-03-09 16:46:59,055 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,055 - INFO - app.tasks - [C7] 📋 ========== 任务开始 ==========
+2026-03-09 16:46:59,055 - INFO - app.tasks - [C7] 📋 Task ID: 7e023105-1a1c-46ba-83e2-3d45fdbb9eea
+2026-03-09 16:46:59,056 - INFO - app.tasks - [C7] 📋 收件人: DGWyT8WlffBMKxWK@126.com
+2026-03-09 16:46:59,056 - INFO - app.tasks - [C7] 📋 主题: HT-TEST-2026001 本地测试项目001 结算 TEST-P-001
+2026-03-09 16:46:59,056 - INFO - app.tasks - [C7] 📋 附件数: 1
+2026-03-09 16:46:59,056 - INFO - app.tasks - [C7] 📋 重试次数: 0/3
+2026-03-09 16:46:59,056 - INFO - app.tasks - [C7] 📋 后续任务: C8, 延迟: 2520秒
+2026-03-09 16:46:59,057 - INFO - app.tasks - [C7] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 16:46:59,057 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,057 - INFO - app.tasks - [C7] 📧 开始发送邮件...
+2026-03-09 16:46:59,060 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 16:46:59,061 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 16:46:59,063 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 16:46:59,069 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 16:46, 抄送=[]
+2026-03-09 16:46:59,070 - INFO - app.tasks - [C7] ✅ SMTP 邮件发送成功！
+2026-03-09 16:46:59,070 - INFO - app.tasks - [C7] ✅ 钉钉表单创建成功！
+2026-03-09 16:46:59,071 - INFO - app.tasks - [C7] 🔍 检测到后续任务，准备调度...
+2026-03-09 16:46:59,071 - INFO - app.tasks - [C7] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 16:46:59,071 - INFO - app.tasks - [C7] 🔍 followup_task_args内容: {'to_email': 'infotech@001precise.com', 'subject': '本地测试项目001 TEST-P-001', 'content': '<html>\n  <body style="font-family: \'SimHei\', \'黑体\', sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>尊敬的PRECISE INSTRUMENT COMPANY LIMITED:</p>\n\n    <p>\n      您好！十分感谢您一直以来的支持与配合。现附上本地测试项目001（合同编号：HT-TEST-2026001）结算单，烦请您在百忙之中审阅确认。若在审核过程中，您对任何数据存有疑问，或是需要我方补充额外资料，烦请随时与我沟通，我将第一时间响应，全力为您提供协助。<br>再次感谢您，期待您的反馈。\n    </p>\n\n    <p>\n      韦书江 WEI Shujiang<br>\n      ·电话/Tel：+86 13699788210<br>\n      ·邮箱/E-mail：<a href="mailto:DGWyT8WlffBMKxWK@126.com">DGWyT8WlffBMKxWK@126.com</a><br>\n      ·深圳市德贯科技有限公司<br>\n      &nbsp;&nbsp;Shenzhen Deguan Technology Co., Ltd<br>\n      ·深圳市罗湖区南湖街道新南社区深南东路2105号中建大厦401-A5房<br>\n      &nbsp;&nbsp;Room 401-A5, Zhongjian Building, No.2105 Shennan East Road, Xinnan Community, Nanhu Street ,Luohu  District, Shenzhen, China\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'DGWyT8WlffBMKxWK@126.com', 'password': 'GVZv5CPVyc9Q3n6h', 'from': 'DGWyT8WlffBMKxWK@126.com'}, 'stage': 'C8', 'attachments': ['C:\\Users\\007\\BD_settlements\\结算单.xlsx'], 'followup_task_args': {'to_email': 'DGWyT8WlffBMKxWK@126.com', 'subject': '本地測試項目001結算確認TEST-P-001', 'content': '<html>\n  <body style="font-family: \'FangSong\', \'仿宋\', serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>致韋經理：</p>\n\n    <p>\n      就本地測試項目001（合同編號：HT-TEST-2026001）的結算事宜，經本公司嚴謹細緻地審核，確認此次結算並無任何問題。<br>該結算可順利進入後續流程，如有任何需要進一步溝通或協助之處，歡迎隨時與本公司聯繫。<br>多謝貴方的關注與配合！<br>祝商祺！\n    </p>\n\n    <p>\n      PRECISE INSTRUMENT COMPANY LIMITED<br>\n      電 話/TEL: +852 39622353<br>\n      郵 箱/E-MAIL: infotech@001precise.com<br>\n      公 司/COMPANY: PRECISE INSTRUMENT COMPANY LIMITED<br>\n      地 址/ADD: Room 202, 2/F, Cheung Wing Industrial Building, 109-115 Wo Yi Hop Road, Kwai Chung, New Territories Hong Kong\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': '', 'password': '', 'from': 'infotech@001precise.com'}, 'stage': 'C9', 'attachments': [], 'followup_task_args': {'to_email': 'oli91okl6h@yeah.net', 'subject': '本地测试项目001 TEST-P-001', 'content': '<html>\n  <body style="font-family: \'Microsoft YaHei\', 微软雅黑, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>尊敬的冯经理:</p>\n\n    <p>可以，谢谢！</p>\n\n    <p>\n      韦书江 WEI Shujiang<br>\n      ·电话/Tel：+86 13699788210<br>\n      ·邮箱/E-mail：<a href="mailto:DGWyT8WlffBMKxWK@126.com">DGWyT8WlffBMKxWK@126.com</a><br>\n      ·深圳市德贯科技有限公司<br>\n      &nbsp;&nbsp;Shenzhen Deguan Technology Co., Ltd<br>\n      ·深圳市罗湖区南湖街道新南社区深南东路2105号中建大厦401-A5房<br>\n      &nbsp;&nbsp;Room 401-A5, Zhongjian Building, No.2105 Shennan East Road, Xinnan Community, Nanhu Street ,Luohu  District, Shenzhen, China\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'DGWyT8WlffBMKxWK@126.com', 'password': 'GVZv5CPVyc9Q3n6h', 'from': 'DGWyT8WlffBMKxWK@126.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 480}, 'followup_delay': 2460, 'cc': ['huang.bh@001precise.com']}, 'followup_delay': 3360, 'cc': ['huang.bh@001precise.com']}
+2026-03-09 16:46:59,072 - INFO - app.tasks - [C7] 🔍 准备pop followup_delay...
+2026-03-09 16:46:59,073 - INFO - app.tasks - [C7] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 16:46:59,073 - INFO - app.tasks - [C7] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 16:46:59,073 - INFO - app.tasks - [C7] 🔍 获取到的next_delay: 3360
+2026-03-09 16:46:59,073 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,073 - INFO - app.tasks - [C7] 📤 ========== 调度后续任务 ==========
+2026-03-09 16:46:59,073 - INFO - app.tasks - [C7] 📤 下一阶段: C8
+2026-03-09 16:46:59,074 - INFO - app.tasks - [C7] 📤 目标收件人: infotech@001precise.com
+2026-03-09 16:46:59,074 - INFO - app.tasks - [C7] 📤 延迟时间: 3360 秒 (56 分钟)
+2026-03-09 16:46:59,074 - INFO - app.tasks - [C7] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 16:46:59,074 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,074 - INFO - app.tasks - [C7] 🚀 开始调用apply_async...
+2026-03-09 16:46:59,074 - ERROR - app.tasks - [C7] ❌ 调度后续任务失败：send_reply_email_with_attachments_delay() got an unexpected keyword argument 'cc'
+2026-03-09 16:46:59,075 - ERROR - app.tasks - [C7] 详细错误信息：
+Traceback (most recent call last):
+  File "E:\code_projects\syjz_emails\backend\app\tasks.py", line 403, in send_reply_email_with_attachments_delay
+    result = send_reply_email_with_attachments_delay.apply_async(
+        kwargs=followup_task_args,
+        countdown=next_delay
+    )
+  File "E:\code_projects\syjz_emails\backend\venv\Lib\site-packages\celery\app\task.py", line 566, in apply_async
+    check_arguments(*(args or ()), **(kwargs or {}))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: send_reply_email_with_attachments_delay() got an unexpected keyword argument 'cc'
+2026-03-09 16:46:59,077 - ERROR - app.tasks - [C7] ⚠️ 注意：后续任务调度失败，但当前任务将继续完成
+2026-03-09 16:46:59,077 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,077 - INFO - app.tasks - [C7] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 16:46:59,077 - INFO - app.tasks - ============================================================
+2026-03-09 16:46:59,077 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[7e023105-1a1c-46ba-83e2-3d45fdbb9eea] succeeded in 0.022469099960289896s: {'success': True, 'error': ''}
+2026-03-09 16:46:59,078 - INFO - app.main - ✅ BCD项目邮件任务调度完成
+2026-03-09 16:46:59,078 - INFO - app.main - BC_download_url: http://103.30.78.107:8000/download/HT-TEST-2026001_TEST-P-001_BCD模式_BC结算单.xlsx, BD_download_url: http://103.30.78.107:8000/download/HT-TEST-2026001_TEST-P-001_BCD模式_BD结算单.xlsx
+2026-03-09 17:07:17,184 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市赛纳精密仪器有限公司', 'project_name': '本地测试项目002', 'l_serial_number': 'TEST-L-002', 'p_serial_number': 'TEST-P-002', 'f_serial_number': 'TEST-F-002', 'bidding_code': 'ZB-TEST-2026002'}
+2026-03-09 17:07:17,200 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): B
+2026-03-09 17:07:17,211 - INFO - app.main - B公司名称：深圳市赛纳精密仪器有限公司
+2026-03-09 17:07:17,246 - INFO - app.main - PR 邮件抄送人: ['huang.bh@001precise.com']
+2026-03-09 17:07:17,468 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:07:17,468 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:07:17,474 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:17,649 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:17,654 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:17,654 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:07:17,655 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:17,659 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=[]
+2026-03-09 17:07:17,660 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1680 秒
+2026-03-09 17:07:17,661 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 17:07:17,661 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 17:07:17,664 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:17,826 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:17,828 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:17,829 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:07:17,829 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:17,833 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=[]
+2026-03-09 17:07:17,833 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:17,845 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[af6c05a8-34cd-4ae6-a564-2dece7ffd7b3] succeeded in 0.1842111999867484s: None
+2026-03-09 17:07:17,845 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:17,846 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[3b950f65-5c73-4ce5-bc52-7937d2a1e7cc] succeeded in 0.37789559992961586s: None
+2026-03-09 17:07:17,950 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:07:17,950 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:07:17,954 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:18,085 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:18,086 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:18,087 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:07:18,087 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:18,091 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=[]
+2026-03-09 17:07:18,092 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 60 秒
+2026-03-09 17:07:18,092 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 17:07:18,093 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 17:07:18,096 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:18,239 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:18,240 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:18,241 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:07:18,241 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:18,245 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=[]
+2026-03-09 17:07:18,246 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:18,246 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[dbb40dc1-85e8-444e-a652-54aa11cd7546] succeeded in 0.153619599994272s: None
+2026-03-09 17:07:18,246 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:18,247 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[6506115d-6779-4df6-946f-1e29a0b02673] succeeded in 0.29722960002254695s: None
+2026-03-09 17:07:18,365 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:07:18,366 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 17:07:18,371 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:18,506 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:18,508 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:18,508 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:18,513 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=['huang.bh@001precise.com']
+2026-03-09 17:07:18,513 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1980 秒
+2026-03-09 17:07:18,514 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=xu.p@001precise.com
+2026-03-09 17:07:18,514 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=xu.p@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 17:07:18,517 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:07:18,657 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:07:18,658 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:07:18,659 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:07:18,659 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:07:18,663 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:07; cc=['huang.bh@001precise.com']
+2026-03-09 17:07:18,663 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:18,664 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[fc2c3ce1-57b7-4be2-baf5-d5e1a9d2dc4c] succeeded in 0.149870999972336s: None
+2026-03-09 17:07:18,664 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:07:18,664 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[2142ba4c-a3ff-4fe9-bb21-4516f0b0759c] succeeded in 0.298646799987182s: None
+2026-03-09 17:07:18,664 - INFO - app.main - A1邮件调度延迟（分钟）: LF=5, FR=3, PR=0
+2026-03-09 17:07:18,665 - INFO - app.main - A2邮件后续延迟（分钟）: LF=28, FR=1, PR=33
+2026-03-09 17:08:29,043 - INFO - app.main - 2项目中标信息|请求参数：{'project_name': '本地测试项目002', 'l_serial_number': 'TEST-L-002', 'p_serial_number': 'TEST-P-002', 'f_serial_number': 'TEST-F-002', 'bidding_code': 'ZB-TEST-2026002', 'contract_number': 'HT-TEST-2026002', 'winning_amount': 1000000.0, 'winning_time': datetime.datetime(2025, 3, 1, 8, 0), 'actual_winning_company': '深圳市赛纳精密仪器有限公司'}
+2026-03-09 17:08:58,557 - INFO - app.main - 3合同审核|请求参数: {'project_name': '本地测试项目002', 'l_serial_number': 'TEST-L-002', 'p_serial_number': 'TEST-P-002', 'f_serial_number': 'TEST-F-002', 'contract_number': 'HT-TEST-2026002', 'contract_serial_number': 'LS-TEST-2026002', 'company_b_name': '深圳市赛纳精密仪器有限公司', 'company_c_name': '深圳市立达方圆物料供应有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'winning_amount': 1000000.0, 'contracts': [{'numberField_l7ps2caa': '1000000', 'radioField_lfafvypp': '否', 'selectField_l7ps2ca3': '三方/四方合同', 'numberField_leqpuqk4': '', 'selectField_l7ps2ca8': 'CNY', 'numberField_l7ps2ca9': '1000000', 'selectField_l7ps2ca7': 'PRECISE INSTRUMENT COMPANY LIMITED', 'selectField_l7ps2ca6': '深圳市立达方圆物料供应有限公司', 'numberField_lfafvypq': '', 'selectField_l7ps2ca5': '付'}]}
+2026-03-09 17:08:58,565 - INFO - app.main - 获取到的中标金额为1000000.00，中标时间为2025-03-01
+2026-03-09 17:08:58,565 - INFO - app.main - B公司名称：深圳市赛纳精密仪器有限公司
+2026-03-09 17:08:58,565 - INFO - app.main - C公司名称：深圳市立达方圆物料供应有限公司
+2026-03-09 17:08:58,566 - INFO - app.main - D公司名称：PRECISE INSTRUMENT COMPANY LIMITED
+2026-03-09 17:08:58,570 - INFO - app.main - @@@@@@@@@@@@@@C公司名称：深圳市立达方圆物料供应有限公司
+2026-03-09 17:08:58,576 - INFO - app.main - BCD 类型项目: 本地测试项目002
+2026-03-09 17:08:58,577 - INFO - app.send_email_tasks - PR 抄送人: ['huang.bh@001precise.com']
+2026-03-09 17:08:58,581 - INFO - app.send_email_tasks - B3-B公司邮件主题：本地测试项目002 外贸服务 TEST-P-002
+2026-03-09 17:08:58,584 - INFO - app.send_email_tasks - B4-C公司邮件主题：HT-TEST-2026002 本地测试项目002 TEST-P-002
+2026-03-09 17:08:58,588 - INFO - app.send_email_tasks - B5-B公司邮件主题：【中标通知】本地测试项目002 TEST-P-002
+2026-03-09 17:08:58,658 - INFO - app.send_email_tasks - B6-D公司邮件主题：本地測試項目002採購項目TEST-P-002
+2026-03-09 17:08:58,659 - INFO - app.send_email_tasks - [B3] 💌 调度链准备完成，目标：oli91okl6h@yeah.net
+2026-03-09 17:08:58,659 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=oli91okl6h@yeah.net
+2026-03-09 17:08:58,660 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=oli91okl6h@yeah.net, cc=[]
+2026-03-09 17:08:58,663 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:08:58,825 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:08:58,827 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:08:58,827 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:08:58,827 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:08:58,831 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:08; cc=[]
+2026-03-09 17:08:58,831 - INFO - app.tasks - [B3] 🕐 调度 followup 任务（下一阶段 B4），延迟 3180 秒
+2026-03-09 17:08:58,832 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:08:58,832 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:08:58,837 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:08:58,992 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:08:58,994 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:08:58,994 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:08:58,994 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:08:58,998 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:08; cc=[]
+2026-03-09 17:08:58,998 - INFO - app.tasks - [B4] 🕐 调度 followup 任务（下一阶段 B5），延迟 420 秒
+2026-03-09 17:08:58,999 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=xu.p@001precise.com
+2026-03-09 17:08:59,000 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=xu.p@001precise.com, cc=['huang.bh@001precise.com']
+2026-03-09 17:08:59,007 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:08:59,179 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:08:59,181 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:08:59,181 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:08:59,181 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:08:59,186 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:08; cc=['huang.bh@001precise.com']
+2026-03-09 17:08:59,186 - INFO - app.tasks - [B5] 🕐 调度 followup 任务（下一阶段 B6），延迟 3120 秒
+2026-03-09 17:08:59,187 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:08:59,187 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=['huang.bh@001precise.com']
+2026-03-09 17:08:59,192 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:08:59,353 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:08:59,355 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:08:59,355 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:08:59,359 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:08; cc=['huang.bh@001precise.com']
+2026-03-09 17:08:59,359 - INFO - app.tasks - [B6] ✅ 邮件发送任务成功完成
+2026-03-09 17:08:59,359 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[ebc45e09-08b6-4b27-ae99-0b818170d929] succeeded in 0.17255629994906485s: None
+2026-03-09 17:08:59,360 - INFO - app.tasks - [B5] ✅ 邮件发送任务成功完成
+2026-03-09 17:08:59,360 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[cea343cd-e662-436e-83a6-9c4cc8cd7366] succeeded in 0.36083240003790706s: None
+2026-03-09 17:08:59,360 - INFO - app.tasks - [B4] ✅ 邮件发送任务成功完成
+2026-03-09 17:08:59,360 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[4164625d-d30a-40e8-af8d-f093315f6767] succeeded in 0.5284561000298709s: None
+2026-03-09 17:08:59,361 - INFO - app.tasks - [B3] ✅ 邮件发送任务成功完成
+2026-03-09 17:08:59,361 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[a8950a22-783f-4086-ada0-06ed1cad1a87] succeeded in 0.7014913000166416s: None
+2026-03-09 17:08:59,361 - INFO - app.main - 合同审批阶段邮件已成功发送，合同号为HT-TEST-2026002
+2026-03-09 17:09:57,163 - INFO - app.main - ================================================================================
+2026-03-09 17:09:57,164 - INFO - app.main - 4结算|请求参数：{'project_name': '本地测试项目002', 'l_serial_number': 'TEST-L-002', 'p_serial_number': 'TEST-P-002', 'f_serial_number': 'TEST-F-002', 'contract_number': 'HT-TEST-2026002', 'contract_serial_number': 'LS-TEST-2026002', 'company_b_name': '深圳市深业晋展物料供应有限公司', 'company_c_name': '深圳市立达方圆物料供应有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'contract_type': 'BCD', 'amount': 1000000.0, 'three_fourth': 850000.0, 'import_service_fee': 50000.0, 'third_party_fee': 30000.0, 'service_fee': 20000.0, 'win_bidding_fee': 25000.0, 'bidding_document_fee': 5000.0, 'bidding_service_fee': 20000.0}
+2026-03-09 17:09:57,164 - INFO - app.main - ================================================================================
+2026-03-09 17:09:57,176 - INFO - app.main - 🔵 检测到BCD项目，调用schedule_settlement_BCD
+2026-03-09 17:09:57,176 - INFO - app.send_email_tasks - PR 抄送人: ['huang.bh@001precise.com']
+2026-03-09 17:09:57,178 - INFO - app.send_email_tasks - c_email_subject_c7:TEST-P-002, HT-TEST-2026002 本地测试项目002 结算 TEST-P-002 
+2026-03-09 17:09:57,213 - INFO - app.send_email_tasks - CB_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026002_TEST-P-002_BCD模式_BC结算单.xlsx
+2026-03-09 17:09:57,213 - INFO - app.send_email_tasks - CB_email_attachment_path&&&: C:\Users\007\CB_settlements\结算单.xlsx
+2026-03-09 17:09:58,239 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 17:09:59,035 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 17:09:59,268 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 17:09:59,545 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 17:09:59,553 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[5be5f24e-6ff9-4f0c-8160-c137c32719eb] succeeded in 2.3396978999953717s: True
+2026-03-09 17:09:59,584 - INFO - app.send_email_tasks - BD_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026002_TEST-P-002_BCD模式_BD结算单.xlsx
+2026-03-09 17:09:59,584 - INFO - app.send_email_tasks - BD_email_attachment_path&&&: C:\Users\007\BD_settlements\结算单.xlsx
+2026-03-09 17:09:59,733 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 17:10:00,535 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 17:10:00,774 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 17:10:01,062 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 17:10:01,062 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[458898df-6c1d-426d-afba-94dbbfa22bc3] succeeded in 1.477819100022316s: True
+2026-03-09 17:10:01,129 - INFO - app.send_email_tasks - d_email_subject_c9: 本地測試項目002結算確認TEST-P-002
+2026-03-09 17:10:01,167 - INFO - app.send_email_tasks - b_email_subject_c10: 【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002
+2026-03-09 17:10:01,168 - INFO - app.send_email_tasks - [C10] 💌 准备完毕，目标：oli91okl6h@yeah.net，将在 C9 成功后延迟 60 分钟发送
+2026-03-09 17:10:01,168 - INFO - app.send_email_tasks - [C9] 💌 准备完毕，目标：KQ18SETTLma@163.com，成功后将在 8 分钟后调度 C10
+2026-03-09 17:10:01,169 - INFO - app.send_email_tasks - [C8] 💌 准备完毕，目标：xu.p@001precise.com，成功后将在 27 分钟后调度 C9
+2026-03-09 17:10:01,169 - INFO - app.send_email_tasks - [C7] 🚀 开始调度，目标：KQ18SETTLma@163.com，成功后将在 19 分钟后调度 C8
+2026-03-09 17:10:01,170 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,170 - INFO - app.tasks - [C7] 📋 ========== 任务开始 ==========
+2026-03-09 17:10:01,170 - INFO - app.tasks - [C7] 📋 Task ID: 5e218588-d166-4189-b337-8579116a2626
+2026-03-09 17:10:01,170 - INFO - app.tasks - [C7] 📋 收件人: KQ18SETTLma@163.com
+2026-03-09 17:10:01,170 - INFO - app.tasks - [C7] 📋 主题: HT-TEST-2026002 本地测试项目002 结算 TEST-P-002
+2026-03-09 17:10:01,170 - INFO - app.tasks - [C7] 📋 附件数: 1
+2026-03-09 17:10:01,171 - INFO - app.tasks - [C7] 📋 重试次数: 0/3
+2026-03-09 17:10:01,171 - INFO - app.tasks - [C7] 📋 后续任务: C8, 延迟: 1140秒
+2026-03-09 17:10:01,171 - INFO - app.tasks - [C7] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 17:10:01,171 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,171 - INFO - app.tasks - [C7] 📧 开始发送邮件...
+2026-03-09 17:10:01,175 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:10:01,175 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:10:01,179 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:10:01,183 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:10, 抄送=[]
+2026-03-09 17:10:01,183 - INFO - app.tasks - [C7] ✅ SMTP 邮件发送成功！
+2026-03-09 17:10:01,184 - INFO - app.tasks - [C7] ✅ 钉钉表单创建成功！
+2026-03-09 17:10:01,184 - INFO - app.tasks - [C7] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:10:01,184 - INFO - app.tasks - [C7] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:10:01,184 - INFO - app.tasks - [C7] 🔍 followup_task_args内容: {'to_email': 'xu.p@001precise.com', 'subject': '【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002', 'content': '<html>\n  <body style="font-family: \'SimHei\', \'黑体\', sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, PRECISE INSTRUMENT COMPANY LIMITED</p>\n\n    <p style="text-indent: 2em;">附件为合同号：HT-TEST-2026002本地测试项目002的结算单，请审核！</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C8', 'attachments': ['C:\\Users\\007\\BD_settlements\\结算单.xlsx'], 'followup_task_args': {'to_email': 'KQ18SETTLma@163.com', 'subject': '本地測試項目002結算確認TEST-P-002', 'content': '<html>\n  <body style="font-family: \'FangSong\', \'仿宋\', serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>致萬經理：</p>\n\n    <p>\n      就本地測試項目002（合同編號：HT-TEST-2026002）的結算事宜，經本公司嚴謹細緻地審核，確認此次結算並無任何問題。<br>該結算可順利進入後續流程，如有任何需要進一步溝通或協助之處，歡迎隨時與本公司聯繫。<br>多謝貴方的關注與配合！<br>祝商祺！\n    </p>\n\n    <p>\n      PRECISE INSTRUMENT COMPANY LIMITED<br>\n      電 話/TEL: +852 39622353<br>\n      郵 箱/E-MAIL: xu.p@001precise.com<br>\n      公 司/COMPANY: PRECISE INSTRUMENT COMPANY LIMITED<br>\n      地 址/ADD: Room 202, 2/F, Cheung Wing Industrial Building, 109-115 Wo Yi Hop Road, Kwai Chung, New Territories Hong Kong\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': '', 'password': '', 'from': 'xu.p@001precise.com'}, 'stage': 'C9', 'attachments': [], 'followup_task_args': {'to_email': 'oli91okl6h@yeah.net', 'subject': '【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 冯经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 3600}, 'followup_delay': 480, 'cc': ['huang.bh@001precise.com']}, 'followup_delay': 1620, 'cc': ['huang.bh@001precise.com']}
+2026-03-09 17:10:01,185 - INFO - app.tasks - [C7] 🔍 准备pop followup_delay...
+2026-03-09 17:10:01,186 - INFO - app.tasks - [C7] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 17:10:01,186 - INFO - app.tasks - [C7] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 17:10:01,186 - INFO - app.tasks - [C7] 🔍 获取到的next_delay: 1620
+2026-03-09 17:10:01,186 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,186 - INFO - app.tasks - [C7] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:10:01,186 - INFO - app.tasks - [C7] 📤 下一阶段: C8
+2026-03-09 17:10:01,187 - INFO - app.tasks - [C7] 📤 目标收件人: xu.p@001precise.com
+2026-03-09 17:10:01,187 - INFO - app.tasks - [C7] 📤 延迟时间: 1620 秒 (27 分钟)
+2026-03-09 17:10:01,187 - INFO - app.tasks - [C7] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 17:10:01,187 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,187 - INFO - app.tasks - [C7] 🚀 开始调用apply_async...
+2026-03-09 17:10:01,188 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,188 - INFO - app.tasks - [C8] 📋 ========== 任务开始 ==========
+2026-03-09 17:10:01,188 - INFO - app.tasks - [C8] 📋 Task ID: cf03eec5-65dc-4c94-96a7-1975771e3c74
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 收件人: xu.p@001precise.com
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 主题: 【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 附件数: 1
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 重试次数: 0/3
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 后续任务: C9, 延迟: 0秒
+2026-03-09 17:10:01,189 - INFO - app.tasks - [C8] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 17:10:01,190 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,190 - INFO - app.tasks - [C8] 📧 开始发送邮件...
+2026-03-09 17:10:01,194 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:10:01,194 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:10:01,196 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:10:01,200 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:10, 抄送=['huang.bh@001precise.com']
+2026-03-09 17:10:01,201 - INFO - app.tasks - [C8] ✅ SMTP 邮件发送成功！
+2026-03-09 17:10:01,201 - INFO - app.tasks - [C8] ✅ 钉钉表单创建成功！
+2026-03-09 17:10:01,201 - INFO - app.tasks - [C8] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:10:01,202 - INFO - app.tasks - [C8] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:10:01,202 - INFO - app.tasks - [C8] 🔍 followup_task_args内容: {'to_email': 'KQ18SETTLma@163.com', 'subject': '本地測試項目002結算確認TEST-P-002', 'content': '<html>\n  <body style="font-family: \'FangSong\', \'仿宋\', serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>致萬經理：</p>\n\n    <p>\n      就本地測試項目002（合同編號：HT-TEST-2026002）的結算事宜，經本公司嚴謹細緻地審核，確認此次結算並無任何問題。<br>該結算可順利進入後續流程，如有任何需要進一步溝通或協助之處，歡迎隨時與本公司聯繫。<br>多謝貴方的關注與配合！<br>祝商祺！\n    </p>\n\n    <p>\n      PRECISE INSTRUMENT COMPANY LIMITED<br>\n      電 話/TEL: +852 39622353<br>\n      郵 箱/E-MAIL: xu.p@001precise.com<br>\n      公 司/COMPANY: PRECISE INSTRUMENT COMPANY LIMITED<br>\n      地 址/ADD: Room 202, 2/F, Cheung Wing Industrial Building, 109-115 Wo Yi Hop Road, Kwai Chung, New Territories Hong Kong\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': '', 'password': '', 'from': 'xu.p@001precise.com'}, 'stage': 'C9', 'attachments': [], 'followup_task_args': {'to_email': 'oli91okl6h@yeah.net', 'subject': '【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 冯经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 3600}, 'followup_delay': 480, 'cc': ['huang.bh@001precise.com']}
+2026-03-09 17:10:01,203 - INFO - app.tasks - [C8] 🔍 准备pop followup_delay...
+2026-03-09 17:10:01,203 - INFO - app.tasks - [C8] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay', 'cc']
+2026-03-09 17:10:01,203 - INFO - app.tasks - [C8] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 17:10:01,204 - INFO - app.tasks - [C8] 🔍 获取到的next_delay: 480
+2026-03-09 17:10:01,204 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,204 - INFO - app.tasks - [C8] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:10:01,204 - INFO - app.tasks - [C8] 📤 下一阶段: C9
+2026-03-09 17:10:01,204 - INFO - app.tasks - [C8] 📤 目标收件人: KQ18SETTLma@163.com
+2026-03-09 17:10:01,205 - INFO - app.tasks - [C8] 📤 延迟时间: 480 秒 (8 分钟)
+2026-03-09 17:10:01,205 - INFO - app.tasks - [C8] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'cc']
+2026-03-09 17:10:01,205 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,205 - INFO - app.tasks - [C8] 🚀 开始调用apply_async...
+2026-03-09 17:10:01,206 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,206 - INFO - app.tasks - [C9] 📋 ========== 任务开始 ==========
+2026-03-09 17:10:01,206 - INFO - app.tasks - [C9] 📋 Task ID: 90552da0-1be4-4fde-8dcc-4465748d0234
+2026-03-09 17:10:01,206 - INFO - app.tasks - [C9] 📋 收件人: KQ18SETTLma@163.com
+2026-03-09 17:10:01,206 - INFO - app.tasks - [C9] 📋 主题: 本地測試項目002結算確認TEST-P-002
+2026-03-09 17:10:01,206 - INFO - app.tasks - [C9] 📋 附件数: 0
+2026-03-09 17:10:01,207 - INFO - app.tasks - [C9] 📋 重试次数: 0/3
+2026-03-09 17:10:01,207 - INFO - app.tasks - [C9] 📋 后续任务: C10, 延迟: 0秒
+2026-03-09 17:10:01,207 - INFO - app.tasks - [C9] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:10:01,207 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,207 - INFO - app.tasks - [C9] 📧 开始发送邮件...
+2026-03-09 17:10:01,210 - WARNING - app.email_utils - 📎 未提供任何附件，跳过附件处理
+2026-03-09 17:10:01,210 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:10:01,210 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:10:01,215 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:10, 抄送=['huang.bh@001precise.com']
+2026-03-09 17:10:01,216 - INFO - app.tasks - [C9] ✅ SMTP 邮件发送成功！
+2026-03-09 17:10:01,216 - INFO - app.tasks - [C9] ✅ 钉钉表单创建成功！
+2026-03-09 17:10:01,216 - INFO - app.tasks - [C9] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:10:01,216 - INFO - app.tasks - [C9] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:10:01,217 - INFO - app.tasks - [C9] 🔍 followup_task_args内容: {'to_email': 'oli91okl6h@yeah.net', 'subject': '【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 冯经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 3600}
+2026-03-09 17:10:01,217 - INFO - app.tasks - [C9] 🔍 准备pop followup_delay...
+2026-03-09 17:10:01,217 - INFO - app.tasks - [C9] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:10:01,217 - INFO - app.tasks - [C9] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:10:01,218 - INFO - app.tasks - [C9] 🔍 获取到的next_delay: 3600
+2026-03-09 17:10:01,218 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,218 - INFO - app.tasks - [C9] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:10:01,218 - INFO - app.tasks - [C9] 📤 下一阶段: C10
+2026-03-09 17:10:01,218 - INFO - app.tasks - [C9] 📤 目标收件人: oli91okl6h@yeah.net
+2026-03-09 17:10:01,218 - INFO - app.tasks - [C9] 📤 延迟时间: 3600 秒 (60 分钟)
+2026-03-09 17:10:01,219 - INFO - app.tasks - [C9] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:10:01,219 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,219 - INFO - app.tasks - [C9] 🚀 开始调用apply_async...
+2026-03-09 17:10:01,219 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 ========== 任务开始 ==========
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 Task ID: 227b6baf-3f59-42a0-9258-0df597264a71
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 收件人: oli91okl6h@yeah.net
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 主题: 【结算单】HT-TEST-2026002 本地测试项目002 TEST-P-002
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 附件数: 0
+2026-03-09 17:10:01,220 - INFO - app.tasks - [C10] 📋 重试次数: 0/3
+2026-03-09 17:10:01,221 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,221 - INFO - app.tasks - [C10] 📧 开始发送邮件...
+2026-03-09 17:10:01,223 - WARNING - app.email_utils - 📎 未提供任何附件，跳过附件处理
+2026-03-09 17:10:01,223 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:10:01,224 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:10:01,225 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:10:01,228 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:10, 抄送=[]
+2026-03-09 17:10:01,229 - INFO - app.tasks - [C10] ✅ SMTP 邮件发送成功！
+2026-03-09 17:10:01,229 - INFO - app.tasks - [C10] ✅ 钉钉表单创建成功！
+2026-03-09 17:10:01,229 - INFO - app.tasks - [C10] ℹ️ 无后续任务，流程结束
+2026-03-09 17:10:01,229 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,230 - INFO - app.tasks - [C10] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:10:01,230 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,230 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[227b6baf-3f59-42a0-9258-0df597264a71] succeeded in 0.010659800027497113s: {'success': True, 'error': ''}
+2026-03-09 17:10:01,230 - INFO - app.tasks - [C9] ✅ 后续任务 C10 调度成功！Task ID: 227b6baf-3f59-42a0-9258-0df597264a71
+2026-03-09 17:10:01,231 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,231 - INFO - app.tasks - [C9] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:10:01,231 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,231 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[90552da0-1be4-4fde-8dcc-4465748d0234] succeeded in 0.02549389994237572s: {'success': True, 'error': ''}
+2026-03-09 17:10:01,231 - INFO - app.tasks - [C8] ✅ 后续任务 C9 调度成功！Task ID: 90552da0-1be4-4fde-8dcc-4465748d0234
+2026-03-09 17:10:01,231 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,232 - INFO - app.tasks - [C8] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:10:01,232 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,232 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[cf03eec5-65dc-4c94-96a7-1975771e3c74] succeeded in 0.04410599998664111s: {'success': True, 'error': ''}
+2026-03-09 17:10:01,232 - INFO - app.tasks - [C7] ✅ 后续任务 C8 调度成功！Task ID: cf03eec5-65dc-4c94-96a7-1975771e3c74
+2026-03-09 17:10:01,232 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,233 - INFO - app.tasks - [C7] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:10:01,233 - INFO - app.tasks - ============================================================
+2026-03-09 17:10:01,233 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[5e218588-d166-4189-b337-8579116a2626] succeeded in 0.06342600006610155s: {'success': True, 'error': ''}
+2026-03-09 17:10:01,233 - INFO - app.main - ✅ BCD项目邮件任务调度完成
+2026-03-09 17:10:01,233 - INFO - app.main - BC_download_url: http://103.30.78.107:8000/download/HT-TEST-2026002_TEST-P-002_BCD模式_BC结算单.xlsx, BD_download_url: http://103.30.78.107:8000/download/HT-TEST-2026002_TEST-P-002_BCD模式_BD结算单.xlsx
+2026-03-09 17:11:41,323 - INFO - app.main - 1委托投标登记|请求参数：{'purchase_department': '深圳市测试采购单位', 'b_company_name': '深圳市赛纳精密仪器有限公司', 'project_name': '本地测试项目003', 'l_serial_number': 'TEST-L-003', 'p_serial_number': 'TEST-P-003', 'f_serial_number': 'TEST-F-003', 'bidding_code': 'ZB-TEST-2026003'}
+2026-03-09 17:11:41,326 - INFO - app.main - (2) 确定本项目邮箱别名 (A/B/C): C
+2026-03-09 17:11:41,331 - INFO - app.main - B公司名称：深圳市赛纳精密仪器有限公司
+2026-03-09 17:11:41,354 - INFO - app.main - PR 邮件抄送人: 无
+2026-03-09 17:11:41,492 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:11:41,493 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:11:41,496 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:41,654 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:41,655 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:41,656 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:11:41,656 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:41,660 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:41,660 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 3000 秒
+2026-03-09 17:11:41,661 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net
+2026-03-09 17:11:41,661 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=qz2uirw4k@yeah.net, cc=[]
+2026-03-09 17:11:41,668 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:41,833 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:41,835 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:41,835 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:11:41,835 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:41,839 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:41,839 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:41,839 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[dba7c4bb-0d6b-4323-8753-3a2dff6371ed] succeeded in 0.17826960003003478s: None
+2026-03-09 17:11:41,840 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:41,840 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[c82f55c6-236c-4a89-9aa9-385f2e8a18f1] succeeded in 0.34744549996685237s: None
+2026-03-09 17:11:41,944 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:11:41,944 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:11:41,949 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:42,089 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:42,092 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:42,092 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:11:42,092 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:42,096 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:42,097 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 660 秒
+2026-03-09 17:11:42,098 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com
+2026-03-09 17:11:42,098 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=a7Ii4ECk@163.com, cc=[]
+2026-03-09 17:11:42,101 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:42,253 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:42,255 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:42,255 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:11:42,255 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:42,259 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:42,259 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:42,260 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[5fb5c927-ec39-4ad2-9fb2-d5ef717ec815] succeeded in 0.16205649997573346s: None
+2026-03-09 17:11:42,260 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:42,260 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[ca00a5d6-3899-4495-977b-d2ecac0330a6] succeeded in 0.3161498000845313s: None
+2026-03-09 17:11:42,379 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:11:42,380 - INFO - app.tasks - [A1] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:11:42,384 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:42,516 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:42,518 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:42,518 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:42,522 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:42,523 - INFO - app.tasks - [A1] 🕐 调度 followup 任务（下一阶段 A2），延迟 1740 秒
+2026-03-09 17:11:42,523 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=huang.bh@001precise.com
+2026-03-09 17:11:42,523 - INFO - app.tasks - [A2] 🚀 发送邮件任务开始，to=huang.bh@001precise.com, cc=[]
+2026-03-09 17:11:42,527 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:11:42,667 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:11:42,669 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:11:42,669 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:11:42,669 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:11:42,673 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:11; cc=[]
+2026-03-09 17:11:42,673 - INFO - app.tasks - [A2] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:42,674 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[a5e799e7-1b9e-4350-9a3f-8abb917ca0fc] succeeded in 0.1505194999044761s: None
+2026-03-09 17:11:42,674 - INFO - app.tasks - [A1] ✅ 邮件发送任务成功完成
+2026-03-09 17:11:42,674 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[d9be2b73-8188-4a02-8bc3-da4fe9d19a9d] succeeded in 0.29509439994581044s: None
+2026-03-09 17:11:42,675 - INFO - app.main - A1邮件调度延迟（分钟）: LF=4, FR=1, PR=0
+2026-03-09 17:11:42,675 - INFO - app.main - A2邮件后续延迟（分钟）: LF=50, FR=11, PR=29
+2026-03-09 17:12:10,891 - INFO - app.main - 2项目中标信息|请求参数：{'project_name': '本地测试项目003', 'l_serial_number': 'TEST-L-003', 'p_serial_number': 'TEST-P-003', 'f_serial_number': 'TEST-F-003', 'bidding_code': 'ZB-TEST-2026003', 'contract_number': 'HT-TEST-2026003', 'winning_amount': 1000000.0, 'winning_time': datetime.datetime(2025, 3, 1, 8, 0), 'actual_winning_company': '深圳市赛纳精密仪器有限公司'}
+2026-03-09 17:13:19,679 - INFO - app.main - 3合同审核|请求参数: {'project_name': '本地测试项目003', 'l_serial_number': 'TEST-L-003', 'p_serial_number': 'TEST-P-003', 'f_serial_number': 'TEST-F-003', 'contract_number': 'HT-TEST-2026003', 'contract_serial_number': 'LS-TEST-2026003', 'company_b_name': '深圳市赛纳精密仪器有限公司', 'company_c_name': '深圳市雅怡科技仪器有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'winning_amount': 1000000.0, 'contracts': [{'numberField_l7ps2caa': '1000000', 'radioField_lfafvypp': '否', 'selectField_l7ps2ca3': '三方/四方合同', 'numberField_leqpuqk4': '', 'selectField_l7ps2ca8': 'CNY', 'numberField_l7ps2ca9': '1000000', 'selectField_l7ps2ca7': 'PRECISE INSTRUMENT COMPANY LIMITED', 'selectField_l7ps2ca6': '深圳市深业晋展物料供应有限公司', 'numberField_lfafvypq': '', 'selectField_l7ps2ca5': '付'}]}
+2026-03-09 17:13:19,684 - INFO - app.main - 获取到的中标金额为1000000.00，中标时间为2025-03-01
+2026-03-09 17:13:19,684 - INFO - app.main - B公司名称：深圳市赛纳精密仪器有限公司
+2026-03-09 17:13:19,684 - INFO - app.main - C公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 17:13:19,684 - INFO - app.main - D公司名称：PRECISE INSTRUMENT COMPANY LIMITED
+2026-03-09 17:13:19,686 - INFO - app.main - @@@@@@@@@@@@@@C公司名称：深圳市深业晋展物料供应有限公司
+2026-03-09 17:13:19,692 - INFO - app.main - BCD 类型项目: 本地测试项目003
+2026-03-09 17:13:19,693 - INFO - app.send_email_tasks - PR 抄送人: 无
+2026-03-09 17:13:19,699 - INFO - app.send_email_tasks - B3-B公司邮件主题：本地测试项目003 外贸服务 TEST-P-003
+2026-03-09 17:13:19,702 - INFO - app.send_email_tasks - B4-C公司邮件主题：HT-TEST-2026003 本地测试项目003 TEST-P-003
+2026-03-09 17:13:19,705 - INFO - app.send_email_tasks - B5-B公司邮件主题：【中标通知】本地测试项目003 TEST-P-003
+2026-03-09 17:13:19,775 - INFO - app.send_email_tasks - B6-D公司邮件主题：本地測試項目003採購項目TEST-P-003
+2026-03-09 17:13:19,776 - INFO - app.send_email_tasks - [B3] 💌 调度链准备完成，目标：szsyjz2025@163.com
+2026-03-09 17:13:19,776 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=szsyjz2025@163.com
+2026-03-09 17:13:19,777 - INFO - app.tasks - [B3] 🚀 发送邮件任务开始，to=szsyjz2025@163.com, cc=[]
+2026-03-09 17:13:19,780 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:13:19,921 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:13:19,923 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:13:19,923 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:13:19,923 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:13:19,927 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:13; cc=[]
+2026-03-09 17:13:19,927 - INFO - app.tasks - [B3] 🕐 调度 followup 任务（下一阶段 B4），延迟 2880 秒
+2026-03-09 17:13:19,928 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:13:19,928 - INFO - app.tasks - [B4] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:13:19,933 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:13:20,119 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:13:20,121 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:13:20,121 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:13:20,122 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:13:20,126 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:13; cc=[]
+2026-03-09 17:13:20,127 - INFO - app.tasks - [B4] 🕐 调度 followup 任务（下一阶段 B5），延迟 1200 秒
+2026-03-09 17:13:20,128 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=huang.bh@001precise.com
+2026-03-09 17:13:20,129 - INFO - app.tasks - [B5] 🚀 发送邮件任务开始，to=huang.bh@001precise.com, cc=[]
+2026-03-09 17:13:20,133 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:13:20,370 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:13:20,372 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:13:20,372 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:13:20,372 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:13:20,377 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:13; cc=[]
+2026-03-09 17:13:20,378 - INFO - app.tasks - [B5] 🕐 调度 followup 任务（下一阶段 B6），延迟 1440 秒
+2026-03-09 17:13:20,378 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com
+2026-03-09 17:13:20,379 - INFO - app.tasks - [B6] 🚀 发送邮件任务开始，to=KQ18SETTLma@163.com, cc=[]
+2026-03-09 17:13:20,382 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:13:20,545 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:13:20,547 - INFO - app.email_utils - 📧 登录 SMTP...
+2026-03-09 17:13:20,547 - INFO - app.email_utils - 📧 登录成功，开始发送邮件...
+2026-03-09 17:13:20,551 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:13; cc=[]
+2026-03-09 17:13:20,551 - INFO - app.tasks - [B6] ✅ 邮件发送任务成功完成
+2026-03-09 17:13:20,552 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[ea93b24d-6303-460d-98ea-969f7afb222d] succeeded in 0.17334870004560798s: None
+2026-03-09 17:13:20,552 - INFO - app.tasks - [B5] ✅ 邮件发送任务成功完成
+2026-03-09 17:13:20,552 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[04a11001-de9c-46c9-a97d-934d28cb6370] succeeded in 0.42430830001831055s: None
+2026-03-09 17:13:20,552 - INFO - app.tasks - [B4] ✅ 邮件发送任务成功完成
+2026-03-09 17:13:20,553 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[adb7184b-0ff0-4f4a-89de-dd6531531ff7] succeeded in 0.6244579999474809s: None
+2026-03-09 17:13:20,553 - INFO - app.tasks - [B3] ✅ 邮件发送任务成功完成
+2026-03-09 17:13:20,553 - INFO - celery.app.trace - Task app.tasks.send_email_with_followup_delay[10f35e1b-a49c-48a8-bb36-3ad803816453] succeeded in 0.7769019999541342s: None
+2026-03-09 17:13:20,553 - INFO - app.main - 合同审批阶段邮件已成功发送，合同号为HT-TEST-2026003
+2026-03-09 17:14:45,222 - INFO - app.main - ================================================================================
+2026-03-09 17:14:45,222 - INFO - app.main - 4结算|请求参数：{'project_name': '本地测试项目003', 'l_serial_number': 'TEST-L-003', 'p_serial_number': 'TEST-P-003', 'f_serial_number': 'TEST-F-003', 'contract_number': 'HT-TEST-2026003', 'contract_serial_number': 'LS-TEST-2026003', 'company_b_name': '深圳市深业晋展物料供应有限公司', 'company_c_name': '深圳市立达方圆物料供应有限公司', 'company_d_name': 'PRECISE INSTRUMENT COMPANY LIMITED', 'contract_type': 'BCD', 'amount': 1000000.0, 'three_fourth': 850000.0, 'import_service_fee': 50000.0, 'third_party_fee': 30000.0, 'service_fee': 20000.0, 'win_bidding_fee': 25000.0, 'bidding_document_fee': 5000.0, 'bidding_service_fee': 20000.0}
+2026-03-09 17:14:45,223 - INFO - app.main - ================================================================================
+2026-03-09 17:14:45,233 - INFO - app.main - 🔵 检测到BCD项目，调用schedule_settlement_BCD
+2026-03-09 17:14:45,233 - INFO - app.send_email_tasks - PR 抄送人: 无
+2026-03-09 17:14:45,235 - INFO - app.send_email_tasks - c_email_subject_c7:TEST-P-003, HT-TEST-2026003本地测试项目003结算发送TEST-P-003 
+2026-03-09 17:14:45,263 - INFO - app.send_email_tasks - CB_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026003_TEST-P-003_BCD模式_BC结算单.xlsx
+2026-03-09 17:14:45,264 - INFO - app.send_email_tasks - CB_email_attachment_path&&&: C:\Users\007\CB_settlements\结算单.xlsx
+2026-03-09 17:14:46,207 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 17:14:46,980 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 17:14:47,204 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 17:14:47,472 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 17:14:47,473 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[561be91e-5de9-48cd-9190-f28f5141a860] succeeded in 2.208327900036238s: True
+2026-03-09 17:14:47,497 - INFO - app.send_email_tasks - BD_settlement_path&&&: C:\Users\007\settlements\HT-TEST-2026003_TEST-P-003_BCD模式_BD结算单.xlsx
+2026-03-09 17:14:47,498 - INFO - app.send_email_tasks - BD_email_attachment_path&&&: C:\Users\007\BD_settlements\结算单.xlsx
+2026-03-09 17:14:47,640 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_7.4)
+2026-03-09 17:14:48,402 - INFO - paramiko.transport - Authentication (password) successful!
+2026-03-09 17:14:48,624 - INFO - paramiko.transport.sftp - [chan 0] Opened sftp connection (server version 3)
+2026-03-09 17:14:48,890 - INFO - paramiko.transport.sftp - [chan 0] sftp session closed.
+2026-03-09 17:14:48,891 - INFO - celery.app.trace - Task app.tasks.upload_file_to_sftp_task[7860c567-af74-4cb9-91a6-db7a53b6a350] succeeded in 1.392229299992323s: True
+2026-03-09 17:14:48,958 - INFO - app.send_email_tasks - d_email_subject_c9: 本地測試項目003結算確認TEST-P-003
+2026-03-09 17:14:48,994 - INFO - app.send_email_tasks - b_email_subject_c10: 【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003
+2026-03-09 17:14:48,996 - INFO - app.send_email_tasks - [C10] 💌 准备完毕，目标：szsyjz2025@163.com，将在 C9 成功后延迟 24 分钟发送
+2026-03-09 17:14:48,996 - INFO - app.send_email_tasks - [C9] 💌 准备完毕，目标：KQ18SETTLma@163.com，成功后将在 47 分钟后调度 C10
+2026-03-09 17:14:48,997 - INFO - app.send_email_tasks - [C8] 💌 准备完毕，目标：huang.bh@001precise.com，成功后将在 54 分钟后调度 C9
+2026-03-09 17:14:48,997 - INFO - app.send_email_tasks - [C7] 🚀 开始调度，目标：KQ18SETTLma@163.com，成功后将在 40 分钟后调度 C8
+2026-03-09 17:14:48,997 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:48,998 - INFO - app.tasks - [C7] 📋 ========== 任务开始 ==========
+2026-03-09 17:14:48,998 - INFO - app.tasks - [C7] 📋 Task ID: 319548cb-df2e-41c0-8e2a-e150b7e780e4
+2026-03-09 17:14:48,998 - INFO - app.tasks - [C7] 📋 收件人: KQ18SETTLma@163.com
+2026-03-09 17:14:48,998 - INFO - app.tasks - [C7] 📋 主题: HT-TEST-2026003本地测试项目003结算发送TEST-P-003
+2026-03-09 17:14:48,999 - INFO - app.tasks - [C7] 📋 附件数: 1
+2026-03-09 17:14:48,999 - INFO - app.tasks - [C7] 📋 重试次数: 0/3
+2026-03-09 17:14:49,000 - INFO - app.tasks - [C7] 📋 后续任务: C8, 延迟: 2400秒
+2026-03-09 17:14:49,000 - INFO - app.tasks - [C7] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,000 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,001 - INFO - app.tasks - [C7] 📧 开始发送邮件...
+2026-03-09 17:14:49,005 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:14:49,006 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:14:49,009 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:14:49,013 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:14, 抄送=[]
+2026-03-09 17:14:49,014 - INFO - app.tasks - [C7] ✅ SMTP 邮件发送成功！
+2026-03-09 17:14:49,014 - INFO - app.tasks - [C7] ✅ 钉钉表单创建成功！
+2026-03-09 17:14:49,015 - INFO - app.tasks - [C7] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:14:49,015 - INFO - app.tasks - [C7] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:14:49,015 - INFO - app.tasks - [C7] 🔍 followup_task_args内容: {'to_email': 'huang.bh@001precise.com', 'subject': '【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003', 'content': '<html>\n  <body style="font-family: \'SimHei\', \'黑体\', sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, PRECISE INSTRUMENT COMPANY LIMITED</p>\n\n    <p style="text-indent: 2em;">附件为合同号：HT-TEST-2026003本地测试项目003的结算单，请审核！</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C8', 'attachments': ['C:\\Users\\007\\BD_settlements\\结算单.xlsx'], 'followup_task_args': {'to_email': 'KQ18SETTLma@163.com', 'subject': '本地測試項目003結算確認TEST-P-003', 'content': '<html>\n  <body style="font-family: \'FangSong\', \'仿宋\', serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>致萬經理：</p>\n\n    <p>\n      就本地測試項目003（合同編號：HT-TEST-2026003）的結算事宜，經本公司嚴謹細緻地審核，確認此次結算並無任何問題。<br>該結算可順利進入後續流程，如有任何需要進一步溝通或協助之處，歡迎隨時與本公司聯繫。<br>多謝貴方的關注與配合！<br>祝商祺！\n    </p>\n\n    <p>\n      PRECISE INSTRUMENT COMPANY LIMITED<br>\n      電 話/TEL: +852 39622353<br>\n      郵 箱/E-MAIL: huang.bh@001precise.com<br>\n      公 司/COMPANY: PRECISE INSTRUMENT COMPANY LIMITED<br>\n      地 址/ADD: Room 202, 2/F, Cheung Wing Industrial Building, 109-115 Wo Yi Hop Road, Kwai Chung, New Territories Hong Kong\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': '', 'password': '', 'from': 'huang.bh@001precise.com'}, 'stage': 'C9', 'attachments': [], 'followup_task_args': {'to_email': 'szsyjz2025@163.com', 'subject': '【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 张经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 1440}, 'followup_delay': 2820}, 'followup_delay': 3240}
+2026-03-09 17:14:49,017 - INFO - app.tasks - [C7] 🔍 准备pop followup_delay...
+2026-03-09 17:14:49,017 - INFO - app.tasks - [C7] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,017 - INFO - app.tasks - [C7] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,018 - INFO - app.tasks - [C7] 🔍 获取到的next_delay: 3240
+2026-03-09 17:14:49,018 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,018 - INFO - app.tasks - [C7] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:14:49,018 - INFO - app.tasks - [C7] 📤 下一阶段: C8
+2026-03-09 17:14:49,018 - INFO - app.tasks - [C7] 📤 目标收件人: huang.bh@001precise.com
+2026-03-09 17:14:49,018 - INFO - app.tasks - [C7] 📤 延迟时间: 3240 秒 (54 分钟)
+2026-03-09 17:14:49,019 - INFO - app.tasks - [C7] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,019 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,019 - INFO - app.tasks - [C7] 🚀 开始调用apply_async...
+2026-03-09 17:14:49,020 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,020 - INFO - app.tasks - [C8] 📋 ========== 任务开始 ==========
+2026-03-09 17:14:49,020 - INFO - app.tasks - [C8] 📋 Task ID: a2fb76d4-08de-45d8-81bf-b647745e486e
+2026-03-09 17:14:49,020 - INFO - app.tasks - [C8] 📋 收件人: huang.bh@001precise.com
+2026-03-09 17:14:49,020 - INFO - app.tasks - [C8] 📋 主题: 【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003
+2026-03-09 17:14:49,020 - INFO - app.tasks - [C8] 📋 附件数: 1
+2026-03-09 17:14:49,021 - INFO - app.tasks - [C8] 📋 重试次数: 0/3
+2026-03-09 17:14:49,021 - INFO - app.tasks - [C8] 📋 后续任务: C9, 延迟: 0秒
+2026-03-09 17:14:49,021 - INFO - app.tasks - [C8] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,021 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,021 - INFO - app.tasks - [C8] 📧 开始发送邮件...
+2026-03-09 17:14:49,025 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:14:49,025 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:14:49,027 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:14:49,031 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:14, 抄送=[]
+2026-03-09 17:14:49,031 - INFO - app.tasks - [C8] ✅ SMTP 邮件发送成功！
+2026-03-09 17:14:49,032 - INFO - app.tasks - [C8] ✅ 钉钉表单创建成功！
+2026-03-09 17:14:49,032 - INFO - app.tasks - [C8] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:14:49,032 - INFO - app.tasks - [C8] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:14:49,032 - INFO - app.tasks - [C8] 🔍 followup_task_args内容: {'to_email': 'KQ18SETTLma@163.com', 'subject': '本地測試項目003結算確認TEST-P-003', 'content': '<html>\n  <body style="font-family: \'FangSong\', \'仿宋\', serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>致萬經理：</p>\n\n    <p>\n      就本地測試項目003（合同編號：HT-TEST-2026003）的結算事宜，經本公司嚴謹細緻地審核，確認此次結算並無任何問題。<br>該結算可順利進入後續流程，如有任何需要進一步溝通或協助之處，歡迎隨時與本公司聯繫。<br>多謝貴方的關注與配合！<br>祝商祺！\n    </p>\n\n    <p>\n      PRECISE INSTRUMENT COMPANY LIMITED<br>\n      電 話/TEL: +852 39622353<br>\n      郵 箱/E-MAIL: huang.bh@001precise.com<br>\n      公 司/COMPANY: PRECISE INSTRUMENT COMPANY LIMITED<br>\n      地 址/ADD: Room 202, 2/F, Cheung Wing Industrial Building, 109-115 Wo Yi Hop Road, Kwai Chung, New Territories Hong Kong\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': '', 'password': '', 'from': 'huang.bh@001precise.com'}, 'stage': 'C9', 'attachments': [], 'followup_task_args': {'to_email': 'szsyjz2025@163.com', 'subject': '【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 张经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 1440}, 'followup_delay': 2820}
+2026-03-09 17:14:49,034 - INFO - app.tasks - [C8] 🔍 准备pop followup_delay...
+2026-03-09 17:14:49,034 - INFO - app.tasks - [C8] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,034 - INFO - app.tasks - [C8] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,034 - INFO - app.tasks - [C8] 🔍 获取到的next_delay: 2820
+2026-03-09 17:14:49,035 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,035 - INFO - app.tasks - [C8] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:14:49,035 - INFO - app.tasks - [C8] 📤 下一阶段: C9
+2026-03-09 17:14:49,035 - INFO - app.tasks - [C8] 📤 目标收件人: KQ18SETTLma@163.com
+2026-03-09 17:14:49,035 - INFO - app.tasks - [C8] 📤 延迟时间: 2820 秒 (47 分钟)
+2026-03-09 17:14:49,035 - INFO - app.tasks - [C8] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,036 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,036 - INFO - app.tasks - [C8] 🚀 开始调用apply_async...
+2026-03-09 17:14:49,036 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,036 - INFO - app.tasks - [C9] 📋 ========== 任务开始 ==========
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 Task ID: 0ead724a-0d68-4552-b8d5-8f304577d4fd
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 收件人: KQ18SETTLma@163.com
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 主题: 本地測試項目003結算確認TEST-P-003
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 附件数: 0
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 重试次数: 0/3
+2026-03-09 17:14:49,037 - INFO - app.tasks - [C9] 📋 后续任务: C10, 延迟: 0秒
+2026-03-09 17:14:49,038 - INFO - app.tasks - [C9] 📋 followup_task_args包含的键: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,038 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,038 - INFO - app.tasks - [C9] 📧 开始发送邮件...
+2026-03-09 17:14:49,040 - WARNING - app.email_utils - 📎 未提供任何附件，跳过附件处理
+2026-03-09 17:14:49,041 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:14:49,041 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:14:49,045 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:14, 抄送=[]
+2026-03-09 17:14:49,046 - INFO - app.tasks - [C9] ✅ SMTP 邮件发送成功！
+2026-03-09 17:14:49,046 - INFO - app.tasks - [C9] ✅ 钉钉表单创建成功！
+2026-03-09 17:14:49,047 - INFO - app.tasks - [C9] 🔍 检测到后续任务，准备调度...
+2026-03-09 17:14:49,047 - INFO - app.tasks - [C9] 🔍 followup_task_args类型: <class 'dict'>
+2026-03-09 17:14:49,047 - INFO - app.tasks - [C9] 🔍 followup_task_args内容: {'to_email': 'szsyjz2025@163.com', 'subject': '【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003', 'content': '<html>\n  <body style="font-family: SimHei, 黑体, sans-serif; font-size: 16px; line-height: 1.8; color: #000;">\n    <p>Hi, 张经理</p>\n\n    <p style="text-indent: 2em;">结算OK。</p>\n\n    <p>\n      万丽华  WAN LIHUA<br>\n      移动电话PHONE：+86 13316908196<br>\n      座机TEL：+86 755-82256522<br>\n      邮箱EMAIL：KQ18SETTLma@163.com<br>\n      深圳市赛纳精密仪器有限公司<br>\n      Shenzhen Seine Precision Instruments Co.,Ltd<br>\n      深圳市福田区福田街道福南社区深南中路3039号国际文化大厦1907B1D<br>\n      Apartment 1907B1D, International Culture Building, No. 3039, Shennan Middle Road, Funan Community, Futian Subdistrict, Futian District, Shenzhen, China.\n    </p>\n  </body>\n</html>', 'smtp_config': {'host': 'localhost', 'port': 1025, 'username': 'KQ18SETTLma@163.com', 'password': 'CEZp96ihMZpuftfz', 'from': 'KQ18SETTLma@163.com'}, 'stage': 'C10', 'attachments': [], 'followup_task_args': None, 'followup_delay': 1440}
+2026-03-09 17:14:49,048 - INFO - app.tasks - [C9] 🔍 准备pop followup_delay...
+2026-03-09 17:14:49,048 - INFO - app.tasks - [C9] 🔍 pop前的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args', 'followup_delay']
+2026-03-09 17:14:49,049 - INFO - app.tasks - [C9] 🔍 pop后的keys: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,049 - INFO - app.tasks - [C9] 🔍 获取到的next_delay: 1440
+2026-03-09 17:14:49,049 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,049 - INFO - app.tasks - [C9] 📤 ========== 调度后续任务 ==========
+2026-03-09 17:14:49,049 - INFO - app.tasks - [C9] 📤 下一阶段: C10
+2026-03-09 17:14:49,050 - INFO - app.tasks - [C9] 📤 目标收件人: szsyjz2025@163.com
+2026-03-09 17:14:49,050 - INFO - app.tasks - [C9] 📤 延迟时间: 1440 秒 (24 分钟)
+2026-03-09 17:14:49,050 - INFO - app.tasks - [C9] 📤 调度参数: ['to_email', 'subject', 'content', 'smtp_config', 'stage', 'attachments', 'followup_task_args']
+2026-03-09 17:14:49,050 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,050 - INFO - app.tasks - [C9] 🚀 开始调用apply_async...
+2026-03-09 17:14:49,051 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,051 - INFO - app.tasks - [C10] 📋 ========== 任务开始 ==========
+2026-03-09 17:14:49,051 - INFO - app.tasks - [C10] 📋 Task ID: b21ed749-7f00-4830-b73f-a6c073255b10
+2026-03-09 17:14:49,051 - INFO - app.tasks - [C10] 📋 收件人: szsyjz2025@163.com
+2026-03-09 17:14:49,051 - INFO - app.tasks - [C10] 📋 主题: 【结算单】HT-TEST-2026003 本地测试项目003 TEST-P-003
+2026-03-09 17:14:49,052 - INFO - app.tasks - [C10] 📋 附件数: 0
+2026-03-09 17:14:49,052 - INFO - app.tasks - [C10] 📋 重试次数: 0/3
+2026-03-09 17:14:49,052 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,052 - INFO - app.tasks - [C10] 📧 开始发送邮件...
+2026-03-09 17:14:49,055 - WARNING - app.email_utils - 📎 未提供任何附件，跳过附件处理
+2026-03-09 17:14:49,055 - INFO - app.email_utils - 📧 开始建立 SMTP 连接
+2026-03-09 17:14:49,055 - INFO - app.email_utils - 📧 [DEV] SMTP 已重定向至 localhost:1025
+2026-03-09 17:14:49,057 - WARNING - app.email_utils - 📧 SMTP 服务器不支持 AUTH 扩展，跳过登录（本地测试模式）
+2026-03-09 17:14:49,060 - INFO - app.email_utils - ✅ #########发送邮件成功，时间：2026-03-09 17:14, 抄送=[]
+2026-03-09 17:14:49,061 - INFO - app.tasks - [C10] ✅ SMTP 邮件发送成功！
+2026-03-09 17:14:49,061 - INFO - app.tasks - [C10] ✅ 钉钉表单创建成功！
+2026-03-09 17:14:49,061 - INFO - app.tasks - [C10] ℹ️ 无后续任务，流程结束
+2026-03-09 17:14:49,062 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,062 - INFO - app.tasks - [C10] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:14:49,062 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,063 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[b21ed749-7f00-4830-b73f-a6c073255b10] succeeded in 0.011764799943193793s: {'success': True, 'error': ''}
+2026-03-09 17:14:49,063 - INFO - app.tasks - [C9] ✅ 后续任务 C10 调度成功！Task ID: b21ed749-7f00-4830-b73f-a6c073255b10
+2026-03-09 17:14:49,064 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,064 - INFO - app.tasks - [C9] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:14:49,064 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,065 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[0ead724a-0d68-4552-b8d5-8f304577d4fd] succeeded in 0.02857419999781996s: {'success': True, 'error': ''}
+2026-03-09 17:14:49,065 - INFO - app.tasks - [C8] ✅ 后续任务 C9 调度成功！Task ID: 0ead724a-0d68-4552-b8d5-8f304577d4fd
+2026-03-09 17:14:49,065 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,066 - INFO - app.tasks - [C8] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:14:49,066 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,066 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[a2fb76d4-08de-45d8-81bf-b647745e486e] succeeded in 0.0466570999706164s: {'success': True, 'error': ''}
+2026-03-09 17:14:49,067 - INFO - app.tasks - [C7] ✅ 后续任务 C8 调度成功！Task ID: a2fb76d4-08de-45d8-81bf-b647745e486e
+2026-03-09 17:14:49,067 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,067 - INFO - app.tasks - [C7] ✅✅✅ 带附件邮件任务全部完成 ✅✅✅
+2026-03-09 17:14:49,068 - INFO - app.tasks - ============================================================
+2026-03-09 17:14:49,068 - INFO - celery.app.trace - Task app.tasks.send_reply_email_with_attachments_delay[319548cb-df2e-41c0-8e2a-e150b7e780e4] succeeded in 0.07057570002507418s: {'success': True, 'error': ''}
+2026-03-09 17:14:49,068 - INFO - app.main - ✅ BCD项目邮件任务调度完成
+2026-03-09 17:14:49,068 - INFO - app.main - BC_download_url: http://103.30.78.107:8000/download/HT-TEST-2026003_TEST-P-003_BCD模式_BC结算单.xlsx, BD_download_url: http://103.30.78.107:8000/download/HT-TEST-2026003_TEST-P-003_BCD模式_BD结算单.xlsx

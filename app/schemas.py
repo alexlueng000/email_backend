@@ -202,5 +202,6 @@ class SettlementRequest(BaseModel):
     win_bidding_fee: Optional[Union[str, float]] = None
     bidding_document_fee: Optional[Union[str, float]] = None
     bidding_service_fee: Optional[Union[str, float]] = None
+    external_agent_fee: Optional[Union[str, float]] = None # 外付代理费 
 
     

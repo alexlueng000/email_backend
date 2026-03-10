@@ -651,7 +651,7 @@ def settlement(
     # 更新 project_fee_details 表
     fee = project_information.fee_details
     fee.three_fourth_amount = clean_decimal(req.three_fourth)
-    fee.import_service_fee = clean_decimal(req.import_service_fee)
+    fee.import_service_fee = clean_decimal(req.import_service_fee) + clean_decimal(req.external_agent_fee) # 2036.3.10 新增计算方式：C进口服务费取值=C进口服务费（RMB）+ 外付代理费
     fee.third_party_fee = clean_decimal(req.third_party_fee)
     fee.settlement_service_fee = clean_decimal(req.service_fee)
     fee.bidding_service_fee = clean_decimal(req.win_bidding_fee)
