@@ -113,11 +113,13 @@ class ProjectWinningInfoRequest(BaseModel):
     bidding_code: str # 招标编号
     contract_number: str # 合同号
     winning_amount: float # 中标金额
-    winning_time: datetime  # 毫秒时间戳将被转为 datetime
+    winning_time: Optional[datetime] = None  # 毫秒时间戳将被转为 datetime
     actual_winning_company: str # 实际中标商
 
-    @validator("winning_time", pre=True)
+    @field_validator("winning_time", mode="before")
     def parse_millisecond_timestamp(cls, v):
+        if v is None:
+            return None
         try:
             ts = float(v)
             if ts > 1e12:  # 判断是否为毫秒级时间戳
