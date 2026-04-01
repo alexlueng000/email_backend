@@ -62,6 +62,16 @@ MAIL_ACCOUNTS = {
         "from": "huang.bh@001precise.com",
         "active": True,
     },
+    "D": {
+        "alias": "D",
+        "email": "ouy@001precise.com",
+        "smtp_host": "smtphz.qiye.163.com",
+        "smtp_port": 465,
+        "username": "ouy@001precise.com",
+        "password": "3#G6g3#FHU3CHmgj",
+        "from": "ouy@001precise.com",
+        "active": True,
+    },
 }
 
 # 如果上一个是A，那就返回B；如果是B，就返回C；否则返回A
