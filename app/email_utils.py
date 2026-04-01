@@ -74,7 +74,7 @@ MAIL_ACCOUNTS = {
     },
 }
 
-# 如果上一个是A，那就返回B；如果是B，就返回C；否则返回A
+# 轮换顺序：A→B→C→D→A
 def get_last_plss_email() -> str:
     with get_db_session() as db:
         last_project = (
@@ -90,12 +90,8 @@ def get_last_plss_email() -> str:
         prev_alias = getattr(last_project, "current_plss_email", None)
         print("上一个PLSS邮箱别名:", prev_alias)
 
-        if prev_alias == "A":
-            return "B"
-        elif prev_alias == "B":
-            return "C"
-        else:
-            return "A"
+        rotation = {"A": "B", "B": "C", "C": "D", "D": "A"}
+        return rotation.get(prev_alias, "A")
 
 def _normalize_cc(cc: Optional[Union[str, Iterable[str]]]) -> List[str]:
     """
