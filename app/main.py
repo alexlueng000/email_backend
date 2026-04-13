@@ -216,7 +216,7 @@ async def receive_bidding_register(
 
     # === 根据项目邮箱别名确定 PR 抄送人 ===
     cc_list = []
-    if project_info.current_plss_email in ("A", "B"):
+    if project_info.current_plss_email != "C":
         cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 邮件抄送人: %s", cc_list if cc_list else "无")
 

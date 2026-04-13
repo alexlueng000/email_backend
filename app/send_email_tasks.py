@@ -50,7 +50,7 @@ def schedule_bid_conversation_BCD(
     # === 判断抄送人逻辑（仅对 PR 生效） ===
     cc_list = []
     if d_company.short_name == "PR":
-        if project_info.current_plss_email in ("A", "B"):
+        if project_info.current_plss_email != "C":
             cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
@@ -309,7 +309,7 @@ def schedule_bid_conversation_CCD(
     # === 判断抄送人逻辑（仅对 PR 生效） ===
     cc_list = []
     if d_company.short_name == "PR":
-        if project_info.current_plss_email in ("A", "B"):
+        if project_info.current_plss_email != "C":
             cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
@@ -497,7 +497,7 @@ def schedule_bid_conversation_BD(
 
     cc_list = []
     if d_company.short_name == "PR":
-        if project_info.current_plss_email in ("A", "B"):
+        if project_info.current_plss_email != "C":
             cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
@@ -694,7 +694,7 @@ def schedule_settlement_BCD(
 
     cc_list = []
     if d_company.short_name == "PR":
-        if project_info.current_plss_email in ("A", "B"):
+        if project_info.current_plss_email != "C":
             cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
@@ -1075,7 +1075,7 @@ def schedule_settlement_CCD_BD(
 
     cc_list = []
     if d_company.short_name == "PR":
-        if project_info.current_plss_email in ("A", "B"):
+        if project_info.current_plss_email != "C":
             cc_list = [email_utils.MAIL_ACCOUNTS["C"]["email"]]
     logger.info("PR 抄送人: %s", cc_list if cc_list else "无")
 
