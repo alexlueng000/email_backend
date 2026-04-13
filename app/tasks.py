@@ -35,10 +35,20 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-celery = Celery( 
+celery = Celery(
     "syjz_emails",
     broker="redis://localhost:6379/0",      # Redis 作为 broker
     backend="redis://localhost:6379/0"      # 可用于任务结果存储（可选）
+)
+
+# Redis 故障时快速失败，避免 apply_async 阻塞请求线程
+celery.conf.update(
+    broker_connection_retry_on_startup=True,
+    broker_connection_max_retries=3,          # 最多重试 3 次
+    broker_transport_options={
+        "socket_timeout": 5,                  # 5 秒超时
+        "socket_connect_timeout": 5,
+    },
 )
 
 class EmailSendFailed(Exception):
